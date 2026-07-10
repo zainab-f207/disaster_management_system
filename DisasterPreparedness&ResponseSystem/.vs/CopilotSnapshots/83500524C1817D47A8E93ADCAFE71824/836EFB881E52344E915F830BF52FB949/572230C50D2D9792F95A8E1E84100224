@@ -1,0 +1,49 @@
+﻿namespace DisasterPreparedness_ResponseSystem.Core.Entity
+{
+    public class Enums
+    {
+        public enum DisasterType { Flood, Earthquake, Storm, Heatwave, Landslide, RoadAccident,          // most common Rescue 1122 call
+            BuildingCollapse,     
+            IndustrialAccident,    
+            UrbanFire,             
+            GasExplosion,         
+            TrainAccident,        
+            Stampede,             
+            WaterContamination,    
+            PowerGridFailure,      
+            Other
+        }
+
+        public enum DisasterCategory
+        {
+            Natural,
+            ManMade,
+            Civil
+        }
+        public enum SeverityLevel { Low, Medium, High, Critical }
+        public enum DisasterStatus { Reported, UnderVerification, Verified, ResponseInProgress, Resolved, FalseAlarm }
+        public enum DisasterSource {
+            WeatherApi,
+            EarthquakeApi,
+            CitizenReport,
+            ManualReport,
+            ResponderReport
+        }     // Note: ManualReport reintroduced; existing DB values will be migrated to CitizenReport by a data migration below for historical records where required.  
+
+        public enum OrganizationType {
+            Rescue1122,                  // Nationwide emergency/medical/rescue — most provinces
+            NDMA,                        // National Disaster Management Authority (level 3 disasters)
+            PDMA,                        // Provincial Disaster Management Authority (level 2 disasters)
+            EdhiFoundation,               // Ambulance, shelter, rescue (nationwide)
+            AlkhidmatFoundation,          // Food, rescue boats, mobile clinics
+            ChhipaWelfare,                // Ambulance/rescue (mainly Sindh/Karachi)
+            PakistanRedCrescentSociety,   // Relief, medical camps
+            CivilDefence,                 // Fire, evacuation
+            Police,
+            Other
+        }
+        public enum AssignmentStatus { Assigned, EnRoute, OnSite, Completed, Cancelled }
+        public enum AssignmentMethod { Auto, ManualOverride }
+        public enum ReportStatus { Pending, Reviewed, Merged, Rejected }
+    }
+}

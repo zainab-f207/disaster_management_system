@@ -1,0 +1,138 @@
+﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DisasterPreparedness_ResponseSystem.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITokenService _tokenService;
+        private readonly IConfiguration _config;
+
+        public AuthController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ITokenService tokenService,
+            IConfiguration config)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
+            _config = config;
+        }
+
+        /// <summary>
+        /// Register a new user account with a specified role.
+        /// Open endpoint—citizens can self-register. Only existing Admins can create other Admins.
+        /// </summary>
+        /// <remarks>
+        /// Available roles: Citizen, Responder, Admin.
+        /// Responders must specify their organization ID (Rescue 1122, Edhi, PDMA, etc.).
+        /// Email must be unique. Password must be at least 6 characters and include at least one non-alphanumeric character.
+        /// </remarks>
+        /// <param name="dto">Registration data: FullName, Email, Password, Role, ResponderOrganizationId (if Responder)</param>
+        /// <returns>JWT token, user ID, role, and token expiration timestamp</returns>
+        // POST /api/auth/register
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        {
+            if (!new[] { "Admin", "Responder", "Citizen" }.Contains(dto.Role))
+                return BadRequest("Role must be Admin, Responder, or Citizen.");
+
+            // Prevent self-registration as Admin (only existing Admin can create other Admins)
+            if (dto.Role == "Admin" && !User.IsInRole("Admin"))
+                return Forbid();
+
+            var user = new ApplicationUser
+            {
+                FullName = dto.FullName,
+                Email = dto.Email,
+                UserName = dto.Email,
+                EmailConfirmed = true,
+                ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null
+            };
+
+            var result = await _userManager.CreateAsync(user, dto.Password);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors.Select(e => e.Description));
+
+            await _userManager.AddToRoleAsync(user, dto.Role);
+
+            var token = await _tokenService.GenerateTokenAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new AuthResponseDto(
+                Token: token,
+                UserId: user.Id,
+                FullName: user.FullName,
+                Email: user.Email!,
+                Role: roles.FirstOrDefault() ?? dto.Role,
+                OrganizationId: user.ResponderOrganizationId,
+                ExpiresAt: DateTime.UtcNow.AddHours(24)
+            ));
+        }
+
+        /// <summary>
+        /// Authenticate a user and issue a JWT token.
+        /// Open endpoint—all users (Citizen, Responder, Admin) can log in with email and password.
+        /// </summary>
+        /// <remarks>
+        /// Returns a JWT token valid for 24 hours. Token must be included in subsequent requests as:
+        /// Authorization: Bearer {token}
+        /// </remarks>
+        /// <param name="dto">Login credentials: Email and Password</param>
+        /// <returns>JWT token, user ID, full name, role, organization (if Responder), and token expiration</returns>
+        // POST /api/auth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return Unauthorized("Invalid email or password.");
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: false);
+            if (!result.Succeeded) return Unauthorized("Invalid email or password.");
+
+            var token = await _tokenService.GenerateTokenAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new AuthResponseDto(
+                Token: token,
+                UserId: user.Id,
+                FullName: user.FullName,
+                Email: user.Email!,
+                Role: roles.FirstOrDefault() ?? "Citizen",
+                OrganizationId: user.ResponderOrganizationId,
+                ExpiresAt: DateTime.UtcNow.AddHours(24)
+            ));
+        }
+
+        // GET /api/auth/me  — returns currently logged-in user's info
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+            if (user == null) return NotFound();
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return Ok(new AuthResponseDto(
+                Token: "",
+                UserId: user.Id,
+                FullName: user.FullName,
+                Email: user.Email!,
+                Role: roles.FirstOrDefault() ?? "",
+                OrganizationId: user.ResponderOrganizationId,
+                ExpiresAt: DateTime.UtcNow
+            ));
+        }
+    }
+}

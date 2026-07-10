@@ -1,0 +1,177 @@
+﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using static DisasterPreparedness_ResponseSystem.Core.Entity.Enums;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace DisasterPreparedness_ResponseSystem.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class ReportsController : ControllerBase
+    {
+        private readonly AppDbContext _db;
+        private readonly IReportService _reportService;
+        private readonly IAlertService _alertService;
+
+
+        public ReportsController(AppDbContext db, IReportService reportService, IAlertService alertService)
+        {
+            _db = db;
+            _reportService = reportService;
+            _alertService = alertService;
+        }
+
+        /// <summary>
+        /// Submit a new disaster report. Any logged-in user (Citizen, Responder, or Admin) can submit.
+        /// Admin is notified in real-time via SignalR.
+        /// </summary>
+        /// <remarks>
+        /// Latitude must be in range 23–37 (Pakistan range). Longitude must be in range 60–77.
+        /// Report status begins as "Pending" and requires Admin verification.
+        /// </remarks>
+        /// <param name="dto">The disaster report details (latitude, longitude, description, etc.)</param>
+        /// <returns>Created report with ID and timestamps</returns>
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateReportDto dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var user = await _db.Users.FindAsync(userId);
+            var report = await _reportService.CreateReportAsync(userId, dto);
+            await _alertService.SendNewReportNotificationAsync(report, user?.FullName ?? "Citizen");
+
+            return CreatedAtAction(nameof(GetById), new { id = report.Id }, report);
+        }
+
+        /// <summary>
+        /// Retrieve a specific disaster report by ID.
+        /// </summary>
+        /// <param name="id">The disaster report ID</param>
+        /// <returns>Report details including location, description, and status</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var report = await _db.DisasterReports
+                .Include(r => r.ReportedByUser)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (report == null) return NotFound();
+
+            return Ok(new ReportResponseDto(
+                report.Id, report.DisasterId, report.ReportedByUserId,
+                report.ReportedByUser.FullName, report.Description,
+                report.Latitude, report.Longitude, report.ImageUrl,
+                report.Status, report.CreatedAt));
+        }
+
+        /// <summary>
+        /// Get all disaster reports with optional filtering by status.
+        /// Restricted to Admin role. Used to review pending reports and manage verification workflow.
+        /// </summary>
+        /// <remarks>
+        /// Status values: Pending, Verified, Rejected, Merged.
+        /// If no status filter is provided, returns all reports sorted by most recent first.
+        /// </remarks>
+        /// <param name="status">Optional: Filter reports by status (Pending, Verified, Rejected, Merged)</param>
+        /// <returns>List of reports matching the filter criteria</returns>
+        // GET /api/reports?status=Pending  — admin review queue
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] ReportStatus? status)
+        {
+            var query = _db.DisasterReports.Include(r => r.ReportedByUser).AsQueryable();
+            if (status.HasValue) query = query.Where(r => r.Status == status);
+
+            var reports = await query
+                .OrderByDescending(r => r.CreatedAt)
+                .Select(r => new ReportResponseDto(
+                    r.Id, r.DisasterId, r.ReportedByUserId, r.ReportedByUser.FullName,
+                    r.Description, r.Latitude, r.Longitude, r.ImageUrl, r.Status, r.CreatedAt))
+                .ToListAsync();
+
+            return Ok(reports);
+        }
+
+        /// <summary>
+        /// Find pending disaster reports near a given location.
+        /// Restricted to Admin role. Used to detect potential duplicate reports before merging.
+        /// </summary>
+        /// <remarks>
+        /// Returns all pending reports within the specified radius (in kilometers) of the given coordinates.
+        /// Helps Admin identify related incidents that should be merged into a single disaster.
+        /// </remarks>
+        /// <param name="lat">Latitude of the center point (Pakistan: 23–37)</param>
+        /// <param name="lon">Longitude of the center point (Pakistan: 60–77)</param>
+        /// <param name="radiusKm">Search radius in kilometers (default: 5 km)</param>
+        /// <returns>List of nearby pending reports within the radius</returns>
+        // GET /api/reports/nearby?lat=31.5&lon=74.3&radiusKm=5  — admin checks for duplicate reports before merging
+        [Authorize(Roles = "Admin")]
+        [HttpGet("nearby")]
+        public async Task<IActionResult> GetNearby([FromQuery] double lat, [FromQuery] double lon, [FromQuery] double radiusKm = 5)
+        {
+            var reports = await _reportService.GetNearbyPendingReportsAsync(lat, lon, radiusKm);
+            return Ok(reports);
+        }
+
+        // PUT /api/reports/5/merge-existing  — admin links report to an existing disaster
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/merge-existing")]
+        public async Task<IActionResult> MergeExisting(int id, [FromBody] MergeIntoExistingDto dto)
+        {
+            try
+            {
+                var disaster = await _reportService.MergeIntoExistingDisasterAsync(id, dto.DisasterId);
+                return Ok(new DisasterResponseDto(
+                    disaster.Id, disaster.Type, disaster.Severity, disaster.Status,
+                    disaster.Source, disaster.Latitude, disaster.Longitude,
+                    disaster.Description, disaster.ReportedAt, disaster.VerifiedAt));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        // PUT /api/reports/5/create-disaster  — admin confirms this is a NEW disaster
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/create-disaster")]
+        public async Task<IActionResult> CreateDisasterFromReport(int id, [FromBody] CreateDisasterFromReportDto dto)
+        {
+            try
+            {
+                var disaster = await _reportService.CreateDisasterFromReportAsync(id, dto);
+                return Ok(new DisasterResponseDto(
+                    disaster.Id, disaster.Type, disaster.Severity, disaster.Status,
+                    disaster.Source, disaster.Latitude, disaster.Longitude,
+                    disaster.Description, disaster.ReportedAt, disaster.VerifiedAt));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        // PUT /api/reports/5/reject
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/reject")]
+        public async Task<IActionResult> Reject(int id, [FromBody] RejectReportDto dto)
+        {
+            try
+            {
+                var report = await _reportService.RejectReportAsync(id, dto.Reason);
+                return Ok(new ReportResponseDto(report.Id, report.DisasterId, report.ReportedByUserId, (await _db.Users.FindAsync(report.ReportedByUserId))?.FullName ?? "", report.Description, report.Latitude, report.Longitude, report.ImageUrl, report.Status, report.CreatedAt));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+    }
+
+}
+}

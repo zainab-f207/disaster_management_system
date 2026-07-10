@@ -1,0 +1,217 @@
+﻿using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using DisasterPreparedness_ResponseSystem.Core.Models;
+using DisasterPreparedness_ResponseSystem.Hubs;
+using DisasterPreparedness_ResponseSystem.Infrastructure.BackgroundServices;
+using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
+using DisasterPreparedness_ResponseSystem.Infrastructure.Interfaces;
+using DisasterPreparedness_ResponseSystem.Infrastructure.Services;
+using DisasterPreparedness_ResponseSystem.Middleware;
+using DisasterPreparedness_ResponseSystem.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
+using System.Text.Json.Serialization;
+
+var builder = WebApplication.CreateBuilder(args);
+
+/// <summary>
+/// SchemaFilter to ensure enum values are displayed as strings (not numeric values) in Swagger/OpenAPI documentation.
+/// This filter converts enum schemas to display human-readable names like "Verified", "Pending", etc.
+/// instead of numeric values.
+/// </summary>
+internal class EnumSchemaFilter : ISchemaFilter
+{
+    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    {
+        if (context.Type.IsEnum)
+        {
+            schema.Enum.Clear();
+            foreach (var enumValue in Enum.GetNames(context.Type))
+            {
+                schema.Enum.Add(new Microsoft.OpenApi.Any.OpenApiString(enumValue));
+            }
+        }
+    }
+}
+
+
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = true;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
+var jwtKey = builder.Configuration["JwtSettings:Key"]!;
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+
+   
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                context.Token = accessToken;
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
+builder.Services.AddSignalR();
+
+builder.Services.AddHttpClient<IWeatherApiService, WeatherApiService>();
+builder.Services.AddHttpClient<IEarthquakeApiService, EarthquakeApiService>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IResponderAssignmentService, ResponderAssignmentService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IDuplicateCheckService, DuplicateCheckService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+
+builder.Services.Configure<MonitoringConfig>(
+    builder.Configuration.GetSection("DisasterMonitoring"));
+builder.Services.AddHostedService<DisasterMonitoringService>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Pakistan Disaster Response System API",
+        Version = "v1",
+        Description = """
+            Real-time disaster preparedness and response system for Pakistan.
+            
+            **Roles:**
+            - 🔓 Public — no login required
+            - 👤 Citizen — submit reports, view disasters
+            - 🚒 Responder — update assignment status (Rescue 1122, Edhi, PDMA etc.)
+            - 👑 Admin — verify disasters, manage organizations, override assignments
+            
+            **Flow:** Citizen Report → Admin Verify → Auto-Assign Responder → Real-time Alert
+            """,
+        Contact = new OpenApiContact
+        {
+            Name = "NDMA Pakistan",
+            Email = "webadmin@ndma.gov.pk"
+        }
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: **Bearer {your token}**\n\nExample: Bearer eyJhbGci..."
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+        c.IncludeXmlComments(xmlPath);
+});
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    await RoleSeeder.SeedRolesAsync(roleManager);
+
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    await RoleSeeder.SeedAdminUserAsync(userManager);
+
+    if (!db.ResponderOrganizations.Any())
+    {
+        db.ResponderOrganizations.AddRange(SeedData.GetSeedOrganizations());
+        await db.SaveChangesAsync();
+    }
+}
+
+app.UseMiddleware<ExceptionMiddleware>();  
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pakistan Disaster Response API v1");
+        c.DocumentTitle = "Pakistan Disaster Response System";
+        c.DefaultModelsExpandDepth(-1);      
+    });
+}
+
+app.UseHttpsRedirection();
+app.UseAuthentication();                   
+app.UseAuthorization();
+app.MapControllers();
+app.MapHub<DisasterHub>("/hubs/disasters");
+
+app.Run();

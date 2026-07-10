@@ -1,0 +1,1472 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\rules\\disasterorgmapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\rules\\disasterorgmapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\disasterscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\disasterscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\reportverification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\reportverification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\alertservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\alertservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\ialertservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\ialertservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\safetycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\safetycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\safetycheck.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\safetycheck.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\disastercreationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\disastercreationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\disasterdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\disasterdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\disasterreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\disasterreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\idisastercreationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\idisastercreationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\idisasterhubclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\idisasterhubclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\assignmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\assignmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\assignmentdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\assignmentdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\responderassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\responderassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\responderassignmentdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\responderassignmentdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\reportdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\reportdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\helpers\\disastercategoryhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\helpers\\disastercategoryhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\backgroundservices\\disastermonitoringservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\backgroundservices\\disastermonitoringservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\responderassignmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\responderassignmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\disasterruleengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\disasterruleengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\duplicatecheckservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\duplicatecheckservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\data\\roleseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\data\\roleseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\pushcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\pushcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\pushnotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\pushnotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\ipushnotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\ipushnotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\pushsubscription.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\pushsubscription.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\disaster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\disaster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Zainab Fayyaz\\.copilot\\plans\\plan-add-xml-documentation-comments-to-controllers-and-configure-swagger-for-english.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.Alerts.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderOrganizations.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderAssignments.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\models\\monitoringconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\models\\monitoringconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\models\\weatherapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\models\\weatherapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\airqualityapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\airqualityapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\airqualityapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\airqualityapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\iairqualityapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\iairqualityapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\airqualitydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\airqualitydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\weatherapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\weatherapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\geocodingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\geocodingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\geocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\geocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\nominatimresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\nominatimresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\nominatimaddress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\nominatimaddress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\igeocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\igeocodingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\geocodingresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\geocodingresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\alertscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\alertscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\swagger\\enumschemafilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\swagger\\enumschemafilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\errordtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\errordtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\validators\\reportvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\validators\\reportvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\validators\\organizationvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\validators\\organizationvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\validators\\disastervalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\validators\\disastervalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\validators\\authvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\validators\\authvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\alertdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\alertdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\iduplicatecheckservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\iduplicatecheckservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\services\\earthquakeapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\services\\earthquakeapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\iearthquakeapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\iearthquakeapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\iweatherapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\iweatherapiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\models\\earthquakeapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\models\\earthquakeapiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoleClaims.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoles.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserClaims.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserRoles.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserTokens.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUsers.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserLogins.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\organizationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\organizationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\interfaces\\iresponderassignmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\interfaces\\iresponderassignmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\dtos\\organizationdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\dtos\\organizationdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\entity\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\entity\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\helpers\\distancecalculator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\helpers\\distancecalculator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DisasterPreparedness\u0026ResponseSystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.core\\disasterpreparedness\u0026responsesystem.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1CCE6EBC-C675-4A4B-9167-8950995A3A1A}|DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.core\\disasterpreparedness\u0026responsesystem.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{49636441-DC07-67F9-1F8B-0778331C77D6}|DisasterPreparedness\u0026ResponseSystem.API\\DisasterPreparedness\u0026ResponseSystem.API.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\migrations\\20260703151058_addlocationname.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\migrations\\20260703151058_addlocationname.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\hubs\\disasterhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\hubs\\disasterhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|d:\\.net projects\\disasterpreparedness\u0026responsesystem\\disasterpreparedness\u0026responsesystem.infrastructure\\migrations\\20260708214522_addpushsubscriptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50ADB33F-002F-4F01-8CE2-8680E2C00E56}|DisasterPreparedness\u0026ResponseSystem.Infrastructure\\DisasterPreparedness\u0026ResponseSystem.Infrastructure.csproj|solutionrelative:disasterpreparedness\u0026responsesystem.infrastructure\\migrations\\20260708214522_addpushsubscriptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DisastersController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\DisastersController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\DisastersController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\DisastersController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\DisastersController.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAYwOQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:10:23.016Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DisasterOrgMapping.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Rules\\DisasterOrgMapping.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Rules\\DisasterOrgMapping.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Rules\\DisasterOrgMapping.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Rules\\DisasterOrgMapping.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwLEAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T12:24:23.423Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SeedData.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\SeedData.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\SeedData.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\SeedData.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\SeedData.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAwwFsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T23:48:36.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ReportsController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\ReportsController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\ReportsController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\ReportsController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\ReportsController.cs",
+              "ViewState": "AgIAAN8AAAAAAAAAAAAcwO0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:10:50.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAYwBIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:44:43.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ReportVerification.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ReportVerification.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ReportVerification.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ReportVerification.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ReportVerification.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T23:16:23.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20260709231341_AddSafetyChecks.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260709231341_AddSafetyChecks.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T23:13:41.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SafetyController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\SafetyController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\SafetyController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\SafetyController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\SafetyController.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAewCwAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T23:10:17.023Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SafetyCheck.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\SafetyCheck.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\SafetyCheck.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\SafetyCheck.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\SafetyCheck.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T23:08:34.883Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IAlertService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAlertService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAlertService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAlertService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAlertService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA4AAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T19:39:18.551Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AlertService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AlertService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AlertService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AlertService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AlertService.cs",
+              "ViewState": "AgIAAJcAAAAAAAAAAAAwwKkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T19:38:51.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Program.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Program.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Program.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Program.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAWwOYAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T00:13:43.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DisasterDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\DisasterDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\DisasterDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\DisasterDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\DisasterDtos.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAACgAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:02:45.976Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\appsettings.json",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\appsettings.json",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\appsettings.json",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\appsettings.json",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAowEoAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-08T21:50:56.599Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DisasterCreationService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterCreationService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterCreationService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterCreationService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterCreationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALEAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T16:48:13.045Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DisasterReport.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\DisasterReport.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\DisasterReport.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\DisasterReport.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\DisasterReport.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAowBIAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:01:58.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "IDisasterCreationService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterCreationService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterCreationService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterCreationService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterCreationService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAnwBUAAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-09T16:48:40.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "IDisasterHubClient.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterHubClient.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterHubClient.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterHubClient.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDisasterHubClient.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T19:35:03.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "AssignmentsController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AssignmentsController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AssignmentsController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AssignmentsController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AssignmentsController.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAjwGwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:13:34.044Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ResponderAssignment.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ResponderAssignment.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ResponderAssignment.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ResponderAssignment.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ResponderAssignment.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwBIAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T12:36:21.488Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Enums.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Enums.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Enums.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Enums.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Enums.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAowCwAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T12:17:40.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "AssignmentDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AssignmentDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AssignmentDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AssignmentDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AssignmentDtos.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAgwBoAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:03:28.048Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ResponderAssignmentDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ResponderAssignmentDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ResponderAssignmentDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ResponderAssignmentDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ResponderAssignmentDtos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:18:23.948Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ReportDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ReportDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ReportDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ReportDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ReportDtos.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAcwB4AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:02:59.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "DisasterCategoryHelper.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DisasterCategoryHelper.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DisasterCategoryHelper.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DisasterCategoryHelper.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DisasterCategoryHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T15:54:46.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "DisasterMonitoringService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\BackgroundServices\\DisasterMonitoringService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\BackgroundServices\\DisasterMonitoringService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\BackgroundServices\\DisasterMonitoringService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\BackgroundServices\\DisasterMonitoringService.cs",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAtwKwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T18:01:39.885Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ResponderAssignmentService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ResponderAssignmentService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ResponderAssignmentService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ResponderAssignmentService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ResponderAssignmentService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAMwBYAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T18:18:00.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "DisasterRuleEngine.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterRuleEngine.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterRuleEngine.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterRuleEngine.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DisasterRuleEngine.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAewD0AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:59:52.927Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ReportService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ReportService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ReportService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ReportService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\ReportService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAA/wCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:38:28.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "DuplicateCheckService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DuplicateCheckService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DuplicateCheckService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DuplicateCheckService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\DuplicateCheckService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:58:05.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "PushController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\PushController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\PushController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\PushController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\PushController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAiwAgAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:49:22.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "RoleSeeder.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\RoleSeeder.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\RoleSeeder.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\RoleSeeder.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Data\\RoleSeeder.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAiwEkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:52:12.081Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "IPushNotificationService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IPushNotificationService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IPushNotificationService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IPushNotificationService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IPushNotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:46:23.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "PushNotificationService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\PushNotificationService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\PushNotificationService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\PushNotificationService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\PushNotificationService.cs",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAgwCIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:46:00.378Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 90,
+              "Title": "20260708214522_AddPushSubscriptions.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260708214522_AddPushSubscriptions.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260708214522_AddPushSubscriptions.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260708214522_AddPushSubscriptions.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260708214522_AddPushSubscriptions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:45:23.083Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "PushSubscription.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\PushSubscription.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\PushSubscription.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\PushSubscription.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\PushSubscription.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T21:43:59.451Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 89,
+              "Title": "DisasterHub.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Hubs\\DisasterHub.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Hubs\\DisasterHub.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Hubs\\DisasterHub.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Hubs\\DisasterHub.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T18:20:31.022Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Disaster.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Disaster.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Disaster.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Disaster.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\Disaster.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAABgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T17:21:19.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAADwv4cAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T14:58:01.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Properties\\launchSettings.json",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-08T15:08:03.056Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "plan-add-xml-documentation-comments-to-controllers-and-configure-swagger-for-english.md [Preview]",
+              "DocumentMoniker": "C:\\Users\\Zainab Fayyaz\\.copilot\\plans\\plan-add-xml-documentation-comments-to-controllers-and-configure-swagger-for-english.md",
+              "ToolTip": "C:\\Users\\Zainab Fayyaz\\.copilot\\plans\\plan-add-xml-documentation-comments-to-controllers-and-configure-swagger-for-english.md [Preview]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-07-03T19:44:05.967Z",
+              "EditorCaption": " [Preview]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "dbo.ResponderOrganizations.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderOrganizations.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderOrganizations.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-03T16:10:31.199Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "dbo.Alerts.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.Alerts.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.Alerts.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-03T16:11:16.401Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "dbo.ResponderAssignments.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderAssignments.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.ResponderAssignments.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-03T16:09:57.373Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "MonitoringConfig.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\MonitoringConfig.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\MonitoringConfig.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\MonitoringConfig.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\MonitoringConfig.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAowCAAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:50:18.811Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "WeatherApiResponse.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\WeatherApiResponse.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\WeatherApiResponse.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\WeatherApiResponse.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\WeatherApiResponse.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAxwBoAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:51:27.07Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "AirQualityApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AirQualityApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AirQualityApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AirQualityApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\AirQualityApiService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAxwCkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:16:09.84Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "AirQualityApiResponse.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityApiResponse.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityApiResponse.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityApiResponse.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityApiResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:18:00.756Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "IAirQualityApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAirQualityApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAirQualityApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAirQualityApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IAirQualityApiService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:16:28.893Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "AirQualityData.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityData.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityData.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityData.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\AirQualityData.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:17:06.656Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "WeatherApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\WeatherApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\WeatherApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\WeatherApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\WeatherApiService.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAswCIAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:53:54.437Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 88,
+              "Title": "20260703151058_AddLocationName.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260703151058_AddLocationName.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260703151058_AddLocationName.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260703151058_AddLocationName.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Migrations\\20260703151058_AddLocationName.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:10:58.894Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "GeocodingController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\GeocodingController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\GeocodingController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\GeocodingController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\GeocodingController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:07:44.45Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "NominatimResult.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimResult.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimResult.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimResult.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimResult.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAsAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:03:49.537Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "NominatimAddress.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimAddress.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimAddress.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimAddress.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\NominatimAddress.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:04:58.861Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "GeocodingService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\GeocodingService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\GeocodingService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\GeocodingService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\GeocodingService.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAYwDgAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:00:09.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "GeocodingResult.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\GeocodingResult.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\GeocodingResult.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\GeocodingResult.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\GeocodingResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:01:41.143Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "IGeocodingService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IGeocodingService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IGeocodingService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IGeocodingService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IGeocodingService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T15:00:32.95Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "AlertsController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AlertsController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AlertsController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AlertsController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\AlertsController.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwB4AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T20:53:40.393Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "EnumSchemaFilter.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Swagger\\EnumSchemaFilter.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Swagger\\EnumSchemaFilter.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Swagger\\EnumSchemaFilter.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Swagger\\EnumSchemaFilter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T14:08:10.42Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 87,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T13:40:39.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "ErrorDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ErrorDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ErrorDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ErrorDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\ErrorDtos.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwAsAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:35:29.478Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "ExceptionMiddleware.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Middleware\\ExceptionMiddleware.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Middleware\\ExceptionMiddleware.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Middleware\\ExceptionMiddleware.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Middleware\\ExceptionMiddleware.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:34:13.493Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "OrganizationValidators.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\OrganizationValidators.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\OrganizationValidators.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\OrganizationValidators.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\OrganizationValidators.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAAwBkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:33:15.461Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "ReportValidators.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\ReportValidators.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\ReportValidators.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\ReportValidators.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\ReportValidators.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:32:34.039Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "DisasterValidators.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\DisasterValidators.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\DisasterValidators.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\DisasterValidators.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\DisasterValidators.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:31:26.465Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 62,
+              "Title": "AuthValidators.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\AuthValidators.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\AuthValidators.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Validators\\AuthValidators.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Validators\\AuthValidators.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAqwCMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T14:28:46.719Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 63,
+              "Title": "IReportService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IReportService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IReportService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IReportService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IReportService.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAmwA0AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:24:42.907Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 64,
+              "Title": "AuthDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AuthDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AuthDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AuthDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AuthDtos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T14:49:20.293Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 65,
+              "Title": "AlertDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AlertDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AlertDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AlertDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\AlertDtos.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwCkAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T19:33:26.994Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 66,
+              "Title": "IDuplicateCheckService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDuplicateCheckService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDuplicateCheckService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDuplicateCheckService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IDuplicateCheckService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:58:28.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 67,
+              "Title": "EarthquakeApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\EarthquakeApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\EarthquakeApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\EarthquakeApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Infrastructure\\Services\\EarthquakeApiService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:56:58.66Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 68,
+              "Title": "IEarthquakeApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IEarthquakeApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IEarthquakeApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IEarthquakeApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IEarthquakeApiService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:56:20.865Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 69,
+              "Title": "IWeatherApiService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IWeatherApiService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IWeatherApiService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IWeatherApiService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IWeatherApiService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:54:28.808Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 70,
+              "Title": "EarthquakeApiResponse.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\EarthquakeApiResponse.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\EarthquakeApiResponse.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Models\\EarthquakeApiResponse.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Models\\EarthquakeApiResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T17:52:50.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 71,
+              "Title": "dbo.AspNetRoleClaims.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoleClaims.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoleClaims.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:34:44.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 72,
+              "Title": "dbo.AspNetRoles.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoles.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetRoles.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:34:38.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 73,
+              "Title": "dbo.AspNetUserClaims.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserClaims.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserClaims.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:34:35.336Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 74,
+              "Title": "dbo.AspNetUserRoles.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserRoles.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserRoles.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:34:10.602Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 75,
+              "Title": "dbo.AspNetUserTokens.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserTokens.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserTokens.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:34:05.448Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 76,
+              "Title": "dbo.AspNetUsers.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUsers.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUsers.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:33:40.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 77,
+              "Title": "dbo.AspNetUserLogins.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserLogins.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/localhost/DisasterResponseDb/True/SqlTable/dbo.AspNetUserLogins.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-07-01T17:33:35.66Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 86,
+              "Title": "DisasterPreparedness\u0026ResponseSystem.Core.csproj",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DisasterPreparedness\u0026ResponseSystem.Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-01T15:57:07.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 78,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\ITokenService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\ITokenService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\ITokenService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\ITokenService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T13:34:09.326Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 79,
+              "Title": "OrganizationsController.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\OrganizationsController.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\OrganizationsController.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\OrganizationsController.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.API\\Controllers\\OrganizationsController.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAIBJwHwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:13:00.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 80,
+              "Title": "IResponderAssignmentService.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IResponderAssignmentService.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IResponderAssignmentService.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IResponderAssignmentService.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Interfaces\\IResponderAssignmentService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T18:28:51.166Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 81,
+              "Title": "OrganizationDtos.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\OrganizationDtos.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\OrganizationDtos.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\OrganizationDtos.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\DTOs\\OrganizationDtos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T13:03:14.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 82,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ApplicationUser.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ApplicationUser.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Entity\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-28T19:03:15.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 83,
+              "Title": "DistanceCalculator.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DistanceCalculator.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DistanceCalculator.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DistanceCalculator.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Helpers\\DistanceCalculator.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwAwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T12:37:17.85Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 84,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Class1.cs",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem.Core\\Class1.cs",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem.Core\\Class1.cs",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem.Core\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-28T19:00:55.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 85,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem\\appsettings.json",
+              "RelativeDocumentMoniker": "DisasterPreparedness\u0026ResponseSystem\\appsettings.json",
+              "ToolTip": "D:\\.NET Projects\\DisasterPreparedness\u0026ResponseSystem\\DisasterPreparedness\u0026ResponseSystem\\appsettings.json",
+              "RelativeToolTip": "DisasterPreparedness\u0026ResponseSystem\\appsettings.json",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-28T18:51:42.413Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

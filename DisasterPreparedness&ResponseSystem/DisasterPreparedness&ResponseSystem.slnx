@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="DisasterPreparedness&amp;ResponseSystem.API/DisasterPreparedness&amp;ResponseSystem.API.csproj" />
+  <Project Path="DisasterPreparedness&amp;ResponseSystem.Core/DisasterPreparedness&amp;ResponseSystem.Core.csproj" Id="1cce6ebc-c675-4a4b-9167-8950995a3a1a" />
+  <Project Path="DisasterPreparedness&amp;ResponseSystem.Infrastructure/DisasterPreparedness&amp;ResponseSystem.Infrastructure.csproj" Id="50adb33f-002f-4f01-8ce2-8680e2c00e56" />
+</Solution>

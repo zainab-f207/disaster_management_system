@@ -1,0 +1,43 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace DisasterPreparedness_ResponseSystem.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
+    {
+        private static readonly string[] Summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// Retrieve a sample 5-day weather forecast (template endpoint).
+        /// Open to all users. This is a demo/test endpoint.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint returns randomly generated forecast data for demonstration purposes.
+        /// In production, integrate with weather.gov.pk, weather APIs, or other meteorological services
+        /// to provide real weather forecasts for disaster risk assessment.
+        /// </remarks>
+        /// <returns>Array of 5 weather forecast entries with date, temperature, and conditions</returns>
+        [HttpGet(Name = "GetWeatherForecast")]
+        public IEnumerable<WeatherForecast> Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+    }
+}

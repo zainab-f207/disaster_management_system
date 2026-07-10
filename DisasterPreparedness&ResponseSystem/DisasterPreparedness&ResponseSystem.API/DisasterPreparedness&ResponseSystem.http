@@ -1,0 +1,6 @@
+@DisasterPreparedness_ResponseSystem_HostAddress = http://localhost:5082
+
+GET {{DisasterPreparedness_ResponseSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

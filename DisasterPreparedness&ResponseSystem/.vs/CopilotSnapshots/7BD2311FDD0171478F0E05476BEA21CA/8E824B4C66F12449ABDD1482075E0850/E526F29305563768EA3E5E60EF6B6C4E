@@ -1,0 +1,54 @@
+﻿using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
+{
+    public class TokenService : ITokenService
+    {
+        private readonly IConfiguration _config;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public TokenService(IConfiguration config, UserManager<ApplicationUser> userManager)
+        {
+            _config = config;
+            _userManager = userManager;
+        }
+
+        public async Task<string> GenerateTokenAsync(ApplicationUser user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.Name, user.FullName),
+            ..roles.Select(role => new Claim(ClaimTypes.Role, role))
+        };
+            if (user.ResponderOrganizationId.HasValue)
+                claims.Add(new Claim("OrganizationId", user.ResponderOrganizationId.Value.ToString()));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["JwtSettings:Issuer"],
+                audience: _config["JwtSettings:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(double.Parse(_config["JwtSettings:ExpiryInHours"]!)),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+}
