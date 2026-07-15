@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
@@ -16,6 +16,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
         public DbSet<ResponderOrganization> ResponderOrganizations => Set<ResponderOrganization>();
         public DbSet<PushSubscription> PushSubscriptions => Set<PushSubscription>();
         public DbSet<SafetyCheck> SafetyChecks => Set<SafetyCheck>();
+        public DbSet<ResponderLocationPing> ResponderLocationPings => Set<ResponderLocationPing>();
        
         public DbSet<ReportVerification> ReportVerifications => Set<ReportVerification>();
 
@@ -37,7 +38,17 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
                 .WithMany(d => d.Assignments)
                 .OnDelete(DeleteBehavior.Cascade);
 
-        
+            builder.Entity<ResponderLocationPing>()
+                .HasOne(p => p.Assignment)
+                .WithMany()
+                .HasForeignKey(p => p.AssignmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ResponderLocationPing>()
+                .HasIndex(p => new { p.AssignmentId, p.RecordedAt });
+             
+
+
             builder.Entity<Disaster>()
                 .HasIndex(d => new { d.Status, d.Type });
 

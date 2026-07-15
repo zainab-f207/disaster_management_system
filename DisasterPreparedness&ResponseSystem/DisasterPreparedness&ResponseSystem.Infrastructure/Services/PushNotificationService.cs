@@ -1,8 +1,9 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
 using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
     {
         private readonly AppDbContext _db;
         private readonly IConfiguration _config;
+        private readonly ILogger<PushNotificationService> _logger;
 
-        public PushNotificationService(AppDbContext db, IConfiguration config)
+        public PushNotificationService(AppDbContext db, IConfiguration config, ILogger<PushNotificationService> logger)
         {
             _db = db;
             _config = config;
+            _logger = logger;
         }
 
         public async Task SendToUserAsync(string userId, string title, string body, string? url = null)
@@ -49,9 +52,18 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
         private async Task SendToSubscriptions(
             List<DisasterPreparedness_ResponseSystem.Core.Entity.PushSubscription> subscriptions, string title, string body, string? url)
         {
-            var vapidPublic = _config["VapidKeys:PublicKey"]!;
-            var vapidPrivate = _config["VapidKeys:PrivateKey"]!;
-            var subject = _config["VapidKeys:Subject"]!;
+            var vapidPublic = _config["VapidKeys:PublicKey"];
+            var vapidPrivate = _config["VapidKeys:PrivateKey"];
+            var subject = _config["VapidKeys:Subject"];
+
+            // If VAPID keys are not configured, skip push notifications gracefully
+            if (string.IsNullOrWhiteSpace(vapidPublic) ||
+                string.IsNullOrWhiteSpace(vapidPrivate) ||
+                string.IsNullOrWhiteSpace(subject))
+            {
+                _logger.LogWarning("VAPID keys not configured — skipping push notifications.");
+                return;
+            }
 
             var webPushClient = new WebPushClient();
             webPushClient.SetVapidDetails(subject, vapidPublic, vapidPrivate);

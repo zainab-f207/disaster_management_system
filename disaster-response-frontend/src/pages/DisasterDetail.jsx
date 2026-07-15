@@ -159,7 +159,16 @@ export default function DisasterDetail() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px' }}>
           {[
             { label: '📍 Location', value: locationName || 'Fetching area name...' },
-            { label: '📡 Source', value: <SourceBadge source={disaster.source} /> },
+            { label: '📡 Source', value: (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <SourceBadge source={disaster.source} />
+                {disaster.sourceReference && (
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500 }}>
+                    {disaster.sourceReference}
+                  </span>
+                )}
+              </div>
+            ) },
             { label: '🕒 Reported', value: new Date(disaster.reportedAt).toLocaleString('en-PK') },
             { label: '✅ Verified', value: disaster.verifiedAt ? new Date(disaster.verifiedAt).toLocaleString('en-PK') : 'Not yet verified' },
             { label: '📏 Affected Radius', value: disaster.affectedAreaRadiusKm ? `${disaster.affectedAreaRadiusKm} km` : 'Not specified' },

@@ -19,12 +19,12 @@ export function usePushNotifications() {
       }
 
       const reg = await navigator.serviceWorker.register('/sw.js');
-      await navigator.serviceWorker.ready; 
+      await navigator.serviceWorker.ready;
 
       const keyRes = await api.get('/push/vapid-public-key');
       const publicKey = keyRes.data?.publicKey;
 
-      if (!publicKey || publicKey === 'BAbbr3lFSU3vv6AHdccCQYgvFDVslvfUxqaq98-AMB5N9eaGEeTYBLJfXdF8Ow4OSpk8WKyvHPlAJP5srg6TvnE') {
+      if (!publicKey || publicKey.length < 80) {
         console.log('Push: VAPID key not configured yet.');
         return;
       }
@@ -46,8 +46,8 @@ export function usePushNotifications() {
 
       await api.post('/push/subscribe', {
         endpoint: subJson.endpoint,
-        p256dh:   subJson.keys.p256dh,
-        auth:     subJson.keys.auth,
+        p256dh: subJson.keys.p256dh,
+        auth: subJson.keys.auth,
       });
 
       console.log('✅ Push notifications enabled');
@@ -60,7 +60,7 @@ export function usePushNotifications() {
 function urlBase64ToUint8Array(base64String) {
   if (!base64String) return new Uint8Array();
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const raw     = window.atob(base64);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = window.atob(base64);
   return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
 }

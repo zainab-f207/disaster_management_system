@@ -89,6 +89,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
                 AffectedAreaRadiusKm = dto.AffectedAreaRadiusKm,
                 Description = dto.Description,
                 Source = DisasterSource.AdminReport,
+                SourceReference = dto.Source ?? "",
                 Status = isAlertOnly ? DisasterStatus.AlertActive : DisasterStatus.Verified,
                 VerifiedAt = DateTime.UtcNow,
                 VerifiedByUserId = adminId,

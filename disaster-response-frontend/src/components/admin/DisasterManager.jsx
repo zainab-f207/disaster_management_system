@@ -132,7 +132,7 @@ export default function DisasterManager() {
                       #{d.id} — {d.type}
                     </div>
                     <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                      {d.source} •{' '}
+                      {d.source} {d.sourceReference ? `(${d.sourceReference})` : ''} •{' '}
                       {new Date(d.reportedAt).toLocaleString('en-PK', {
                         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                       })}

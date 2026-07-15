@@ -170,6 +170,18 @@ export default function DisastersList() {
                         </span>
                         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>#{d.id}</span>
                         <SourceBadge source={d.source} />
+                        {d.sourceReference && (
+                          <span style={{
+                            fontSize: '10px',
+                            color: 'var(--text-muted)',
+                            background: 'var(--bg-surface-2)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontWeight: 500,
+                          }}>
+                            {d.sourceReference}
+                          </span>
+                        )}
                       </div>
                       <p style={{
                         fontSize: '13px', color: 'var(--text-secondary)',

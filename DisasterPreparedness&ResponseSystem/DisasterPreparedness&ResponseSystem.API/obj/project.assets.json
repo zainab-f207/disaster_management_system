@@ -4501,11 +4501,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\DisasterPreparedness&ResponseSystem.API.csproj",
+      "projectUniqueName": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\DisasterPreparedness&ResponseSystem.API.csproj",
       "projectName": "DisasterPreparedness&ResponseSystem.API",
-      "projectPath": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\DisasterPreparedness&ResponseSystem.API.csproj",
+      "projectPath": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\DisasterPreparedness&ResponseSystem.API.csproj",
       "packagesPath": "C:\\Users\\Zainab Fayyaz\\.nuget\\packages\\",
-      "outputPath": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\obj\\",
+      "outputPath": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4528,8 +4528,8 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj": {
-              "projectPath": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj"
+            "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj": {
+              "projectPath": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj"
             }
           }
         }

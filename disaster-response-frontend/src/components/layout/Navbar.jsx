@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useThemeStore, useAuthStore } from '../../store';
 import {
-  Sun, Moon, Menu, X, Shield, AlertTriangle,
-  LogOut, User, ChevronDown, Radio
+  Sun, Moon, Menu, X, Shield, LogOut, User, ChevronDown, Radio
 } from 'lucide-react';
 
 import NotificationPanel from './NotificationPanel';
@@ -15,22 +14,33 @@ export default function Navbar({ isConnected }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
 
-  const primaryDashboardLink =
-    user?.role === 'Admin' ? { to: '/admin', label: 'Dashboard' } :
-      user?.role === 'Responder' ? { to: '/responder', label: 'Dashboard' } :
-        user?.role === 'Citizen' ? { to: '/citizen', label: 'Dashboard' } :
-          { to: '/', label: 'Dashboard' };
+  const roleLinks = {
+    Admin: [
+      { to: '/admin', label: '📊 Dashboard' },
+      { to: '/create-official-incident', label: '🛡️ Create Incident' },
+      { to: '/admin/sources', label: '📡 Monitoring' },
+      { to: '/admin/organizations', label: '🏢 Organizations' },
+      { to: '/admin/responders', label: '👮 Responders' },
+      { to: '/admin/citizens', label: '👤 Citizens' },
+      { to: '/admin/analytics', label: '📈 Analytics' },
+    ],
+    Responder: [
+      { to: '/responder', label: 'My Assignments' },
+      { to: '/map', label: 'Live Map' },
+    ],
+    Citizen: [
+      { to: '/', label: 'Home' },
+      { to: '/report', label: '📩 Report' },
+      { to: '/my-reports', label: '📄 My Reports' },
+      { to: '/nearby', label: '🏥 Nearby' },
+      { to: '/contacts', label: '📞 Contacts' },
+      { to: '/safety-check', label: '❤️ Safety' },
+      { to: '/preparedness', label: 'Be Prepared' },
+      { to: '/ai-assistant', label: '🤖 AI Help' },
+    ],
+  };
 
-  const navLinks = [
-    primaryDashboardLink,
-    { to: '/disasters', label: 'Disasters' },
-    { to: '/map', label: 'Live Map' },
-    { to: '/safety-check', label: '❤️ Safety Check' },
-    { to: '/preparedness', label: 'Be Prepared' },
-    { to: '/ai-assistant', label: '🤖 AI Help' },
-    ...(isAuthenticated ? [{ to: '/report', label: '📩 Report' }] : []),
-    ...(user?.role === 'Responder' ? [{ to: '/responder', label: 'My Assignments' }] : []),
-  ];
+  const navLinks = user?.role ? (roleLinks[user.role] || roleLinks.Citizen) : roleLinks.Citizen;
 
   const isActive = (path) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
@@ -48,7 +58,8 @@ export default function Navbar({ isConnected }) {
         padding: '0 24px', height: '64px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Logo */}
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
           <div style={{
             width: '36px', height: '36px',
             background: 'linear-gradient(135deg, var(--pk-green-600), var(--pk-green-400))',
@@ -72,6 +83,7 @@ export default function Navbar({ isConnected }) {
           </div>
         </Link>
 
+        {/* Center nav links — desktop */}
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }} className="desktop-nav">
           {navLinks.map((link) => (
             <Link
@@ -89,14 +101,14 @@ export default function Navbar({ isConnected }) {
               }}
               onMouseEnter={e => {
                 if (!isActive(link.to)) {
-                  e.target.style.background = 'var(--bg-surface-2)';
-                  e.target.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.background = 'var(--bg-surface-2)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
                 }
               }}
               onMouseLeave={e => {
                 if (!isActive(link.to)) {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
                 }
               }}
             >
@@ -105,24 +117,28 @@ export default function Navbar({ isConnected }) {
           ))}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Link
-            to="/sos"
-            style={{
-              padding: '7px 14px',
-              background: 'linear-gradient(135deg, #c41a1a, #e53e3e)',
-              color: '#fff', textDecoration: 'none',
-              borderRadius: '10px', fontSize: '13px', fontWeight: 800,
-              boxShadow: '0 4px 12px rgba(229,62,62,0.35)',
-              fontFamily: 'var(--font-display)',
-              letterSpacing: '0.02em',
-              animation: 'pulse-dot 3s infinite',
-              display: 'flex', alignItems: 'center', gap: '5px',
-            }}
-          >
-            🚨 SOS
-          </Link>
+        {/* Right side controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+          {/* SOS button — Citizen only */}
+          {user?.role === 'Citizen' && (
+            <Link
+              to="/sos"
+              style={{
+                padding: '7px 14px',
+                background: 'linear-gradient(135deg, #c41a1a, #e53e3e)',
+                color: '#fff', textDecoration: 'none',
+                borderRadius: '10px', fontSize: '13px', fontWeight: 800,
+                boxShadow: '0 4px 12px rgba(229,62,62,0.35)',
+                fontFamily: 'var(--font-display)',
+                letterSpacing: '0.02em',
+                display: 'flex', alignItems: 'center', gap: '5px',
+              }}
+            >
+              🚨 SOS
+            </Link>
+          )}
 
+          {/* Live indicator */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: '6px',
             padding: '4px 10px', borderRadius: '20px',
@@ -141,6 +157,7 @@ export default function Navbar({ isConnected }) {
 
           <NotificationPanel />
 
+          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -157,6 +174,7 @@ export default function Navbar({ isConnected }) {
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
+          {/* User menu */}
           {isAuthenticated ? (
             <div style={{ position: 'relative' }}>
               <button
@@ -221,6 +239,7 @@ export default function Navbar({ isConnected }) {
             </Link>
           )}
 
+          {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="mobile-menu-btn"
@@ -235,6 +254,49 @@ export default function Navbar({ isConnected }) {
           </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div style={{
+          borderTop: '1px solid var(--border)',
+          background: 'var(--navbar-bg)',
+          backdropFilter: 'blur(20px)',
+          padding: '12px 24px 16px',
+          display: 'flex', flexDirection: 'column', gap: '4px',
+        }}>
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                padding: '10px 14px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: isActive(link.to) ? 700 : 500,
+                color: isActive(link.to) ? 'var(--accent)' : 'var(--text-secondary)',
+                background: isActive(link.to) ? 'var(--accent-subtle)' : 'transparent',
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {user?.role === 'Citizen' && (
+            <Link
+              to="/sos"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                padding: '10px 14px', borderRadius: '8px', textDecoration: 'none',
+                fontSize: '14px', fontWeight: 800,
+                color: '#e53e3e', background: 'rgba(229,62,62,0.08)',
+              }}
+            >
+              🚨 SOS
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

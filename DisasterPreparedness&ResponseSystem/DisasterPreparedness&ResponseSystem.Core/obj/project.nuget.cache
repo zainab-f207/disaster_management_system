@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vAOkFm+O72E=",
+  "dgSpecHash": "HeQFUBXnFbQ=",
   "success": true,
-  "projectFilePath": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Core\\DisasterPreparedness&ResponseSystem.Core.csproj",
+  "projectFilePath": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Core\\DisasterPreparedness&ResponseSystem.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Zainab Fayyaz\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\Zainab Fayyaz\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.1\\fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",

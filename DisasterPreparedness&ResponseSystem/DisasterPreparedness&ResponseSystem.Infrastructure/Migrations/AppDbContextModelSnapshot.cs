@@ -161,6 +161,10 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SourceReference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -275,6 +279,36 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Migrations
                     b.ToTable("PushSubscriptions");
                 });
 
+            modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ReportVerification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReportId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("VotedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReportVerifications");
+                });
+
             modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderAssignment", b =>
                 {
                     b.Property<int>("Id")
@@ -323,6 +357,39 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Migrations
                     b.HasIndex("ResponderOrganizationId");
 
                     b.ToTable("ResponderAssignments");
+                });
+
+            modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderLocationPing", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double?>("AccuracyMeters")
+                        .HasColumnType("float");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("RecordedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("SpeedKmh")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId", "RecordedAt");
+
+                    b.ToTable("ResponderLocationPings");
                 });
 
             modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderOrganization", b =>
@@ -577,6 +644,25 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ReportVerification", b =>
+                {
+                    b.HasOne("DisasterPreparedness_ResponseSystem.Core.Entity.DisasterReport", "Report")
+                        .WithMany()
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DisasterPreparedness_ResponseSystem.Core.Entity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Report");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderAssignment", b =>
                 {
                     b.HasOne("DisasterPreparedness_ResponseSystem.Core.Entity.ApplicationUser", "AssignedUser")
@@ -601,6 +687,17 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Migrations
                     b.Navigation("Disaster");
 
                     b.Navigation("ResponderOrganization");
+                });
+
+            modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderLocationPing", b =>
+                {
+                    b.HasOne("DisasterPreparedness_ResponseSystem.Core.Entity.ResponderAssignment", "Assignment")
+                        .WithMany()
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
                 });
 
             modelBuilder.Entity("DisasterPreparedness_ResponseSystem.Core.Entity.SafetyCheck", b =>

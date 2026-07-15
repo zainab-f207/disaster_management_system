@@ -60,7 +60,7 @@ export default function ResponderDashboard() {
         } catch {}
       }));
 
-      const urgencyOrder = ['OnSite','EnRoute','Assigned','Completed','Cancelled'];
+      const urgencyOrder = ['OperationStarted','OnScene','Arrived','OnSite','EnRoute','Assigned','Completed','Cancelled'];
       all.sort((a,b) =>
         urgencyOrder.indexOf(a.status) - urgencyOrder.indexOf(b.status)
         || new Date(b.assignedAt) - new Date(a.assignedAt)
@@ -90,8 +90,8 @@ export default function ResponderDashboard() {
     return true;
   });
 
-  const onSite    = assignments.filter(a => a.status === 'OnSite').length;
-  const enRoute   = assignments.filter(a => a.status === 'EnRoute').length;
+  const onSite    = assignments.filter(a => ['OnSite', 'OnScene', 'OperationStarted'].includes(a.status)).length;
+  const enRoute   = assignments.filter(a => ['EnRoute', 'Arrived'].includes(a.status)).length;
   const assigned  = assignments.filter(a => a.status === 'Assigned').length;
   const completed = assignments.filter(a => a.status === 'Completed').length;
 
@@ -174,8 +174,22 @@ export default function ResponderDashboard() {
             borderRadius: '10px', fontSize: '13px',
             color: '#d69e2e', fontWeight: 600,
           }}>
-            📍 You are currently on site at {onSite} disaster location{onSite > 1 ? 's' : ''}.
+            📍 You are currently on site/active at {onSite} disaster location{onSite > 1 ? 's' : ''}.
             Mark complete once the situation is resolved.
+          </div>
+        )}
+
+        {enRoute > 0 && (
+          <div style={{
+            marginTop: '10px', padding: '10px 16px',
+            background: 'rgba(66,153,225,0.08)',
+            border: '1px solid rgba(66,153,225,0.3)',
+            borderRadius: '10px', fontSize: '13px',
+            color: '#4299e1', fontWeight: 600,
+            display: 'flex', alignItems: 'center', gap: '8px',
+          }}>
+            <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#4299e1', animation: 'pulse-dot 1.5s infinite' }}></span>
+            📡 GPS Location Sharing is active for your journey. Stay safe!
           </div>
         )}
       </div>

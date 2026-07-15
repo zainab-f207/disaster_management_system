@@ -29,7 +29,7 @@
             <remarks>
             A disaster typically has one primary assignment (auto-assigned nearest responder).
             Additional assignments may exist if Admin creates manual overrides or adds backup responders.
-            Status values: Assigned, EnRoute, OnSite, Completed, Failed.
+            Status values: Assigned, EnRoute, Arrived, OnScene, OperationStarted, OnSite, Completed, Cancelled.
             </remarks>
             <param name="disasterId">The disaster ID</param>
             <returns>List of assignments for the disaster with organization details and status</returns>
@@ -37,13 +37,8 @@
         <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.OverrideAssignment(System.Int32,DisasterPreparedness_ResponseSystem.Core.DTOs.OverrideAssignmentDto)">
             <summary>
             Manually override a disaster assignment to a different responder organization.
-            Restricted to Admin role. Used when auto-assignment is inappropriate or responder capacity is exceeded.
+            Restricted to Admin role.
             </summary>
-            <remarks>
-            Admin can reassign a disaster to any active responder organization.
-            Previous assignment is not deleted—a new assignment record is created with method = "AdminOverride".
-            New organization is notified in real-time via SignalR.
-            </remarks>
             <param name="assignmentId">The existing assignment ID to override</param>
             <param name="dto">New organization ID</param>
             <returns>Updated assignment with new organization details</returns>
@@ -51,16 +46,29 @@
         <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.UpdateAssignmentStatus(System.Int32,DisasterPreparedness_ResponseSystem.Core.DTOs.UpdateAssignmentStatusDto)">
             <summary>
             Update the current status of a responder assignment.
-            Restricted to Admin and Responder roles. Used by responder organizations to report progress.
+            Restricted to Admin and Responder roles.
             </summary>
-            <remarks>
-            Typical progression: Assigned → EnRoute → OnSite → Completed.
-            A "Failed" status indicates the responder cannot complete the assignment (e.g., access denied, resource unavailable).
-            All status updates trigger real-time alert notifications to Admin and Citizens.
-            </remarks>
             <param name="id">The assignment ID</param>
-            <param name="dto">New assignment status (Assigned, EnRoute, OnSite, Completed, Failed)</param>
+            <param name="dto">New assignment status</param>
             <returns>Updated assignment with new status</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.SubmitLocationPing(System.Int32,DisasterPreparedness_ResponseSystem.Core.DTOs.LocationPingDto)" -->
+        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.StartOperation(System.Int32)">
+            <summary>
+            Responder confirms they have started operations at the incident scene.
+            Transitions status from OnScene -> OperationStarted.
+            </summary>
+        </member>
+        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.GetLiveAssignments">
+            <summary>
+            Admin-only endpoint returning all active assignments with their latest GPS ping.
+            Used by the Live Tracking admin view, polled every 10 seconds.
+            </summary>
+        </member>
+        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController.HaversineMeters(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Haversine great-circle distance in metres between two lat/lon coordinates.
+            </summary>
         </member>
         <member name="M:DisasterPreparedness_ResponseSystem.Controllers.AuthController.Register(DisasterPreparedness_ResponseSystem.Core.DTOs.RegisterDto)">
             <summary>
@@ -239,7 +247,7 @@
             <param name="dto">Updated organization details</param>
             <returns>Updated organization record</returns>
         </member>
-        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.OrganizationsController.Deactivate(System.Int32)">
+        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.OrganizationsController.ToggleActive(System.Int32,DisasterPreparedness_ResponseSystem.Controllers.ToggleOrgActiveDto)">
             <summary>
             Deactivate a responder organization (soft delete).
             Restricted to Admin role. Organization records and assignment history are preserved for audit purposes.
@@ -272,7 +280,7 @@
             <param name="id">The disaster report ID</param>
             <returns>Report details including location, description, and status</returns>
         </member>
-        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.ReportsController.GetAll(System.Nullable{DisasterPreparedness_ResponseSystem.Core.Entity.Enums.ReportStatus})">
+        <member name="M:DisasterPreparedness_ResponseSystem.Controllers.ReportsController.GetAll(System.Nullable{DisasterPreparedness_ResponseSystem.Core.Entity.Enums.ReportStatus},System.String)">
             <summary>
             Get all disaster reports with optional filtering by status.
             Restricted to Admin role. Used to review pending reports and manage verification workflow.

@@ -89,18 +89,19 @@ await _alertService.SendNewReportNotificationAsync(report, user?.FullName ?? "Ci
         // GET /api/reports?status=Pending  — admin review queue
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] ReportStatus? status)
+        public async Task<IActionResult> GetAll([FromQuery] ReportStatus? status, [FromQuery] string? userId)
         {
             var query = _db.DisasterReports.Include(r => r.ReportedByUser).AsQueryable();
             if (status.HasValue) query = query.Where(r => r.Status == status);
-
+            if (!string.IsNullOrEmpty(userId)) query = query.Where(r => r.ReportedByUserId == userId);
+ 
             var reports = await query
                 .OrderByDescending(r => r.CreatedAt)
                 .Select(r => new ReportResponseDto(
                     r.Id, r.DisasterId, r.ReportedByUserId, r.ReportedByUser != null ? (r.ReportedByUser.FullName ?? "Unknown") : "Unknown",
                     r.Type, r.Description, r.Latitude, r.Longitude, r.ImageUrl, r.LocationName ?? "Unknown", r.Status, r.CreatedAt))
                 .ToListAsync();
-
+ 
             return Ok(reports);
         }
 

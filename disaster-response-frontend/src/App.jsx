@@ -1,4 +1,13 @@
 import { useEffect } from 'react';
+import AdminSources from './pages/AdminSources';
+import CreateOfficialIncident from './pages/CreateOfficialIncident';
+import AdminOrganizations from './pages/AdminOrganizations';
+import AdminResponders from './pages/AdminResponders';
+import AdminCitizens from './pages/AdminCitizens';
+import AdminAnalytics from './pages/AdminAnalytics';
+import MyReports from './pages/MyReports';
+import EmergencyContacts from './pages/EmergencyContacts';
+import NearbySafePlaces from './pages/NearbySafePlaces';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useThemeStore, useAuthStore } from './store';
@@ -67,6 +76,29 @@ function AppContent() {
         <Route path="/admin" element={
           <ProtectedRoute requiredRole="Admin"><AdminPanel /></ProtectedRoute>
         } />
+        <Route path="/admin/sources" element={
+          <ProtectedRoute requiredRole="Admin"><AdminSources /></ProtectedRoute>
+        } />
+        <Route path="/admin/organizations" element={
+          <ProtectedRoute requiredRole="Admin"><AdminOrganizations /></ProtectedRoute>
+        } />
+        <Route path="/admin/responders" element={
+          <ProtectedRoute requiredRole="Admin"><AdminResponders /></ProtectedRoute>
+        } />
+        <Route path="/admin/citizens" element={
+          <ProtectedRoute requiredRole="Admin"><AdminCitizens /></ProtectedRoute>
+        } />
+        <Route path="/admin/analytics" element={
+          <ProtectedRoute requiredRole="Admin"><AdminAnalytics /></ProtectedRoute>
+        } />
+        <Route path="/create-official-incident" element={
+          <ProtectedRoute requiredRole="Admin"><CreateOfficialIncident /></ProtectedRoute>
+        } />
+        <Route path="/my-reports" element={
+          <ProtectedRoute><MyReports /></ProtectedRoute>
+        } />
+        <Route path="/contacts" element={<EmergencyContacts />} />
+        <Route path="/nearby" element={<NearbySafePlaces />} />
         <Route path="/responder" element={
           <ProtectedRoute requiredRole="Responder"><ResponderDashboard /></ProtectedRoute>
         } />

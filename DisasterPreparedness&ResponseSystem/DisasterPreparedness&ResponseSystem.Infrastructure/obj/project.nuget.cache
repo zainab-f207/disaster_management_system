@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0m3SJJzsZlk=",
+  "dgSpecHash": "74kuYSIpMj4=",
   "success": true,
-  "projectFilePath": "D:\\.NET Projects\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj",
+  "projectFilePath": "D:\\.NET Projects\\Pakistan-Disaster-Response-System\\DisasterPreparedness&ResponseSystem\\DisasterPreparedness&ResponseSystem.Infrastructure\\DisasterPreparedness&ResponseSystem.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Zainab Fayyaz\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Zainab Fayyaz\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

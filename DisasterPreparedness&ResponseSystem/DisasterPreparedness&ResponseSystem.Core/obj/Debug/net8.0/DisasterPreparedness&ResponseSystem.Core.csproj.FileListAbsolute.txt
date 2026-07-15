@@ -10,3 +10,16 @@ D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&Respon
 D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\refint\DisasterPreparedness&ResponseSystem.Core.dll
 D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.pdb
 D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\ref\DisasterPreparedness&ResponseSystem.Core.dll
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\bin\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.deps.json
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\bin\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.dll
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\bin\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.pdb
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.csproj.AssemblyReference.cache
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.AssemblyInfoInputs.cache
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.AssemblyInfo.cs
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.csproj.CoreCompileInputs.cache
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.sourcelink.json
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.dll
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\refint\DisasterPreparedness&ResponseSystem.Core.dll
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\DisasterPreparedness&ResponseSystem.Core.pdb
+D:\.NET Projects\Pakistan-Disaster-Response-System\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\ref\DisasterPreparedness&ResponseSystem.Core.dll

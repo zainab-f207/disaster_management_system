@@ -75,6 +75,43 @@
   },
   {
     "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController",
+    "Method": "SubmitLocationPing",
+    "RelativePath": "api/Assignments/{id}/location",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "DisasterPreparedness_ResponseSystem.Core.DTOs.LocationPingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController",
+    "Method": "StartOperation",
+    "RelativePath": "api/Assignments/{id}/start-operation",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController",
     "Method": "UpdateAssignmentStatus",
     "RelativePath": "api/Assignments/{id}/status",
     "HttpMethod": "PUT",
@@ -108,6 +145,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.AssignmentsController",
+    "Method": "GetLiveAssignments",
+    "RelativePath": "api/Assignments/live",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -238,6 +285,37 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.DisastersController",
+    "Method": "GetNearbyDisasters",
+    "RelativePath": "api/geocoding/nearby-disasters",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "latitude",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "longitude",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "radiusKm",
+        "Type": "System.Double",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.GeocodingController",
     "Method": "Reverse",
     "RelativePath": "api/Geocoding/reverse",
@@ -350,15 +428,20 @@
   },
   {
     "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.OrganizationsController",
-    "Method": "Deactivate",
+    "Method": "ToggleActive",
     "RelativePath": "api/Organizations/{id}",
-    "HttpMethod": "DELETE",
+    "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "DisasterPreparedness_ResponseSystem.Controllers.ToggleOrgActiveDto",
         "IsRequired": true
       }
     ],
@@ -432,6 +515,11 @@
     "Parameters": [
       {
         "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "userId",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -519,6 +607,43 @@
   },
   {
     "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.ReportsController",
+    "Method": "VerifyReport",
+    "RelativePath": "api/Reports/{id}/verify",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "DisasterPreparedness_ResponseSystem.Controllers.ReportsController\u002BVerifyReportDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.ReportsController",
+    "Method": "GetVotes",
+    "RelativePath": "api/Reports/{id}/votes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.ReportsController",
     "Method": "GetMyReports",
     "RelativePath": "api/Reports/my",
     "HttpMethod": "GET",
@@ -551,6 +676,110 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.SafetyController",
+    "Method": "GetSafetyStatus",
+    "RelativePath": "api/Safety/check/{disasterId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "disasterId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.SafetyController",
+    "Method": "MarkSafe",
+    "RelativePath": "api/Safety/mark-safe",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "DisasterPreparedness_ResponseSystem.Controllers.MarkSafeDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.StatsController",
+    "Method": "GetStats",
+    "RelativePath": "api/Stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.UsersController",
+    "Method": "GetUsers",
+    "RelativePath": "api/Users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.UsersController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/Users/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "DisasterPreparedness_ResponseSystem.Controllers.UpdateUserStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.UsersController",
+    "Method": "GetCitizens",
+    "RelativePath": "api/Users/citizens",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DisasterPreparedness_ResponseSystem.Controllers.UsersController",
+    "Method": "GetResponders",
+    "RelativePath": "api/Users/responders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

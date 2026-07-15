@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuthStore, useAlertStore } from '../store';
 import ReportQueue from '../components/admin/ReportQueue';
 import DisasterManager from '../components/admin/DisasterManager';
@@ -9,6 +9,8 @@ import api from '../services/api';
 import { Shield, AlertTriangle, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import CreateDisasterForm from '../components/admin/CreateDisasterForm';
+import LiveResponderMap from '../components/admin/LiveResponderMap';
+
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: '📊' },
@@ -16,12 +18,15 @@ const TABS = [
   { key: 'disasters', label: 'Disasters', icon: '🌍' },
   { key: 'create', label: 'Create Disaster', icon: '🛡️' },
   { key: 'assignments', label: 'Assignments', icon: '🚒' },
+  { key: 'tracking', label: 'Live Tracking', icon: '📡' },
   { key: 'completions', label: 'Completions', icon: '✅' },
   { key: 'alerts', label: 'Alert History', icon: '🔔' },
 ];
 
 export default function AdminPanel() {
   const navigate = useNavigate();
+  const locationSearch = useLocation().search;
+  const { search } = useLocation();
   const { isAuthenticated, user } = useAuthStore();
   const { alerts: liveAlerts } = useAlertStore();
   const [activeTab, setActiveTab] = useState('overview');
@@ -30,6 +35,14 @@ export default function AdminPanel() {
   const [completions, setCompletions] = useState([]);
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingTab, setLoadingTab] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(locationSearch);
+    const tab = params.get('tab');
+    if (tab && TABS.some(t => t.key === tab)) {
+      setActiveTab(tab);
+    }
+  }, [locationSearch]);
 
   useEffect(() => {
     if (!isAuthenticated || user?.role !== 'Admin') {
@@ -408,6 +421,7 @@ export default function AdminPanel() {
         )}
         {activeTab === 'disasters' && <DisasterManager />}
         {activeTab === 'assignments' && <AssignmentOverride />}
+        {activeTab === 'tracking' && <LiveResponderMap />}
 
         {activeTab === 'completions' && (
           <div>

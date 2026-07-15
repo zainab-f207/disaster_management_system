@@ -9,6 +9,7 @@ namespace DisasterPreparedness_ResponseSystem.Core.Entity
         public SeverityLevel Severity { get; set; }
         public DisasterStatus Status { get; set; } = DisasterStatus.Pending;
         public DisasterSource Source { get; set; }
+        public string SourceReference { get; set; } = string.Empty;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public double? AffectedAreaRadiusKm { get; set; }

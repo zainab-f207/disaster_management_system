@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -137,16 +137,22 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         /// <param name="id">The organization ID to deactivate</param>
         /// <returns>No content (204) on success</returns>
         // DELETE /api/organizations/5 — soft delete (deactivate), never hard-delete an org with history
+        // PATCH /api/organizations/5
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Deactivate(int id)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> ToggleActive(int id, [FromBody] ToggleOrgActiveDto dto)
         {
             var org = await _db.ResponderOrganizations.FindAsync(id);
             if (org == null) return NotFound();
 
-            org.IsActive = false;  // soft delete — preserves assignment history/foreign keys
+            org.IsActive = dto.IsActive;
             await _db.SaveChangesAsync();
-            return NoContent();
+            return Ok(org);
         }
+    }
+
+    public class ToggleOrgActiveDto
+    {
+        public bool IsActive { get; set; }
     }
 }

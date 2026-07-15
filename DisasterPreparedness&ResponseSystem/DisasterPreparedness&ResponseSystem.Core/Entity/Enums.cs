@@ -1,4 +1,4 @@
-﻿namespace DisasterPreparedness_ResponseSystem.Core.Entity
+namespace DisasterPreparedness_ResponseSystem.Core.Entity
 {
     public class Enums
     {
@@ -75,7 +75,7 @@
             WaterAuthority,            
             Other
         }
-        public enum AssignmentStatus { Assigned, EnRoute, OnSite, Completed, Cancelled }
+        public enum AssignmentStatus { Assigned, EnRoute, Arrived, OnScene, OperationStarted, OnSite, Completed, Cancelled }
         public enum AssignmentMethod { Auto, ManualOverride }
         public enum ReportStatus { Pending, Reviewed, Merged, Rejected }
     }

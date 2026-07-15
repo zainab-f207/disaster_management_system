@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Helpers;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
@@ -29,12 +29,12 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly IAlertService _alertService;
         private readonly IDisasterCreationService _creation;
 
-        public DisastersController(AppDbContext db, IResponderAssignmentService assignmentService, IAlertService alertService)
+        public DisastersController(AppDbContext db, IResponderAssignmentService assignmentService, IAlertService alertService, IDisasterCreationService creation)
         {
             _db = db;
             _assignmentService = assignmentService;
             _alertService = alertService;
-
+            _creation = creation;
         }
 
         /// <summary>
@@ -198,9 +198,8 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         }
 
         // GET /api/geocoding/nearby-disasters?type=Flood&latitude=31.5&longitude=74.3&radiusKm=3
-        [HttpGet("nearby-disasters")]
+        [HttpGet("/api/geocoding/nearby-disasters")]
         [AllowAnonymous]
-        [Route("api/geocoding/nearby-disasters")]
         public async Task<IActionResult> GetNearbyDisasters(
             [FromQuery] DisasterType type,
             [FromQuery] double latitude,

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DisasterPreparedness&ResponseSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74e7ed7c735366c5b8c0ac0de193e8219e651f65")]
 [assembly: System.Reflection.AssemblyProductAttribute("DisasterPreparedness&ResponseSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DisasterPreparedness&ResponseSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
