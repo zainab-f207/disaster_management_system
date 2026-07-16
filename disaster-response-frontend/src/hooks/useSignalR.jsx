@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { useAlertStore } from '../store';
+import { setActiveConnection } from '../services/signalrConnection';
 import toast from 'react-hot-toast';
 
 const HUB_URL = 'https://localhost:7129/hubs/disasters';
 
 export function useSignalR() {
-  const connectionRef  = useRef(null);
-  const connectedRef   = useRef(false); // ← prevents double connection in StrictMode
+  const connectionRef = useRef(null);
+  const connectedRef = useRef(false); // ← prevents double connection in StrictMode
   const [isConnected, setIsConnected] = useState(false);
   const addAlert = useAlertStore((s) => s.addAlert);
 
@@ -15,7 +16,7 @@ export function useSignalR() {
     if (connectedRef.current) return;
     connectedRef.current = true;
 
-    const auth  = JSON.parse(localStorage.getItem('auth-data') || '{}');
+    const auth = JSON.parse(localStorage.getItem('auth-data') || '{}');
     const token = auth?.state?.token;
 
     if (!token) {
@@ -51,17 +52,28 @@ export function useSignalR() {
     connection.on('ReceiveSystemMessage', (msg) => {
       console.log('[SignalR]', msg);
     });
+    connection.on('ReceiveLocationUpdate', (update) => {
+      useLocationStore.getState().setLocation(update.assignmentId, {
+        lat: update.latitude,
+        lng: update.longitude,
+        updatedAt: update.updatedAt,
+        orgName: update.organizationName,
+        disasterId: update.disasterId,
+      });
+    });
+
+    setActiveConnection(connection);
 
     connection.onreconnecting(() => setIsConnected(false));
     connection.onreconnected(() => setIsConnected(true));
-    connection.onclose(() => { setIsConnected(false); connectedRef.current = false; });
+    connection.onclose(() => { setIsConnected(false); connectedRef.current = false; setActiveConnection(null); });
 
     connection.start()
       .then(() => {
         setIsConnected(true);
         connectionRef.current = connection;
-        const cities = ['Lahore','Karachi','Islamabad','Peshawar','Quetta','Multan','Faisalabad','Rawalpindi'];
-        cities.forEach(city => connection.invoke('SubscribeToCity', city).catch(() => {}));
+        const cities = ['Lahore', 'Karachi', 'Islamabad', 'Peshawar', 'Quetta', 'Multan', 'Faisalabad', 'Rawalpindi'];
+        cities.forEach(city => connection.invoke('SubscribeToCity', city).catch(() => { }));
       })
       .catch(err => {
         if (!err.message?.includes('stopped during negotiation')) {
@@ -74,15 +86,15 @@ export function useSignalR() {
       connectedRef.current = false;
       connection.stop();
     };
-  }, []); 
+  }, []);
 
   return { isConnected };
 }
 
 function showDisasterToast(alert) {
-  const severity   = alert.severity?.toLowerCase();
-  const icons      = { critical: '🚨', high: '⚠️', medium: '⚡', low: '📢' };
-  const bgColors   = { critical: '#e53e3e', high: '#dd6b20', medium: '#d69e2e', low: '#38a169' };
+  const severity = alert.severity?.toLowerCase();
+  const icons = { critical: '🚨', high: '⚠️', medium: '⚡', low: '📢' };
+  const bgColors = { critical: '#e53e3e', high: '#dd6b20', medium: '#d69e2e', low: '#38a169' };
 
   toast.custom(
     (t) => (

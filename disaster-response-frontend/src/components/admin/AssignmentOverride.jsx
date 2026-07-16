@@ -53,7 +53,7 @@ export default function AssignmentOverride() {
       const assignMap = {};
       const areaMap   = {};
 
-      await Promise.all(active.map(async d => {
+      for (const d of active) {
         try {
           const res = await api.get(`/assignments/disaster/${d.id}`);
           assignMap[d.id] = res.data || [];
@@ -63,7 +63,7 @@ export default function AssignmentOverride() {
         if (d.latitude && d.longitude) {
           areaMap[d.id] = await getAreaName(d.latitude, d.longitude);
         }
-      }));
+      }
 
       setAssignments(assignMap);
       setAreaNames(areaMap);

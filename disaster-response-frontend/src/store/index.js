@@ -60,3 +60,9 @@ export const useDisasterStore = create((set) => ({
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 }));
+
+export const useLocationStore = create((set) => ({
+  locations: {},
+  setLocation: (assignmentId, loc) =>
+    set(state => ({ locations: { ...state.locations, [assignmentId]: loc } })),
+}));

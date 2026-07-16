@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { DisasterIcon, SeverityBadge } from '../ui';
 import CompletionModal from './CompletionModal';
@@ -21,6 +22,7 @@ const STATUS_CONFIG = {
 };
 
 export default function AssignmentCard({ assignment, onStatusUpdated }) {
+  const navigate = useNavigate();
   const [updating, setUpdating]             = useState(false);
   const [showProofModal, setShowProofModal] = useState(false);
   const [geofenceType, setGeofenceType]     = useState(null);
@@ -299,6 +301,14 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
         </div>
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {assignment.status !== 'Completed' && (
+            <button
+              onClick={() => navigate(`/responder/navigate/${assignment.id}`)}
+              style={{ width: '100%', padding: '10px', marginBottom: '10px', background: 'rgba(66,153,225,0.1)', color: '#4299e1', border: '1px solid rgba(66,153,225,0.3)', borderRadius: '10px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+            >
+              🧭 Navigate to Location
+            </button>
+          )}
           {config.next && (
             <button
               onClick={() => handleStatusUpdate(config.next)}

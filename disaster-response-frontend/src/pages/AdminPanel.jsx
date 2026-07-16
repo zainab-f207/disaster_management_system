@@ -110,7 +110,7 @@ export default function AdminPanel() {
       const disRes = await disasterApi.getAll();
       const disasters = disRes.data || [];
       const allCompletions = [];
-      await Promise.all(disasters.map(async d => {
+      for (const d of disasters) {
         try {
           const res = await api.get(`/assignments/disaster/${d.id}`);
           const completed = (res.data || [])
@@ -118,7 +118,7 @@ export default function AdminPanel() {
             .map(a => ({ ...a, disasterType: d.type, disasterSeverity: d.severity }));
           allCompletions.push(...completed);
         } catch { }
-      }));
+      }
       setCompletions(allCompletions.sort((a, b) =>
         new Date(b.completedAt || 0) - new Date(a.completedAt || 0)
       ));

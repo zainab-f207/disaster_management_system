@@ -2,9 +2,9 @@
 export function SeverityBadge({ severity }) {
   const config = {
     Critical: { bg: 'rgba(229,62,62,0.12)', color: '#e53e3e', dot: '#e53e3e', label: 'Critical' },
-    High:     { bg: 'rgba(221,107,32,0.12)', color: '#dd6b20', dot: '#dd6b20', label: 'High' },
-    Medium:   { bg: 'rgba(214,158,46,0.12)', color: '#d69e2e', dot: '#d69e2e', label: 'Medium' },
-    Low:      { bg: 'rgba(56,161,105,0.12)', color: '#38a169', dot: '#38a169', label: 'Low' },
+    High: { bg: 'rgba(221,107,32,0.12)', color: '#dd6b20', dot: '#dd6b20', label: 'High' },
+    Medium: { bg: 'rgba(214,158,46,0.12)', color: '#d69e2e', dot: '#d69e2e', label: 'Medium' },
+    Low: { bg: 'rgba(56,161,105,0.12)', color: '#38a169', dot: '#38a169', label: 'Low' },
   };
   const c = config[severity] || config.Low;
   return (
@@ -29,17 +29,21 @@ export function SeverityBadge({ severity }) {
 // ── Status Badge ─────────────────────────────────────────────────────────────
 export function StatusBadge({ status }) {
   const config = {
-    Verified:           { bg: 'rgba(56,161,105,0.1)', color: '#38a169' },
+    Verified: { bg: 'rgba(56,161,105,0.1)', color: '#38a169' },
     ResponseInProgress: { bg: 'rgba(66,153,225,0.1)', color: '#4299e1' },
-    Reported:           { bg: 'rgba(160,174,192,0.1)', color: '#a0aec0' },
-    UnderVerification:  { bg: 'rgba(214,158,46,0.1)', color: '#d69e2e' },
-    Resolved:           { bg: 'rgba(56,161,105,0.08)', color: '#68d391' },
-    FalseAlarm:         { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
+    Reported: { bg: 'rgba(160,174,192,0.1)', color: '#a0aec0' },
+    UnderVerification: { bg: 'rgba(214,158,46,0.1)', color: '#d69e2e' },
+    Resolved: { bg: 'rgba(56,161,105,0.08)', color: '#68d391' },
+    FalseAlarm: { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
+    AlertActive: { bg: 'rgba(214,158,46,0.1)', color: '#d69e2e' },
+    AlertExpired: { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
   };
   const c = config[status] || config.Reported;
   const labels = {
     ResponseInProgress: 'In Progress',
     UnderVerification: 'Verifying',
+    AlertActive: '⚠️ Alert Active',
+    AlertExpired: 'Alert Expired',
   };
   return (
     <span style={{
@@ -56,7 +60,7 @@ export function StatusBadge({ status }) {
 // ── Source Badge ─────────────────────────────────────────────────────────────
 export function SourceBadge({ source }) {
   const config = {
-    WeatherApi:    { label: '🌦 Weather API', color: '#4299e1' },
+    WeatherApi: { label: '🌦 Weather API', color: '#4299e1' },
     EarthquakeApi: { label: '🌍 USGS Feed', color: '#ed8936' },
     CitizenReport: { label: '👤 Citizen Report', color: '#9f7aea' },
   };

@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +13,7 @@ namespace DisasterPreparedness_ResponseSystem.Core.Interfaces
         Task ReceiveAssignmentUpdate(AssignmentUpdateDto update);
         Task ReceiveNewReport(NewReportNotificationDto report);
         Task ReceiveSystemMessage(string message);
+        Task ReceiveResponderLocation(object data);
+        Task ReceiveLocationUpdate(LocationUpdateDto update);
     }
 }

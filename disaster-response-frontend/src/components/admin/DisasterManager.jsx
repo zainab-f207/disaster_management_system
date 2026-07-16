@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { disasterApi } from '../../services/api';
 import { SeverityBadge, StatusBadge, DisasterIcon } from '../ui';
 import toast from 'react-hot-toast';
+import api from '../../services/api';
+import IncidentLiveMap from './IncidentLiveMap';
 
 const STATUS_OPTIONS = [
   'Reported', 'UnderVerification', 'Verified',
@@ -10,10 +12,14 @@ const STATUS_OPTIONS = [
 
 export default function DisasterManager() {
   const [disasters, setDisasters] = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [filter, setFilter]       = useState('active');
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('active');
   const [verifying, setVerifying] = useState(null);
-  const [updating, setUpdating]   = useState(null);
+  const [updating, setUpdating] = useState(null);
+  const [incident, setIncident] = useState(null);
+  const [loadingIncident, setLoadingIncident] = useState(false);
+
+
 
   useEffect(() => { fetchDisasters(); }, []);
 
@@ -27,6 +33,15 @@ export default function DisasterManager() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openLiveTrack = async (d) => {
+    setLoadingIncident(true);
+    try {
+      const res = await api.get(`/assignments/disaster/${d.id}`);
+      setIncident({ disaster: d, assignments: res.data || [] });
+    } catch { toast.error('Failed to load live tracking'); }
+    finally { setLoadingIncident(false); }
   };
 
   const handleVerify = async (disaster) => {
@@ -150,10 +165,7 @@ export default function DisasterManager() {
               </p>
 
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                {d.status !== 'Verified' &&
-                 d.status !== 'ResponseInProgress' &&
-                 d.status !== 'Resolved' &&
-                 d.status !== 'FalseAlarm' && (
+                {!['Verified', 'ResponseInProgress', 'Resolved', 'FalseAlarm', 'AlertActive', 'AlertExpired'].includes(d.status) && d.source !== 'AdminReport' && (
                   <button
                     onClick={() => handleVerify(d)}
                     disabled={verifying === d.id}
@@ -187,6 +199,14 @@ export default function DisasterManager() {
                   ))}
                 </select>
 
+                <button
+                  onClick={() => openLiveTrack(d)}
+                  disabled={loadingIncident}
+                  style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, background: 'rgba(66,153,225,0.1)', color: '#4299e1', border: '1px solid rgba(66,153,225,0.3)', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  🗺️ Live Track
+                </button>
+
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                   📍 {d.latitude?.toFixed(3)}, {d.longitude?.toFixed(3)}
                 </span>
@@ -194,6 +214,13 @@ export default function DisasterManager() {
             </div>
           ))}
         </div>
+      )}
+      {incident && (
+        <IncidentLiveMap
+          disaster={incident.disaster}
+          assignments={incident.assignments}
+          onClose={() => setIncident(null)}
+        />
       )}
     </div>
   );

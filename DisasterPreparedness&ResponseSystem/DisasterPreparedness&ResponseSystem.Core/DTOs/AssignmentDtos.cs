@@ -41,16 +41,29 @@ namespace DisasterPreparedness_ResponseSystem.Core.DTOs
     );
 
     public record AssignmentResponseDto(
-        int Id,
-        int DisasterId,
-        int ResponderOrganizationId,
-        string OrganizationName,
-        AssignmentStatus Status,
-        AssignmentMethod Method,
-        DateTime AssignedAt,
-        string? CompletionNotes,
+    int Id,
+    int DisasterId,
+    int ResponderOrganizationId,
+    string OrganizationName,
+    AssignmentStatus Status,
+    AssignmentMethod Method,
+    DateTime AssignedAt,
+    string? CompletionNotes,
     string? CompletionPhotoBase64,
-    DateTime? CompletedAt
+    DateTime? CompletedAt,
+    double? CurrentLatitude,
+    double? CurrentLongitude,
+    DateTime? LocationUpdatedAt
+);
+    public record UpdateLocationDto(double Latitude, double Longitude);
+
+    public record LocationUpdateDto(
+        int AssignmentId,
+        int DisasterId,
+        double Latitude,
+        double Longitude,
+        DateTime UpdatedAt,
+        string OrganizationName
     );
 }
 

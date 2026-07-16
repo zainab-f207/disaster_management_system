@@ -1,7 +1,0 @@
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json
-D:\.NET Projects\DisasterPreparedness&ResponseSystem\DisasterPreparedness&ResponseSystem.Core\obj\Debug\net8.0\staticwebassets.build.json

@@ -59,5 +59,15 @@ namespace DisasterPreparedness_ResponseSystem.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
             await Clients.Caller.ReceiveSystemMessage($"Unsubscribed from alerts for {cityName}");
         }
+
+        public async Task SubscribeToDisaster(int disasterId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"Disaster_{disasterId}");
+        }
+
+        public async Task UnsubscribeFromDisaster(int disasterId)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Disaster_{disasterId}");
+        }
     }
 }

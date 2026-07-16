@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+**/.vs/
+
+# Build output
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Node
+node_modules/
+
+# VS Code
+.vscode/
+
+# User files
+*.user
+*.suo

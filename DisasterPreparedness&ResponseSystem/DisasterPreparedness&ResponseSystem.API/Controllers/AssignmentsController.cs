@@ -5,9 +5,11 @@ using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
 using DisasterPreparedness_ResponseSystem.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static DisasterPreparedness_ResponseSystem.Core.Entity.Enums;
+using DisasterPreparedness_ResponseSystem.Hubs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,12 +22,14 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly AppDbContext _db;
         private readonly IResponderAssignmentService _assignmentService;
         private readonly IAlertService _alertService;
+        private readonly IHubContext<DisasterHub, IDisasterHubClient> _hub;
 
-        public AssignmentsController(AppDbContext db, IResponderAssignmentService assignmentService, IAlertService alertService)
+        public AssignmentsController(AppDbContext db, IResponderAssignmentService assignmentService, IAlertService alertService, IHubContext<DisasterHub, IDisasterHubClient> hub)
         {
             _db = db;
             _assignmentService = assignmentService;
             _alertService = alertService;
+            _hub = hub;
         }
 
         /// <summary>
@@ -46,12 +50,14 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             var assignments = await _db.ResponderAssignments
                 .Where(a => a.DisasterId == disasterId)
                 .Include(a => a.ResponderOrganization)
-                .Select(a => new AssignmentResponseDto(
-                    a.Id, a.DisasterId, a.ResponderOrganizationId,
-                    a.ResponderOrganization.Name, a.Status, a.Method, a.AssignedAt, a.CompletionNotes, a.CompletionPhotoBase64, a.CompletedAt))
                 .ToListAsync();
 
-            return Ok(assignments);
+            var dtos = assignments.Select(a => new AssignmentResponseDto(
+                a.Id, a.DisasterId, a.ResponderOrganizationId,
+                a.ResponderOrganization?.Name ?? "Unknown", a.Status, a.Method, a.AssignedAt, a.CompletionNotes, a.CompletionPhotoBase64, a.CompletedAt, a.CurrentLatitude, a.CurrentLongitude, a.LocationUpdatedAt))
+                .ToList();
+
+            return Ok(dtos);
         }
 
         /// <summary>
@@ -71,7 +77,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
     assignmentId, dto.NewOrganizationId, adminId!);
             return Ok(new AssignmentResponseDto(
                 result.Id, result.DisasterId, result.ResponderOrganizationId,
-                "", result.Status, result.Method, result.AssignedAt, result.CompletionNotes, result.CompletionPhotoBase64, result.CompletedAt));
+                "", result.Status, result.Method, result.AssignedAt, result.CompletionNotes, result.CompletionPhotoBase64, result.CompletedAt, result.CurrentLatitude, result.CurrentLongitude, result.LocationUpdatedAt));
         }
 
         /// <summary>
@@ -94,7 +100,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             return Ok(new AssignmentResponseDto(
     assignment.Id, assignment.DisasterId, assignment.ResponderOrganizationId,
-    "", assignment.Status, assignment.Method, assignment.AssignedAt, assignment.CompletionNotes, assignment.CompletionPhotoBase64, assignment.CompletedAt));
+    "", assignment.Status, assignment.Method, assignment.AssignedAt, assignment.CompletionNotes, assignment.CompletionPhotoBase64, assignment.CompletedAt, assignment.CurrentLatitude, assignment.CurrentLongitude, assignment.LocationUpdatedAt));
         }
 
         [Authorize(Roles = "Admin,Responder")]
@@ -133,7 +139,10 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     assignment.AssignedAt,
                     assignment.CompletionNotes,
                     assignment.CompletionPhotoBase64,
-                    assignment.CompletedAt
+                    assignment.CompletedAt,
+                    assignment.CurrentLatitude,
+                    assignment.CurrentLongitude,
+                    assignment.LocationUpdatedAt
                 )
             });
         }
@@ -141,7 +150,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         /// <summary>
         /// Submit a GPS location ping for an active assignment.
         /// Calculates Haversine distance from disaster location and auto-transitions status:
-        /// EnRoute -> Arrived (<=100m), Arrived -> OnScene (<=20m).
+        /// EnRoute -&gt; Arrived (&lt;=100m), Arrived -&gt; OnScene (&lt;=20m).
         /// </summary>
         [Authorize(Roles = "Admin,Responder")]
         [HttpPost("{id}/location")]
@@ -170,6 +179,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             };
             _db.ResponderLocationPings.Add(ping);
 
+            // Update Assignment tracking fields
+            assignment.CurrentLatitude = dto.Latitude;
+            assignment.CurrentLongitude = dto.Longitude;
+            assignment.LocationUpdatedAt = DateTime.UtcNow;
+
             // Haversine distance calculation
             var disLat = assignment.Disaster.Latitude;
             var disLon = assignment.Disaster.Longitude;
@@ -191,6 +205,8 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
 
             await _db.SaveChangesAsync();
+
+            await _hub.Clients.Group("Admins").ReceiveResponderLocation(new { Id = assignment.Id, Lat = dto.Latitude, Lon = dto.Longitude, Status = assignment.Status.ToString() });
 
             if (autoTransitioned)
                 await _alertService.SendAssignmentUpdateAsync(assignment);
@@ -219,6 +235,8 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 return BadRequest(new { Error = "Can only start operation when status is OnScene." });
 
             assignment.Status = AssignmentStatus.OperationStarted;
+            assignment.OperationStarted = true;
+            assignment.OperationStartedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
             await _alertService.SendAssignmentUpdateAsync(assignment);
 
@@ -281,6 +299,53 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }).ToList();
 
             return Ok(result);
+        }
+
+        // GET /api/assignments/5 — single assignment, used by the responder Navigate page
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var a = await _db.ResponderAssignments
+                .Include(x => x.Disaster)
+                .Include(x => x.ResponderOrganization)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (a == null) return NotFound();
+
+            return Ok(new
+            {
+                a.Id,
+                a.DisasterId,
+                Status = a.Status.ToString(),
+                OrganizationName = a.ResponderOrganization.Name,
+                DisasterType = a.Disaster.Type.ToString(),
+                DisasterLat = a.Disaster.Latitude,
+                DisasterLon = a.Disaster.Longitude,
+            });
+        }
+
+        // PUT /api/assignments/5/location — responder's device reports its GPS position
+        [Authorize(Roles = "Admin,Responder")]
+        [HttpPut("{id}/location")]
+        public async Task<IActionResult> UpdateLocation(int id, [FromBody] UpdateLocationDto dto)
+        {
+            var assignment = await _db.ResponderAssignments
+                .Include(a => a.ResponderOrganization)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            if (assignment == null) return NotFound();
+
+            assignment.CurrentLatitude = dto.Latitude;
+            assignment.CurrentLongitude = dto.Longitude;
+            assignment.LocationUpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+
+            var update = new LocationUpdateDto(
+                assignment.Id, assignment.DisasterId, dto.Latitude, dto.Longitude,
+                assignment.LocationUpdatedAt.Value, assignment.ResponderOrganization?.Name ?? "");
+
+            await _hub.Clients.Group("Admins").ReceiveLocationUpdate(update);
+            await _hub.Clients.Group($"Disaster_{assignment.DisasterId}").ReceiveLocationUpdate(update);
+
+            return Ok(new { Message = "Location updated." });
         }
 
         // ─── Helpers ──────────────────────────────────────────────────────────

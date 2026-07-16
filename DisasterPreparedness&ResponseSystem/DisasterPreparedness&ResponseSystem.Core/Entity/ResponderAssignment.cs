@@ -1,4 +1,4 @@
-﻿using static DisasterPreparedness_ResponseSystem.Core.Entity.Enums;
+using static DisasterPreparedness_ResponseSystem.Core.Entity.Enums;
 
 namespace DisasterPreparedness_ResponseSystem.Core.Entity
 {
@@ -18,5 +18,11 @@ namespace DisasterPreparedness_ResponseSystem.Core.Entity
         public string? CompletionNotes { get; set; }         
         public DateTime? CompletedAt { get; set; }           
         public string? CompletedByUserId { get; set; }
+
+        public double? CurrentLatitude { get; set; }
+        public double? CurrentLongitude { get; set; }
+        public DateTime? LocationUpdatedAt { get; set; }
+        public bool OperationStarted { get; set; }
+        public DateTime? OperationStartedAt { get; set; }
     }
 }

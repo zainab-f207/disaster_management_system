@@ -30,6 +30,7 @@ import SOSPage from './pages/SOSPage';
 import AIAssistant from './pages/AIAssistant';
 import PreparednessCentre from './pages/PreparednessCentre';
 import SafetyCheck from './pages/SafetyCheck';
+import ResponderNavigate from './pages/ResponderNavigate';
 
 function HomeRoute() {
   const { isAuthenticated, user } = useAuthStore();
@@ -101,6 +102,9 @@ function AppContent() {
         <Route path="/nearby" element={<NearbySafePlaces />} />
         <Route path="/responder" element={
           <ProtectedRoute requiredRole="Responder"><ResponderDashboard /></ProtectedRoute>
+        } />
+        <Route path="/responder/navigate/:assignmentId" element={
+          <ProtectedRoute requiredRole="Responder"><ResponderNavigate /></ProtectedRoute>
         } />
 
         <Route path="*" element={<Navigate to="/" replace />} />

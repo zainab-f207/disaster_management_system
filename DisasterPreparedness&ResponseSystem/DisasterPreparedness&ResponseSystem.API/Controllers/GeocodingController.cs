@@ -1,4 +1,5 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,6 +73,27 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { Error = ex.Message });
+            }
+        }
+        
+        /// <summary>
+        /// Fetch historical disaster events from HDX (humdata.org).
+        /// Proxied through the backend to avoid CORS errors.
+        /// </summary>
+        [HttpGet("historical-events")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetHistoricalEvents()
+        {
+            try
+            {
+                using var client = new HttpClient();
+                var csv = await client.GetStringAsync(
+                    "https://data.humdata.org/dataset/94ccdbb8-9ba7-4c83-bf3e-d5fd53da1793/resource/bdcb808b-0a7f-4664-9eba-86d1902635e0/download/pak_glide_events.csv");
+                return Content(csv, "text/csv");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = "Failed to fetch historical events.", Details = ex.Message });
             }
         }
     }

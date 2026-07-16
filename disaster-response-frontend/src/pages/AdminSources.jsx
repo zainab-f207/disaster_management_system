@@ -167,17 +167,9 @@ export default function AdminSources() {
   const fetchGlide = useCallback(async () => {
     setLoad('glide', true);
     try {
-      // Fetch resource metadata to get the latest CSV download URL dynamically
-      const metaRes = await fetch('https://data.humdata.org/api/3/action/resource_show?id=bdcb808b-0a7f-4664-9eba-86d1902635e0');
-      if (!metaRes.ok) throw new Error('Failed to get resource metadata');
-      const metaJson = await metaRes.json();
-      const csvUrl = metaJson.result?.download_url || metaJson.result?.url;
-      if (!csvUrl) throw new Error('CSV URL not found in metadata');
-
-      // Fetch the CSV file
-      const csvRes = await fetch(csvUrl);
-      if (!csvRes.ok) throw new Error('Failed to fetch CSV');
-      const csvText = await csvRes.text();
+      // Fetch via our backend proxy to avoid humdata.org CORS errors
+      const res = await api.get('/geocoding/historical-events');
+      const csvText = res.data;
 
       // Parse the CSV content
       const records = parseCSV(csvText);
