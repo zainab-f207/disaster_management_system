@@ -69,5 +69,14 @@ namespace DisasterPreparedness_ResponseSystem.Hubs
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Disaster_{disasterId}");
         }
+        public async Task SubscribeToOrgChat(int organizationId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"OrgChat_{organizationId}");
+        }
+
+        public async Task UnsubscribeFromOrgChat(int organizationId)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"OrgChat_{organizationId}");
+        }
     }
 }

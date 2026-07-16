@@ -66,3 +66,22 @@ export const useLocationStore = create((set) => ({
   setLocation: (assignmentId, loc) =>
     set(state => ({ locations: { ...state.locations, [assignmentId]: loc } })),
 }));
+
+// ── Chat Store (live messages received via SignalR, keyed by organizationId) ──
+export const useChatStore = create((set, get) => ({
+  messagesByOrg: {}, // { [orgId]: ChatMessageDto[] }
+  addMessage: (msg) => {
+    const orgId = msg.organizationId;
+    const existing = get().messagesByOrg[orgId] || [];
+    if (existing.some(m => m.id === msg.id)) return;
+    set({
+      messagesByOrg: {
+        ...get().messagesByOrg,
+        [orgId]: [...existing, msg].slice(-200), // keep last 200 in memory
+      },
+    });
+  },
+  setInitialMessages: (orgId, msgs) => {
+    set({ messagesByOrg: { ...get().messagesByOrg, [orgId]: msgs } });
+  },
+}));

@@ -17,8 +17,8 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
         public DbSet<PushSubscription> PushSubscriptions => Set<PushSubscription>();
         public DbSet<SafetyCheck> SafetyChecks => Set<SafetyCheck>();
         public DbSet<ResponderLocationPing> ResponderLocationPings => Set<ResponderLocationPing>();
-       
         public DbSet<ReportVerification> ReportVerifications => Set<ReportVerification>();
+        public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
 using DisasterPreparedness_ResponseSystem.Core.Models;
 using DisasterPreparedness_ResponseSystem.Hubs;
@@ -20,6 +20,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
     options.User.RequireUniqueEmail = true;
+
+    // Brute-force protection
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
@@ -75,6 +81,25 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        var path = httpContext.Request.Path;
+        var limit = (path.StartsWithSegments("/api/auth") || path.StartsWithSegments("/api/reports")) ? 5 : 100;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = limit,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            });
+    });
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -200,7 +225,8 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.SeedRolesAsync(roleManager);
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    await RoleSeeder.SeedAdminUserAsync(userManager);
+    var config = services.GetRequiredService<IConfiguration>();
+    await RoleSeeder.SeedAdminUserAsync(userManager, config);
     await RoleSeeder.SeedResponderUsersAsync(userManager, db);
 
     if (!db.ResponderOrganizations.Any())
@@ -225,6 +251,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("FrontendPolicy");
+app.UseRateLimiter();
 app.UseAuthentication();                   
 app.UseAuthorization();
 app.MapControllers();

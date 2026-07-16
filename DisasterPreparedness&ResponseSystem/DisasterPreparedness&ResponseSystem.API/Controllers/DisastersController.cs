@@ -224,5 +224,52 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 nearby.ReportedAt, nearby.VerifiedAt) : null
             });
         }
+
+        /// <summary>
+        /// Permanently deletes a disaster record. Restricted to Admin.
+        /// Any citizen reports linked to it are unlinked (kept) instead of deleted.
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDisaster(int id)
+        {
+            var disaster = await _db.Disasters.FindAsync(id);
+            if (disaster == null) return NotFound();
+
+            // Unlink reports first so deleting the disaster doesn't fail
+            var linkedReports = await _db.DisasterReports
+                .Where(r => r.DisasterId == id)
+                .ToListAsync();
+            foreach (var r in linkedReports) r.DisasterId = null;
+
+            _db.Disasters.Remove(disaster);
+            await _db.SaveChangesAsync();
+
+            return Ok(new { Message = "Disaster deleted successfully." });
+        }
+
+        /// <summary>
+        /// Returns contact details of the citizen who first reported this disaster (if any).
+        /// </summary>
+        [Authorize(Roles = "Admin,Responder")]
+        [HttpGet("{id}/reporter")]
+        public async Task<IActionResult> GetReporterContact(int id)
+        {
+            var report = await _db.DisasterReports
+                .Include(r => r.ReportedByUser)
+                .Where(r => r.DisasterId == id)
+                .OrderBy(r => r.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (report == null)
+                return NotFound(new { Error = "No citizen report is linked to this disaster." });
+
+            return Ok(new
+            {
+                report.ReportedByUser.FullName,
+                report.ReportedByUser.Email,
+                Phone = report.ReportedByUser.PhoneNumber
+            });
+        }
     }
 }

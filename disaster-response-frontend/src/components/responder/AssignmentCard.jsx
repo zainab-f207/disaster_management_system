@@ -11,22 +11,24 @@ import { Navigation, Play, MapPin, Compass } from 'lucide-react';
 const STATUS_FLOW = ['Assigned', 'EnRoute', 'Arrived', 'OnScene', 'OperationStarted', 'Completed'];
 
 const STATUS_CONFIG = {
-  Assigned:  { color: '#a0aec0', emoji: '📋', next: 'EnRoute',  nextLabel: '⚡ Accept & Start Journey' },
-  EnRoute:   { color: '#4299e1', emoji: '🚗', next: 'Arrived',  nextLabel: '📍 Simulated Arrival (100m)' },
-  Arrived:   { color: '#3182ce', emoji: '🔔', next: 'OnScene',  nextLabel: '📍 Simulated Close-Range (20m)' },
-  OnScene:   { color: '#319795', emoji: '📍', next: 'OperationStarted', nextLabel: '🚀 Start Operation' },
+  Assigned: { color: '#a0aec0', emoji: '📋', next: 'EnRoute', nextLabel: '⚡ Accept & Start Journey' },
+  EnRoute: { color: '#4299e1', emoji: '🚗', next: 'Arrived', nextLabel: '📍 Simulated Arrival (100m)' },
+  Arrived: { color: '#3182ce', emoji: '🔔', next: 'OnScene', nextLabel: '📍 Simulated Close-Range (20m)' },
+  OnScene: { color: '#319795', emoji: '📍', next: 'OperationStarted', nextLabel: '🚀 Start Operation' },
   OperationStarted: { color: '#2f855a', emoji: '🛠️', next: 'Complete', nextLabel: '✅ Mark Complete' },
-  OnSite:    { color: '#d69e2e', emoji: '📍', next: 'Complete', nextLabel: '✅ Mark Complete' }, // fallback
-  Completed: { color: '#38a169', emoji: '✅', next: null,        nextLabel: null },
-  Cancelled: { color: '#e53e3e', emoji: '❌', next: null,        nextLabel: null },
+  OnSite: { color: '#d69e2e', emoji: '📍', next: 'Complete', nextLabel: '✅ Mark Complete' }, // fallback
+  Completed: { color: '#38a169', emoji: '✅', next: null, nextLabel: null },
+  Cancelled: { color: '#e53e3e', emoji: '❌', next: null, nextLabel: null },
 };
 
 export default function AssignmentCard({ assignment, onStatusUpdated }) {
   const navigate = useNavigate();
-  const [updating, setUpdating]             = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [showProofModal, setShowProofModal] = useState(false);
-  const [geofenceType, setGeofenceType]     = useState(null);
+  const [geofenceType, setGeofenceType] = useState(null);
   const [hasPromptedLeaving, setHasPromptedLeaving] = useState(false);
+  const [reporterInfo, setReporterInfo] = useState(null);
+  const [loadingReporter, setLoadingReporter] = useState(false);
 
   const config = STATUS_CONFIG[assignment.status] || STATUS_CONFIG.Assigned;
 
@@ -166,6 +168,18 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
     }
   };
 
+  const handleContactReporter = async () => {
+    setLoadingReporter(true);
+    try {
+      const res = await api.get(`/disasters/${assignment.disasterId}/reporter`);
+      setReporterInfo(res.data);
+    } catch {
+      toast.error('No citizen contact found for this disaster.');
+    } finally {
+      setLoadingReporter(false);
+    }
+  };
+
   return (
     <>
       <div style={{
@@ -199,8 +213,8 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
           borderRadius: '10px', padding: '12px', marginBottom: '14px',
         }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <DetailRow label="Organization"  value={assignment.organizationName} />
-            <DetailRow label="Method"        value={assignment.method === 'Auto' ? '🤖 Auto' : '👤 Manual'} />
+            <DetailRow label="Organization" value={assignment.organizationName} />
+            <DetailRow label="Method" value={assignment.method === 'Auto' ? '🤖 Auto' : '👤 Manual'} />
             <DetailRow
               label="Assigned At"
               value={new Date(assignment.assignedAt).toLocaleString('en-PK', {
@@ -256,19 +270,19 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {STATUS_FLOW.map((s, i) => {
               const currentIdx = STATUS_FLOW.indexOf(assignment.status);
-              const isDone     = i <= currentIdx;
-              const isActive   = i === currentIdx;
-              const col        = STATUS_CONFIG[s]?.color || '#a0aec0';
+              const isDone = i <= currentIdx;
+              const isActive = i === currentIdx;
+              const col = STATUS_CONFIG[s]?.color || '#a0aec0';
 
               return (
                 <div key={s} style={{ display: 'flex', alignItems: 'center', flex: i < STATUS_FLOW.length - 1 ? 1 : 'none' }}>
                   <div style={{
-                    width:  isActive ? '14px' : '10px',
+                    width: isActive ? '14px' : '10px',
                     height: isActive ? '14px' : '10px',
                     borderRadius: '50%',
                     background: isDone ? col : 'var(--border)',
-                    border:     isActive ? `2px solid ${col}` : 'none',
-                    boxShadow:  isActive ? `0 0 8px ${col}` : 'none',
+                    border: isActive ? `2px solid ${col}` : 'none',
+                    boxShadow: isActive ? `0 0 8px ${col}` : 'none',
                     flexShrink: 0, transition: 'all 0.3s',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
@@ -279,7 +293,7 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
                   {i < STATUS_FLOW.length - 1 && (
                     <div style={{
                       flex: 1, height: '2px',
-                      background: i < currentIdx ? (STATUS_CONFIG[STATUS_FLOW[i+1]]?.color || col) : 'var(--border)',
+                      background: i < currentIdx ? (STATUS_CONFIG[STATUS_FLOW[i + 1]]?.color || col) : 'var(--border)',
                       transition: 'background 0.3s',
                     }} />
                   )}
@@ -308,6 +322,26 @@ export default function AssignmentCard({ assignment, onStatusUpdated }) {
             >
               🧭 Navigate to Location
             </button>
+
+
+          )}
+
+          <button
+            onClick={handleContactReporter}
+            disabled={loadingReporter}
+            style={{ width: '100%', padding: '10px', marginBottom: '10px', background: 'rgba(159,122,234,0.1)', color: '#9f7aea', border: '1px solid rgba(159,122,234,0.3)', borderRadius: '10px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+          >
+            {loadingReporter ? '⏳ Loading...' : '📞 Contact Reporting Citizen'}
+          </button>
+
+          {reporterInfo && (
+            <div style={{ padding: '12px 14px', marginBottom: '10px', background: 'var(--bg-surface-2)', borderRadius: '10px', fontSize: '13px' }}>
+              <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>👤 {reporterInfo.fullName}</div>
+              {reporterInfo.phone && (
+                <a href={`tel:${reporterInfo.phone}`} style={{ display: 'block', color: '#9f7aea', textDecoration: 'none', marginBottom: '4px' }}>📞 {reporterInfo.phone}</a>
+              )}
+              <a href={`mailto:${reporterInfo.email}`} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '12px' }}>✉ {reporterInfo.email}</a>
+            </div>
           )}
           {config.next && (
             <button

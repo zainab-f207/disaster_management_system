@@ -20,6 +20,20 @@ api.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem('auth-data');
       window.location.href = '/login';
+    } else if (err.response?.status === 429) {
+      if (!document.getElementById('rate-limit-toast')) {
+        const toast = document.createElement('div');
+        toast.id = 'rate-limit-toast';
+        toast.innerHTML = `
+          <div style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#e53e3e;color:#fff;padding:12px 24px;border-radius:8px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-weight:bold;font-size:14px;display:flex;align-items:center;gap:10px;animation:fadeInDown 0.3s ease;">
+            <span>✋</span> Too Many Requests. Please slow down.
+          </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 4000);
+      }
     }
     return Promise.reject(err);
   }
@@ -31,6 +45,8 @@ export const disasterApi = {
   verify: (id) => api.put(`/disasters/${id}/verify`),
   updateStatus: (id, status) => api.put(`/disasters/${id}/status`, { status }),
   create: (data) => api.post('/disasters', data),
+  delete: (id) => api.delete(`/disasters/${id}`),
+  getReporter: (id) => api.get(`/disasters/${id}/reporter`),
 };
 
 export const reportApi = {
@@ -61,4 +77,13 @@ export const alertApi = {
   getAll: () => api.get('/alerts'),
 };
 
+export const responderApi = {
+  getMyAvailability: () => api.get('/users/me/availability'),
+  setAvailability: (status) => api.put('/users/me/availability', { status }),
+};
+
+export const chatApi = {
+  getMessages: (orgId) => api.get(`/chat/${orgId}/messages`),
+  sendMessage: (orgId, message) => api.post(`/chat/${orgId}/messages`, { message }),
+};
 export default api;

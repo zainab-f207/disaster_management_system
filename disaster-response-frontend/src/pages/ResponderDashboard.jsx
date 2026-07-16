@@ -5,26 +5,31 @@ import AssignmentCard from '../components/responder/AssignmentCard';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { RefreshCw, MapPin, Phone } from 'lucide-react';
+import { responderApi } from '../services/api';
+import TeamChat from '../components/chat/TeamChat';
 
 const EMERGENCY_CONTACTS = [
   { name: 'Rescue 1122', number: '1122', emoji: '🚒' },
-  { name: 'Police',      number: '15',   emoji: '👮' },
-  { name: 'NDMA',        number: '1135', emoji: '🛡️' },
-  { name: 'Edhi',        number: '115',  emoji: '🚑' },
+  { name: 'Police', number: '15', emoji: '👮' },
+  { name: 'NDMA', number: '1135', emoji: '🛡️' },
+  { name: 'Edhi', number: '115', emoji: '🚑' },
 ];
 
 export default function ResponderDashboard() {
-  const navigate                        = useNavigate();
-  const { isAuthenticated, user }       = useAuthStore();
-  const { alerts }                      = useAlertStore();
-  const [assignments, setAssignments]   = useState([]);
-  const [loading, setLoading]           = useState(true);
-  const [filter, setFilter]             = useState('active');
-  const [refreshing, setRefreshing]     = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuthStore();
+  const { alerts } = useAlertStore();
+  const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('active');
+  const [refreshing, setRefreshing] = useState(false);
+  const [availability, setAvailability] = useState('Offline');
+  const [savingAvail, setSavingAvail] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated)               { navigate('/login'); return; }
-    if (user?.role !== 'Responder')     { toast.error('Responder access only.'); navigate('/'); }
+    if (!isAuthenticated) { navigate('/login'); return; }
+    if (user?.role !== 'Responder') { toast.error('Responder access only.'); navigate('/'); }
   }, [isAuthenticated, user, navigate]);
 
   const fetchAssignments = useCallback(async (showRefresh = false) => {
@@ -38,9 +43,9 @@ export default function ResponderDashboard() {
         return;
       }
 
-      const disRes    = await api.get('/disasters');
+      const disRes = await api.get('/disasters');
       const disasters = disRes.data || [];
-      const all       = [];
+      const all = [];
 
       await Promise.all(disasters.map(async d => {
         try {
@@ -49,19 +54,19 @@ export default function ResponderDashboard() {
             .filter(a => a.responderOrganizationId === orgId)
             .map(a => ({
               ...a,
-              disasterType:        d.type,
-              disasterSeverity:    d.severity,
-              disasterStatus:      d.status,
+              disasterType: d.type,
+              disasterSeverity: d.severity,
+              disasterStatus: d.status,
               disasterDescription: d.description,
-              disasterLat:         d.latitude,
-              disasterLon:         d.longitude,
+              disasterLat: d.latitude,
+              disasterLon: d.longitude,
             }));
           all.push(...mine);
-        } catch {}
+        } catch { }
       }));
 
-      const urgencyOrder = ['OperationStarted','OnScene','Arrived','OnSite','EnRoute','Assigned','Completed','Cancelled'];
-      all.sort((a,b) =>
+      const urgencyOrder = ['OperationStarted', 'OnScene', 'Arrived', 'OnSite', 'EnRoute', 'Assigned', 'Completed', 'Cancelled'];
+      all.sort((a, b) =>
         urgencyOrder.indexOf(a.status) - urgencyOrder.indexOf(b.status)
         || new Date(b.assignedAt) - new Date(a.assignedAt)
       );
@@ -85,14 +90,34 @@ export default function ResponderDashboard() {
   );
 
   const filtered = assignments.filter(a => {
-    if (filter === 'active')    return !['Completed','Cancelled'].includes(a.status);
+    if (filter === 'active') return !['Completed', 'Cancelled'].includes(a.status);
     if (filter === 'completed') return a.status === 'Completed';
     return true;
   });
 
-  const onSite    = assignments.filter(a => ['OnSite', 'OnScene', 'OperationStarted'].includes(a.status)).length;
-  const enRoute   = assignments.filter(a => ['EnRoute', 'Arrived'].includes(a.status)).length;
-  const assigned  = assignments.filter(a => a.status === 'Assigned').length;
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'Responder') {
+      responderApi.getMyAvailability()
+        .then(res => setAvailability(res.data?.availabilityStatus || 'Offline'))
+        .catch(() => { });
+    }
+  }, [isAuthenticated, user]);
+
+  const changeAvailability = async (status) => {
+    setSavingAvail(true);
+    try {
+      await responderApi.setAvailability(status);
+      setAvailability(status);
+      toast.success(`You're now ${status}`);
+    } catch {
+      toast.error('Failed to update availability');
+    } finally {
+      setSavingAvail(false);
+    }
+  };
+  const onSite = assignments.filter(a => ['OnSite', 'OnScene', 'OperationStarted'].includes(a.status)).length;
+  const enRoute = assignments.filter(a => ['EnRoute', 'Arrived'].includes(a.status)).length;
+  const assigned = assignments.filter(a => a.status === 'Assigned').length;
   const completed = assignments.filter(a => a.status === 'Completed').length;
 
   if (!isAuthenticated || user?.role !== 'Responder') return null;
@@ -148,6 +173,18 @@ export default function ResponderDashboard() {
             <RefreshCw size={14} style={{ animation: refreshing ? 'spin-slow 1s linear infinite' : 'none' }} />
             Refresh
           </button>
+          <button
+            onClick={() => setShowChat(!showChat)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 16px', fontSize: '13px', fontWeight: 600,
+              background: showChat ? 'var(--accent)' : 'var(--accent-subtle)',
+              color: showChat ? '#fff' : 'var(--accent)',
+              border: '1px solid var(--border-strong)', borderRadius: '10px', cursor: 'pointer',
+            }}
+          >
+            💬 Team Chat
+          </button>
         </div>
 
         {newAlerts.length > 0 && (
@@ -194,22 +231,45 @@ export default function ResponderDashboard() {
         )}
       </div>
 
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        {[
+          { key: 'Online', color: '#38a169', emoji: '🟢' },
+          { key: 'Busy', color: '#d69e2e', emoji: '🟡' },
+          { key: 'Offline', color: '#a0aec0', emoji: '⚪' },
+        ].map(s => (
+          <button
+            key={s.key}
+            onClick={() => changeAvailability(s.key)}
+            disabled={savingAvail}
+            style={{
+              padding: '7px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700,
+              border: `1.5px solid ${availability === s.key ? s.color : 'var(--border)'}`,
+              background: availability === s.key ? `${s.color}18` : 'transparent',
+              color: availability === s.key ? s.color : 'var(--text-muted)',
+              cursor: savingAvail ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {s.emoji} {s.key}
+          </button>
+        ))}
+      </div>
+
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
         gap: '10px', marginBottom: '24px',
       }}>
         {[
-          { label: 'On Site',   value: onSite,    color: '#d69e2e', emoji: '📍', urgent: onSite > 0 },
-          { label: 'En Route',  value: enRoute,   color: '#4299e1', emoji: '🚗', urgent: false },
-          { label: 'Assigned',  value: assigned,  color: '#a0aec0', emoji: '📋', urgent: false },
+          { label: 'On Site', value: onSite, color: '#d69e2e', emoji: '📍', urgent: onSite > 0 },
+          { label: 'En Route', value: enRoute, color: '#4299e1', emoji: '🚗', urgent: false },
+          { label: 'Assigned', value: assigned, color: '#a0aec0', emoji: '📋', urgent: false },
           { label: 'Completed', value: completed, color: '#38a169', emoji: '✅', urgent: false },
         ].map((s, i) => (
           <div key={s.label} style={{
             background: 'var(--card-bg)',
-            border: `1px solid ${s.urgent ? s.color+'40' : 'var(--border)'}`,
+            border: `1px solid ${s.urgent ? s.color + '40' : 'var(--border)'}`,
             borderRadius: '12px', padding: '14px',
             textAlign: 'center',
-            animation: `fadeInUp 0.3s ease ${i*50}ms both`,
+            animation: `fadeInUp 0.3s ease ${i * 50}ms both`,
             boxShadow: s.urgent ? `0 4px 16px ${s.color}20` : 'none',
           }}>
             <div style={{ fontSize: '22px', marginBottom: '4px' }}>{s.emoji}</div>
@@ -261,9 +321,9 @@ export default function ResponderDashboard() {
 
       <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
         {[
-          { key: 'active',    label: `⚡ Active (${assignments.filter(a=>!['Completed','Cancelled'].includes(a.status)).length})` },
+          { key: 'active', label: `⚡ Active (${assignments.filter(a => !['Completed', 'Cancelled'].includes(a.status)).length})` },
           { key: 'completed', label: `✅ Completed (${completed})` },
-          { key: 'all',       label: `📋 All (${assignments.length})` },
+          { key: 'all', label: `📋 All (${assignments.length})` },
         ].map(f => (
           <button
             key={f.key}
@@ -284,7 +344,7 @@ export default function ResponderDashboard() {
 
       {loading ? (
         <div style={{ display: 'grid', gap: '14px' }}>
-          {[...Array(3)].map((_,i) => (
+          {[...Array(3)].map((_, i) => (
             <div key={i} className="skeleton" style={{ height: '260px', borderRadius: '14px' }} />
           ))}
         </div>
@@ -315,8 +375,15 @@ export default function ResponderDashboard() {
               onStatusUpdated={() => fetchAssignments(true)}
             />
           ))}
+          {showChat && user?.organizationId && (
+            <div style={{ marginTop: '24px' }}>
+              <TeamChat organizationId={user.organizationId} organizationName={null} />
+            </div>
+          )}
         </div>
+
       )}
+
     </div>
   );
 }

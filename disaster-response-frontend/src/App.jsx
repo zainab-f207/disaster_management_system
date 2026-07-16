@@ -32,6 +32,8 @@ import AIAssistant from './pages/AIAssistant';
 import PreparednessCentre from './pages/PreparednessCentre';
 import SafetyCheck from './pages/SafetyCheck';
 import ResponderNavigate from './pages/ResponderNavigate';
+import AdminSettings from './pages/AdminSettings';
+import CitizenSafeRoute from './pages/CitizenSafeRoute';
 
 function HomeRoute() {
   const { isAuthenticated, user } = useAuthStore();
@@ -99,6 +101,9 @@ function AppContent() {
         <Route path="/my-reports" element={
           <ProtectedRoute><MyReports /></ProtectedRoute>
         } />
+        <Route path="/safe-route" element={
+          <ProtectedRoute><CitizenSafeRoute /></ProtectedRoute>
+        } />
         <Route path="/contacts" element={<EmergencyContacts />} />
         <Route path="/nearby" element={<NearbySafePlaces />} />
         <Route path="/responder" element={
@@ -106,6 +111,10 @@ function AppContent() {
         } />
         <Route path="/responder/navigate/:assignmentId" element={
           <ProtectedRoute requiredRole="Responder"><ResponderNavigate /></ProtectedRoute>
+        } />
+
+        <Route path="/admin/settings" element={
+          <ProtectedRoute requiredRole="Admin"><AdminSettings /></ProtectedRoute>
         } />
 
         <Route path="*" element={<Navigate to="/" replace />} />

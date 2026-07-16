@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DisasterPreparedness_ResponseSystem.Controllers
@@ -143,10 +144,45 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             return Ok(new { Message = "User status updated successfully", IsActive = dto.IsActive });
         }
+
+        /// <summary>
+        /// Lets the currently logged-in responder set their own availability.
+        /// </summary>
+        [Authorize(Roles = "Responder")]
+        [HttpPut("me/availability")]
+        public async Task<IActionResult> UpdateMyAvailability([FromBody] UpdateAvailabilityDto dto)
+        {
+            if (!new[] { "Online", "Offline", "Busy" }.Contains(dto.Status))
+                return BadRequest(new { Error = "Status must be Online, Offline, or Busy." });
+
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId!);
+            if (user == null) return NotFound();
+
+            user.AvailabilityStatus = dto.Status;
+            await _userManager.UpdateAsync(user);
+
+            return Ok(new { user.AvailabilityStatus });
+        }
+
+        /// <summary>
+        /// Returns the currently logged-in responder's own availability.
+        /// </summary>
+        [Authorize(Roles = "Responder")]
+        [HttpGet("me/availability")]
+        public async Task<IActionResult> GetMyAvailability()
+        {
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId!);
+            if (user == null) return NotFound();
+            return Ok(new { user.AvailabilityStatus });
+        }
     }
 
     public class UpdateUserStatusDto
     {
         public bool IsActive { get; set; }
     }
+
+        public record UpdateAvailabilityDto(string Status);
 }

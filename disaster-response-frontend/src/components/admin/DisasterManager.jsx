@@ -73,6 +73,17 @@ export default function DisasterManager() {
     }
   };
 
+  const handleDelete = async (disaster) => {
+    if (!window.confirm(`Delete disaster #${disaster.id} (${disaster.type}) permanently? This cannot be undone.`)) return;
+    try {
+      await disasterApi.delete(disaster.id);
+      toast.success(`Disaster #${disaster.id} deleted.`);
+      fetchDisasters();
+    } catch {
+      toast.error('Failed to delete disaster');
+    }
+  };
+
   const filtered = disasters.filter(d => {
     if (filter === 'active') return !['Resolved', 'FalseAlarm'].includes(d.status);
     if (filter === 'pending') return ['Reported', 'UnderVerification'].includes(d.status);
@@ -114,7 +125,7 @@ export default function DisasterManager() {
             </button>
           ))}
         </div>
-        
+
         <div style={{ display: 'flex', background: 'var(--bg-surface-2)', padding: '4px', borderRadius: '12px', border: '1px solid var(--border)', marginLeft: 'auto' }}>
           <button
             onClick={() => setActiveTab('active')}
@@ -240,6 +251,13 @@ export default function DisasterManager() {
                     🗺️ Live Track
                   </button>
 
+                  <button
+                    onClick={() => handleDelete(d)}
+                    style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, background: 'rgba(229,62,62,0.1)', color: '#e53e3e', border: '1px solid rgba(229,62,62,0.3)', borderRadius: '8px', cursor: 'pointer' }}
+                  >
+                    🗑️ Delete
+                  </button>
+
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                     📍 {d.latitude?.toFixed(3)}, {d.longitude?.toFixed(3)}
                   </span>
@@ -249,7 +267,7 @@ export default function DisasterManager() {
           </div>
         )
       )}
-      
+
       {activeTab === 'history' && (
         <div style={{ animation: 'fadeInUp 0.3s ease', marginTop: '16px' }}>
           <DisasterHistory />

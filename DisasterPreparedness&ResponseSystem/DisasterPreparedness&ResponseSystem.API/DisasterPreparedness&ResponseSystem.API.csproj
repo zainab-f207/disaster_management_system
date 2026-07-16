@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>DisasterPreparedness_ResponseSystem</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <UserSecretsId>967b4734-06f2-4610-b9cb-e8181dd3559b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

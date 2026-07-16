@@ -82,16 +82,7 @@ else navigate('/');
             </p>
           </div>
 
-          <div style={{
-            padding: '10px 14px', marginBottom: '22px',
-            background: 'rgba(39,174,96,0.07)',
-            border: '1px solid rgba(39,174,96,0.2)',
-            borderRadius: '10px', fontSize: '12px',
-            color: 'var(--text-secondary)',
-          }}>
-            <strong style={{ color: 'var(--accent)' }}>Demo Admin:</strong>{' '}
-            admin@ndma.gov.pk / Admin@1234!
-          </div>
+          {/* Demo admin hint removed for security */}
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput

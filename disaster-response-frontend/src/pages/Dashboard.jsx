@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { disasterApi } from '../services/api';
+import api, { disasterApi } from '../services/api';
 import { useDisasterStore, useAlertStore } from '../store';
 import DisasterMap from '../components/map/DisasterMap';
 import AlertBanner from '../components/dashboard/AlertBanner';
@@ -24,6 +24,27 @@ export default function Dashboard() {
   const [selectedDisaster, setSelectedDisaster] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  
+  const [news, setNews] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
+
+  const fetchNews = useCallback(async () => {
+      setLoadingNews(true);
+      try {
+          const res = await api.get('/monitoring/news-rss', { responseType: 'text' });
+          const xmlDoc = new window.DOMParser().parseFromString(res.data, 'text/xml');
+          const items = Array.from(xmlDoc.querySelectorAll('item')).slice(0, 4).map(item => ({
+              title: item.querySelector('title')?.textContent || '',
+              link: item.querySelector('link')?.textContent || '',
+              pubDate: item.querySelector('pubDate')?.textContent || '',
+          }));
+          setNews(items);
+      } catch {
+          setNews([]);
+      } finally {
+          setLoadingNews(false);
+      }
+  }, []);
 
   const fetchDisasters = useCallback(async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -48,9 +69,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDisasters();
-    const interval = setInterval(() => fetchDisasters(true), 60000); // refresh every 60s
+    fetchNews();
+    const interval = setInterval(() => {
+      fetchDisasters(true);
+      fetchNews();
+    }, 60000); // refresh every 60s
     return () => clearInterval(interval);
-  }, [fetchDisasters]);
+  }, [fetchDisasters, fetchNews]);
 
   const filteredDisasters = disasters.filter(d => {
     const severityMatch = filter === 'all' ? true
@@ -271,6 +296,50 @@ export default function Dashboard() {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+          
+          {/* Latest News feed */}
+          <div style={{
+            background: 'var(--card-bg)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden',
+            boxShadow: 'var(--shadow-md)',
+          }}
+            className="animate-fade-up stagger-2"
+          >
+            <div style={{
+              padding: '14px 18px',
+              borderBottom: '1px solid var(--border)',
+              display: 'flex', alignItems: 'center', gap: '8px',
+            }}>
+              <span style={{ fontSize: '16px' }}>📰</span>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Latest News
+              </span>
+            </div>
+            <div style={{ padding: '12px' }}>
+                {loadingNews ? (
+                    <div style={{ display: 'grid', gap: '8px' }}>
+                        {[...Array(3)].map((_, i) => <div key={i} className="skeleton" style={{ height: '48px', borderRadius: '10px' }} />)}
+                    </div>
+                ) : news.length === 0 ? (
+                    <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '10px' }}>
+                        No news available right now.
+                    </div>
+                ) : (
+                    <div style={{ display: 'grid', gap: '8px' }}>
+                        {news.map((n, i) => (
+                            <a key={i} href={n.link} target="_blank" rel="noopener noreferrer" style={{ display: 'block', padding: '10px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', textDecoration: 'none', fontSize: '13px', color: 'var(--text-primary)', transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-3)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}>
+                                {n.title}
+                                <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '3px' }}>
+                                    {n.pubDate ? new Date(n.pubDate).toLocaleDateString('en-PK') : ''}
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                )}
             </div>
           </div>
 

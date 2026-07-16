@@ -19,7 +19,8 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
 
             await RoleSeeder.SeedRolesAsync(roleManager);
 
-            await RoleSeeder.SeedAdminUserAsync(userManager);
+            var config = scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();
+            await RoleSeeder.SeedAdminUserAsync(userManager, config);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace DisasterPreparedness_ResponseSystem.Core.Interfaces
         Task ReceiveSystemMessage(string message);
         Task ReceiveResponderLocation(object data);
         Task ReceiveLocationUpdate(LocationUpdateDto update);
+        Task ReceiveChatMessage(ChatMessageDto message);
     }
 }

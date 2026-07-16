@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
-import { useAlertStore } from '../store';
+import { useAlertStore, useChatStore } from '../store';
 import { setActiveConnection } from '../services/signalrConnection';
 import toast from 'react-hot-toast';
+
 
 const HUB_URL = 'https://localhost:7129/hubs/disasters';
 
@@ -11,6 +12,7 @@ export function useSignalR() {
   const connectedRef = useRef(false); // ← prevents double connection in StrictMode
   const [isConnected, setIsConnected] = useState(false);
   const addAlert = useAlertStore((s) => s.addAlert);
+  const addChatMessage = useChatStore((s) => s.addMessage);
 
   useEffect(() => {
     if (connectedRef.current) return;
@@ -60,6 +62,9 @@ export function useSignalR() {
         orgName: update.organizationName,
         disasterId: update.disasterId,
       });
+    });
+    connection.on('ReceiveChatMessage', (message) => {
+      addChatMessage(message);
     });
 
     setActiveConnection(connection);

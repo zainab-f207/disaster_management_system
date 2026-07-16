@@ -23,6 +23,7 @@ export default function Navbar({ isConnected }) {
       { to: '/admin/responders', label: '👮 Responders' },
       { to: '/admin/citizens', label: '👤 Citizens' },
       { to: '/admin/analytics', label: '📈 Analytics' },
+      { to: '/admin/settings', label: '⚙️ Settings' },
     ],
     Responder: [
       { to: '/responder', label: 'My Assignments' },

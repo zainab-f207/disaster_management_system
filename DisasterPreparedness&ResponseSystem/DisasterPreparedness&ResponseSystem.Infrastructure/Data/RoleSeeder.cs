@@ -38,10 +38,15 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
         /// Creates a default administrator account if it does not exist.
         /// </summary>
         public static async Task SeedAdminUserAsync(
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             const string adminEmail = "admin@ndma.gov.pk";
-            const string adminPassword = "Admin@1234!";
+            var adminPassword = configuration["AdminPassword"];
+            if (string.IsNullOrEmpty(adminPassword))
+            {
+                throw new InvalidOperationException("AdminPassword must be configured in user secrets or environment variables.");
+            }
 
             var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
 

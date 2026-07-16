@@ -10,6 +10,8 @@ import { Shield, AlertTriangle, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import CreateDisasterForm from '../components/admin/CreateDisasterForm';
 import LiveResponderMap from '../components/admin/LiveResponderMap';
+import TeamChat from '../components/chat/TeamChat';
+import { orgApi } from '../services/api';
 
 
 const TABS = [
@@ -21,6 +23,7 @@ const TABS = [
   { key: 'tracking', label: 'Live Tracking', icon: '📡' },
   { key: 'completions', label: 'Completions', icon: '✅' },
   { key: 'alerts', label: 'Alert History', icon: '🔔' },
+  { key: 'chat', label: 'Team Chat', icon: '💬' }
 ];
 
 export default function AdminPanel() {
@@ -35,6 +38,8 @@ export default function AdminPanel() {
   const [completions, setCompletions] = useState([]);
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingTab, setLoadingTab] = useState(false);
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrgId, setSelectedOrgId] = useState('');
 
   useEffect(() => {
     const params = new URLSearchParams(locationSearch);
@@ -58,6 +63,12 @@ export default function AdminPanel() {
   useEffect(() => {
     if (activeTab === 'alerts') fetchAlerts();
     if (activeTab === 'completions') fetchCompletions();
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab === 'chat') {
+      orgApi.getAll().then(res => setOrganizations(res.data || [])).catch(() => { });
+    }
   }, [activeTab]);
 
   const fetchStats = async () => {
@@ -409,6 +420,7 @@ export default function AdminPanel() {
                   )}
                 </div>
               </div>
+
             </div>
           </div>
         )}
@@ -597,6 +609,35 @@ export default function AdminPanel() {
                   );
                 })}
               </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'chat' && (
+          <div>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
+                Select organization channel
+              </label>
+              <select
+                value={selectedOrgId}
+                onChange={e => setSelectedOrgId(e.target.value)}
+                style={{
+                  padding: '9px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)',
+                  borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', minWidth: '260px',
+                }}
+              >
+                <option value="">-- Select organization --</option>
+                {organizations.map(o => (
+                  <option key={o.id} value={o.id}>{o.name}</option>
+                ))}
+              </select>
+            </div>
+            {selectedOrgId && (
+              <TeamChat
+                organizationId={parseInt(selectedOrgId)}
+                organizationName={organizations.find(o => o.id === parseInt(selectedOrgId))?.name}
+              />
             )}
           </div>
         )}
