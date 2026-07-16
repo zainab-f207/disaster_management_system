@@ -32,10 +32,12 @@ export function StatusBadge({ status }) {
     Verified: { bg: 'rgba(56,161,105,0.1)', color: '#38a169' },
     ResponseInProgress: { bg: 'rgba(66,153,225,0.1)', color: '#4299e1' },
     Reported: { bg: 'rgba(160,174,192,0.1)', color: '#a0aec0' },
+    Pending: { bg: 'rgba(160,174,192,0.1)', color: '#a0aec0' },
     UnderVerification: { bg: 'rgba(214,158,46,0.1)', color: '#d69e2e' },
     Resolved: { bg: 'rgba(56,161,105,0.08)', color: '#68d391' },
     FalseAlarm: { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
-    AlertActive: { bg: 'rgba(214,158,46,0.1)', color: '#d69e2e' },
+    Closed: { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
+    AlertActive: { bg: 'rgba(214,158,46,0.12)', color: '#d69e2e' },
     AlertExpired: { bg: 'rgba(160,174,192,0.08)', color: '#a0aec0' },
   };
   const c = config[status] || config.Reported;
@@ -56,7 +58,6 @@ export function StatusBadge({ status }) {
     </span>
   );
 }
-
 // ── Source Badge ─────────────────────────────────────────────────────────────
 export function SourceBadge({ source }) {
   const config = {

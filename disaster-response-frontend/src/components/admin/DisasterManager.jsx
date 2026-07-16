@@ -4,6 +4,8 @@ import { SeverityBadge, StatusBadge, DisasterIcon } from '../ui';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import IncidentLiveMap from './IncidentLiveMap';
+import DisasterHistory from '../../pages/DisasterHistory';
+import { Activity, BarChart2 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
   'Reported', 'UnderVerification', 'Verified',
@@ -18,6 +20,7 @@ export default function DisasterManager() {
   const [updating, setUpdating] = useState(null);
   const [incident, setIncident] = useState(null);
   const [loadingIncident, setLoadingIncident] = useState(false);
+  const [activeTab, setActiveTab] = useState('active');
 
 
 
@@ -97,13 +100,13 @@ export default function DisasterManager() {
           ].map(f => (
             <button
               key={f.key}
-              onClick={() => setFilter(f.key)}
+              onClick={() => { setFilter(f.key); setActiveTab('active'); }}
               style={{
                 padding: '5px 12px', fontSize: '12px', fontWeight: 600,
                 borderRadius: '20px', cursor: 'pointer',
-                border: `1px solid ${filter === f.key ? 'var(--accent)' : 'var(--border)'}`,
-                background: filter === f.key ? 'var(--accent-subtle)' : 'transparent',
-                color: filter === f.key ? 'var(--accent)' : 'var(--text-muted)',
+                border: `1px solid ${filter === f.key && activeTab === 'active' ? 'var(--accent)' : 'var(--border)'}`,
+                background: filter === f.key && activeTab === 'active' ? 'var(--accent-subtle)' : 'transparent',
+                color: filter === f.key && activeTab === 'active' ? 'var(--accent)' : 'var(--text-muted)',
                 transition: 'all 0.15s',
               }}
             >
@@ -111,110 +114,148 @@ export default function DisasterManager() {
             </button>
           ))}
         </div>
+        
+        <div style={{ display: 'flex', background: 'var(--bg-surface-2)', padding: '4px', borderRadius: '12px', border: '1px solid var(--border)', marginLeft: 'auto' }}>
+          <button
+            onClick={() => setActiveTab('active')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '6px 14px', borderRadius: '8px', border: 'none',
+              fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              background: activeTab === 'active' ? 'var(--bg-elevated)' : 'transparent',
+              color: activeTab === 'active' ? 'var(--text-primary)' : 'var(--text-secondary)',
+              boxShadow: activeTab === 'active' ? 'var(--shadow-sm)' : 'none',
+            }}
+          >
+            <Activity size={14} color={activeTab === 'active' ? '#e53e3e' : 'currentColor'} /> Manage Active
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '6px 14px', borderRadius: '8px', border: 'none',
+              fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              background: activeTab === 'history' ? 'var(--bg-elevated)' : 'transparent',
+              color: activeTab === 'history' ? 'var(--text-primary)' : 'var(--text-secondary)',
+              boxShadow: activeTab === 'history' ? 'var(--shadow-sm)' : 'none',
+            }}
+          >
+            <BarChart2 size={14} color={activeTab === 'history' ? '#805ad5' : 'currentColor'} /> History / Analytics
+          </button>
+        </div>
       </div>
 
-      {loading ? (
-        <div style={{ display: 'grid', gap: '10px' }}>
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="skeleton" style={{ height: '90px', borderRadius: '12px' }} />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div style={{
-          textAlign: 'center', padding: '40px',
-          background: 'var(--card-bg)', border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)', color: 'var(--text-muted)', fontSize: '14px',
-        }}>
-          No disasters found for this filter.
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gap: '10px' }}>
-          {filtered.map((d, i) => (
-            <div
-              key={d.id}
-              style={{
-                background: 'var(--card-bg)',
-                border: '1px solid var(--border)',
-                borderRadius: '12px', padding: '14px 16px',
-                animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <DisasterIcon type={d.type} size={22} />
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>
-                      #{d.id} — {d.type}
-                    </div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                      {d.source} {d.sourceReference ? `(${d.sourceReference})` : ''} •{' '}
-                      {new Date(d.reportedAt).toLocaleString('en-PK', {
-                        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                      })}
+      {activeTab === 'active' && (
+        loading ? (
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="skeleton" style={{ height: '90px', borderRadius: '12px' }} />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div style={{
+            textAlign: 'center', padding: '40px',
+            background: 'var(--card-bg)', border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)', color: 'var(--text-muted)', fontSize: '14px',
+          }}>
+            No disasters found for this filter.
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {filtered.map((d, i) => (
+              <div
+                key={d.id}
+                style={{
+                  background: 'var(--card-bg)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px', padding: '14px 16px',
+                  animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <DisasterIcon type={d.type} size={22} />
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        #{d.id} — {d.type}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                        {d.source} {d.sourceReference ? `(${d.sourceReference})` : ''} •{' '}
+                        {new Date(d.reportedAt).toLocaleString('en-PK', {
+                          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                        })}
+                      </div>
                     </div>
                   </div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <SeverityBadge severity={d.severity} />
+                    <StatusBadge status={d.status} />
+                  </div>
                 </div>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                  <SeverityBadge severity={d.severity} />
-                  <StatusBadge status={d.status} />
-                </div>
-              </div>
 
-              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>
-                {d.description?.slice(0, 120)}{d.description?.length > 120 ? '...' : ''}
-              </p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>
+                  {d.description?.slice(0, 120)}{d.description?.length > 120 ? '...' : ''}
+                </p>
 
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                {!['Verified', 'ResponseInProgress', 'Resolved', 'FalseAlarm', 'AlertActive', 'AlertExpired'].includes(d.status) && d.source !== 'AdminReport' && (
-                  <button
-                    onClick={() => handleVerify(d)}
-                    disabled={verifying === d.id}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {!['Verified', 'ResponseInProgress', 'Resolved', 'FalseAlarm', 'AlertActive', 'AlertExpired'].includes(d.status) && d.source !== 'AdminReport' && (
+                    <button
+                      onClick={() => handleVerify(d)}
+                      disabled={verifying === d.id}
+                      style={{
+                        padding: '6px 14px', fontSize: '12px', fontWeight: 700,
+                        background: 'linear-gradient(135deg, #145c33, #27ae60)',
+                        color: '#fff', border: 'none',
+                        borderRadius: '8px', cursor: verifying === d.id ? 'not-allowed' : 'pointer',
+                        opacity: verifying === d.id ? 0.7 : 1,
+                        boxShadow: '0 2px 8px rgba(33,150,83,0.25)',
+                      }}
+                    >
+                      {verifying === d.id ? '⏳ Verifying...' : '✅ Verify + Assign'}
+                    </button>
+                  )}
+
+                  <select
+                    value={d.status}
+                    onChange={e => handleStatusChange(d, e.target.value)}
+                    disabled={updating === d.id}
                     style={{
-                      padding: '6px 14px', fontSize: '12px', fontWeight: 700,
-                      background: 'linear-gradient(135deg, #145c33, #27ae60)',
-                      color: '#fff', border: 'none',
-                      borderRadius: '8px', cursor: verifying === d.id ? 'not-allowed' : 'pointer',
-                      opacity: verifying === d.id ? 0.7 : 1,
-                      boxShadow: '0 2px 8px rgba(33,150,83,0.25)',
+                      padding: '6px 10px', fontSize: '12px',
+                      background: 'var(--bg-surface-2)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px', color: 'var(--text-primary)',
+                      cursor: 'pointer', outline: 'none',
                     }}
                   >
-                    {verifying === d.id ? '⏳ Verifying...' : '✅ Verify + Assign'}
+                    {STATUS_OPTIONS.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+
+                  <button
+                    onClick={() => openLiveTrack(d)}
+                    disabled={loadingIncident}
+                    style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, background: 'rgba(66,153,225,0.1)', color: '#4299e1', border: '1px solid rgba(66,153,225,0.3)', borderRadius: '8px', cursor: 'pointer' }}
+                  >
+                    🗺️ Live Track
                   </button>
-                )}
 
-                <select
-                  value={d.status}
-                  onChange={e => handleStatusChange(d, e.target.value)}
-                  disabled={updating === d.id}
-                  style={{
-                    padding: '6px 10px', fontSize: '12px',
-                    background: 'var(--bg-surface-2)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '8px', color: 'var(--text-primary)',
-                    cursor: 'pointer', outline: 'none',
-                  }}
-                >
-                  {STATUS_OPTIONS.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-
-                <button
-                  onClick={() => openLiveTrack(d)}
-                  disabled={loadingIncident}
-                  style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, background: 'rgba(66,153,225,0.1)', color: '#4299e1', border: '1px solid rgba(66,153,225,0.3)', borderRadius: '8px', cursor: 'pointer' }}
-                >
-                  🗺️ Live Track
-                </button>
-
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  📍 {d.latitude?.toFixed(3)}, {d.longitude?.toFixed(3)}
-                </span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    📍 {d.latitude?.toFixed(3)}, {d.longitude?.toFixed(3)}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )
+      )}
+      
+      {activeTab === 'history' && (
+        <div style={{ animation: 'fadeInUp 0.3s ease', marginTop: '16px' }}>
+          <DisasterHistory />
         </div>
       )}
+
       {incident && (
         <IncidentLiveMap
           disaster={incident.disaster}

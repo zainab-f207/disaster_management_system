@@ -8,6 +8,7 @@ import AdminAnalytics from './pages/AdminAnalytics';
 import MyReports from './pages/MyReports';
 import EmergencyContacts from './pages/EmergencyContacts';
 import NearbySafePlaces from './pages/NearbySafePlaces';
+import DisasterHistory from './pages/DisasterHistory';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useThemeStore, useAuthStore } from './store';

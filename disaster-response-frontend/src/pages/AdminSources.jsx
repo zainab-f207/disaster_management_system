@@ -113,14 +113,19 @@ export default function AdminSources() {
   const [weather, setWeather]           = useState([]);
   const [glideEvents, setGlideEvents]   = useState([]);
   const [reliefWebItems, setRelief]     = useState([]);
-  const [hdxDatasets, setHdx]           = useState([]);
-  const [citizenReports, setCitizen]    = useState([]);
+  const [hdxDatasets, setHdxDatasets]   = useState([]);
+  const [citizenReports, setCitizenReports] = useState([]);
+  const [newsFeeds, setNewsFeeds]       = useState([]);
+  const [pmdFeeds, setPmdFeeds]         = useState([]);
+  const [floodForecast, setFloodForecast] = useState([]);
 
   const [loading, setLoading] = useState({
-    eq: true, wx: true, glide: true, rw: true, hdx: true, cr: true,
+    eq: true, wx: true, glide: true, rw: true, hdx: true, cr: true, news: true, pmd: true, flood: true,
   });
   const [errors, setErrors] = useState({});
   const [lastRefresh, setLastRefresh] = useState(null);
+  const [selectedWeather, setSelectedWeather] = useState(null);
+  const [feedModal, setFeedModal] = useState(null);
 
   /* ── Fetch helpers ── */
   const setLoad = (key, val) => setLoading(p => ({ ...p, [key]: val }));
@@ -147,16 +152,22 @@ export default function AdminSources() {
       const lats = PK_CITIES.map(c => c.lat).join(',');
       const lons = PK_CITIES.map(c => c.lon).join(',');
       const url  = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
-                   `&current=temperature_2m,weathercode,windspeed_10m,precipitation&timezone=Asia%2FKarachi`;
+                   `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weathercode,` +
+                   `windspeed_10m,wind_gusts_10m,precipitation,rain,uv_index&timezone=Asia%2FKarachi`;
       const res  = await fetch(url);
       const json = await res.json();
       const arr  = Array.isArray(json) ? json : [json];
       setWeather(PK_CITIES.map((city, i) => ({
         city: city.name, lat: city.lat, lon: city.lon,
-        temp: arr[i]?.current?.temperature_2m,
-        wmo:  arr[i]?.current?.weathercode,
-        wind: arr[i]?.current?.windspeed_10m,
-        precip: arr[i]?.current?.precipitation,
+        temp:      arr[i]?.current?.temperature_2m,
+        feelsLike: arr[i]?.current?.apparent_temperature,
+        humidity:  arr[i]?.current?.relative_humidity_2m,
+        wmo:       arr[i]?.current?.weathercode,
+        wind:      arr[i]?.current?.windspeed_10m,
+        gusts:     arr[i]?.current?.wind_gusts_10m,
+        precip:    arr[i]?.current?.precipitation,
+        rain:      arr[i]?.current?.rain,
+        uvIndex:   arr[i]?.current?.uv_index,
       })));
       setErr('wx', null);
     } catch { setErr('wx', 'Open-Meteo unreachable.'); }
@@ -167,14 +178,9 @@ export default function AdminSources() {
   const fetchGlide = useCallback(async () => {
     setLoad('glide', true);
     try {
-      // Fetch via our backend proxy to avoid humdata.org CORS errors
       const res = await api.get('/geocoding/historical-events');
       const csvText = res.data;
-
-      // Parse the CSV content
       const records = parseCSV(csvText);
-
-      // Map properties and sort descending by date
       const mapped = records.map(r => ({
         event: r.event || '',
         killed: parseInt(r.killed) || 0,
@@ -203,18 +209,12 @@ export default function AdminSources() {
     finally { setLoad('glide', false); }
   }, []);
 
-  /* ReliefWeb v2 API — free, GET-based to avoid CORS preflight options blocks */
+  /* ReliefWeb — proxied through .NET backend */
   const fetchReliefWeb = useCallback(async () => {
     setLoad('rw', true);
     try {
-      const url = 'https://api.reliefweb.int/v2/disasters?appname=pakistan-drs' +
-                  '&filter[field]=country.iso3&filter[value]=PAK' +
-                  '&limit=6&sort[]=date:desc' +
-                  '&fields[include][]=name&fields[include][]=date&fields[include][]=status' +
-                  '&fields[include][]=url&fields[include][]=glide&fields[include][]=type';
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('non-200');
-      const json = await res.json();
+      const res = await api.get('/monitoring/reliefweb');
+      const json = res.data;
       setRelief((json.data || []).slice(0, 6));
       setErr('rw', null);
     } catch {
@@ -228,24 +228,82 @@ export default function AdminSources() {
   const fetchHdx = useCallback(async () => {
     setLoad('hdx', true);
     try {
-      const url  = `https://data.humdata.org/api/3/action/package_search?q=pakistan+flood+earthquake&sort=metadata_modified+desc&rows=5`;
-      const res  = await fetch(url);
+      const res = await fetch('https://data.humdata.org/api/3/action/package_search?q=pakistan&rows=4&sort=metadata_modified%20desc');
       const json = await res.json();
-      setHdx((json.result?.results || []).slice(0, 5));
+      if (json.success) setHdxDatasets(json.result.results);
       setErr('hdx', null);
-    } catch { setErr('hdx', 'HDX API unreachable.'); }
-    finally  { setLoad('hdx', false); }
+    } catch {
+      setHdxDatasets([]);
+      setErr('hdx', 'Failed to fetch HDX datasets.');
+    }
+    finally { setLoad('hdx', false); }
+  }, []);
+
+  /* Google News RSS — Proxied to bypass CORS */
+  const fetchNewsRss = useCallback(async () => {
+    setLoad('news', true);
+    try {
+      const res = await api.get('/monitoring/news-rss', { responseType: 'text' });
+      const xmlDoc = new window.DOMParser().parseFromString(res.data, "text/xml");
+      const items = Array.from(xmlDoc.querySelectorAll("item")).map(item => ({
+        title: item.querySelector("title")?.textContent || '',
+        link: item.querySelector("link")?.textContent || '',
+        pubDate: item.querySelector("pubDate")?.textContent || ''
+      }));
+      // Sort newest first
+      items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      setNewsFeeds(items);
+      setErr('news', null);
+    } catch {
+      setNewsFeeds([]);
+      setErr('news', 'Could not load OSINT news feed.');
+    }
+    finally { setLoad('news', false); }
+  }, []);
+
+  /* PMD CAP RSS */
+  const fetchPmdRss = useCallback(async () => {
+    setLoad('pmd', true);
+    try {
+      const res = await api.get('/monitoring/pmd-rss', { responseType: 'text' });
+      const xmlDoc = new window.DOMParser().parseFromString(res.data, "text/xml");
+      const items = Array.from(xmlDoc.querySelectorAll("item")).map(item => ({
+        title: item.querySelector("title")?.textContent || '',
+        link: item.querySelector("link")?.textContent || '',
+        pubDate: item.querySelector("pubDate")?.textContent || ''
+      }));
+      // Sort newest first
+      items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      setPmdFeeds(items);
+      setErr('pmd', null);
+    } catch {
+      setPmdFeeds([]);
+      setErr('pmd', 'Could not load PMD alerts feed.');
+    }
+    finally { setLoad('pmd', false); }
+  }, []);
+
+  /* Flood Forecast — PMD FFD via .NET proxy */
+  const fetchFloodForecast = useCallback(async () => {
+    setLoad('flood', true);
+    try {
+      const res = await api.get('/monitoring/flood-forecast');
+      setFloodForecast(res.data?.data || []);
+    } catch {
+      setFloodForecast([]);
+    }
+    finally { setLoad('flood', false); }
   }, []);
 
   /* Internal citizen reports */
-  const fetchCitizen = useCallback(async () => {
+  const fetchCitizenReports = useCallback(async () => {
     setLoad('cr', true);
     try {
       const res = await api.get('/reports?status=Pending&pageSize=5');
-      setCitizen(res.data?.items || res.data || []);
+      setCitizenReports(res.data?.items || res.data || []);
       setErr('cr', null);
     } catch {
-      setCitizen([]);
+      setCitizenReports([]);
       setErr('cr', null);
     }
     finally { setLoad('cr', false); }
@@ -257,11 +315,36 @@ export default function AdminSources() {
     fetchGlide();
     fetchReliefWeb();
     fetchHdx();
-    fetchCitizen();
+    fetchNewsRss();
+    fetchPmdRss();
+    fetchFloodForecast();
+    fetchCitizenReports();
     setLastRefresh(new Date());
-  }, [fetchEarthquakes, fetchWeather, fetchGlide, fetchReliefWeb, fetchHdx, fetchCitizen]);
+  }, [fetchEarthquakes, fetchWeather, fetchGlide, fetchReliefWeb, fetchHdx, fetchCitizenReports, fetchNewsRss, fetchPmdRss, fetchFloodForecast]);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  /* ── Auto-refresh: live feeds every 60s, RSS every 5 min ── */
+  useEffect(() => {
+    const liveInterval = setInterval(() => {
+      fetchEarthquakes();
+      fetchWeather();
+      fetchCitizenReports();
+    }, 60_000); // every 60 seconds
+
+    const rssInterval = setInterval(() => {
+      fetchReliefWeb();
+      fetchNewsRss();
+      fetchPmdRss();
+      fetchFloodForecast();
+      setLastRefresh(new Date());
+    }, 5 * 60_000); // every 5 minutes
+
+    return () => {
+      clearInterval(liveInterval);
+      clearInterval(rssInterval);
+    };
+  }, [fetchEarthquakes, fetchWeather, fetchCitizenReports, fetchReliefWeb, fetchNewsRss, fetchPmdRss, fetchFloodForecast]);
 
   /* ── Styles ── */
   const card = {
@@ -314,18 +397,17 @@ export default function AdminSources() {
     </button>
   );
 
-  /* ── Integration catalog ── */
+  /* ── Integration catalog (accurate, real-data only) ── */
   const catalog = [
-    { name: 'USGS Earthquake Feed',     badge: '🟢 Live',    color: '#38a169', note: 'Real-time M2.5+ GeoJSON. Free, no key needed.' },
-    { name: 'Open-Meteo Weather',       badge: '🟢 Live',    color: '#38a169', note: 'Real current weather for all Pakistan cities. Free.' },
-    { name: 'ReliefWeb API v2',         badge: '🟢 Live',    color: '#38a169', note: 'UN humanitarian disaster database. Free POST API.' },
-    { name: 'HDX / GLIDE Events',       badge: '🟢 Live',    color: '#38a169', note: 'CKAN humanitarian data API — Pakistan disaster records.' },
-    { name: 'Internal Citizen Reports', badge: '🟢 Live',    color: '#3182ce', note: 'Your platform pending reports feed.' },
-    { name: 'NDMA (ndma.gov.pk)',       badge: '🟡 Manual',  color: '#d69e2e', note: 'Primary Pakistan authority. No public API — link provided.' },
-    { name: 'RIMES (rimes.int)',        badge: '🟡 Manual',  color: '#d69e2e', note: 'Regional early warning. No live API — link provided.' },
-    { name: 'HDX HAPI',                badge: '🟡 Static',  color: '#d69e2e', note: 'For humanitarian interoperability analytics, not real-time.' },
-    { name: 'PDMA Alerts',             badge: '🔴 No API',  color: '#e53e3e', note: 'No public live feed. Manual entry from bulletins.' },
-    { name: 'Rescue 1122',             badge: '🔴 No API',  color: '#e53e3e', note: 'Field confirmations only — no public API.' },
+    { name: 'USGS Earthquake Feed',     badge: '🟢 Live',    color: '#38a169', note: 'Real-time M2.5+ GeoJSON filtered to Pakistan bounds. Updates every ~1 min from USGS.' },
+    { name: 'Open-Meteo Weather',       badge: '🟢 Live',    color: '#38a169', note: 'Actual current weather for 6 Pakistan cities. Free, no API key.' },
+    { name: 'ReliefWeb RSS',            badge: '🟢 Live',    color: '#38a169', note: 'UN humanitarian disaster database. Proxied by backend RSS parser. Auto-refreshes every 5 min.' },
+    { name: 'HDX / GLIDE Events',       badge: '📚 Archive', color: '#805ad5', note: 'Pakistan GLIDE historical archive 1990–present. Downloaded from HDX CKAN on demand.' },
+    { name: 'PMD CAP Alerts (RSS)',      badge: '🟢 Live',    color: '#38a169', note: 'Pakistan Met Dept Common Alerting Protocol RSS from AWS S3 bucket. Real bulletins.' },
+    { name: 'PMD Flood Forecast (FFD)', badge: '🟢 Live',    color: '#38a169', note: 'PMD/NDMA flood bulletins parsed from the same CAP RSS feed. Severity auto-detected.' },
+    { name: 'Google News RSS (OSINT)',  badge: '🟢 Live',    color: '#3182ce', note: 'Man-made disaster headlines for Pakistan. Proxied server-side. Auto-refreshes every 5 min.' },
+    { name: 'Internal Citizen Reports', badge: '🟢 Live',    color: '#3182ce', note: 'Pending reports from citizens on your platform. Refreshes every 60 seconds.' },
+    { name: 'Rescue 1122',              badge: '🔴 No API',  color: '#e53e3e', note: 'No public API. Field confirmations only — incidents created manually by admins.' },
   ];
 
   return (
@@ -352,7 +434,7 @@ export default function AdminSources() {
                 Official Monitoring Center
               </h1>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0' }}>
-                Live feeds — USGS · Open-Meteo · ReliefWeb · HDX/GLIDE · NDMA · RIMES · Internal Reports
+                Live feeds — USGS · Open-Meteo · ReliefWeb · News RSS · PMD · Citizen Reports
               </p>
             </div>
           </div>
@@ -440,13 +522,19 @@ export default function AdminSources() {
             {!loading.wx && weather.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(190px,1fr))', gap: '12px' }}>
                 {weather.map(w => {
-                  const wc   = weatherCode(w.wmo ?? 0);
-                  const tSev = tempSeverity(w.temp);
+                  const wc       = weatherCode(w.wmo ?? 0);
+                  const tSev     = tempSeverity(w.temp);
                   const alertSev = wc.severity || tSev;
                   const alertColor = alertSev ? SEV_COLOR[alertSev] : 'var(--border)';
-                  const dtype = w.temp >= 43 ? 'Heatwave' : w.temp <= -3 ? 'ColdWave' : (w.wmo ?? 0) >= 80 ? 'Storm' : null;
+                  const dtype    = w.temp >= 43 ? 'Heatwave' : w.temp <= -3 ? 'ColdWave' : (w.wmo ?? 0) >= 80 ? 'Storm' : null;
                   return (
-                    <div key={w.city} style={{ ...card, borderTop: `4px solid ${alertColor}`, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button
+                      key={w.city}
+                      onClick={() => setSelectedWeather(w)}
+                      style={{ ...card, borderTop: `4px solid ${alertColor}`, display: 'flex', flexDirection: 'column', gap: '6px', cursor: 'pointer', textAlign: 'left', width: '100%', background: 'var(--bg-elevated)', transition: 'transform 0.15s, box-shadow 0.15s' }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.12)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+                    >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{w.city}</span>
                         <span style={{ fontSize: '22px' }}>{wc.emoji}</span>
@@ -456,9 +544,10 @@ export default function AdminSources() {
                       </div>
                       <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{wc.label}</div>
                       <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>💨 {w.wind} km/h · 🌧 {w.precip} mm</div>
+                      <div style={{ fontSize: '10px', color: 'var(--text-muted)', opacity: 0.7 }}>Click for details</div>
                       {alertSev && dtype && (
                         <button
-                          onClick={() => navigate(`/create-official-incident?type=${dtype}&severity=${alertSev}&locationName=${encodeURIComponent(w.city)}&latitude=${w.lat}&longitude=${w.lon}&source=OpenWeather API`)}
+                          onClick={e => { e.stopPropagation(); navigate(`/create-official-incident?type=${dtype}&severity=${alertSev}&locationName=${encodeURIComponent(w.city)}&latitude=${w.lat}&longitude=${w.lon}&source=OpenWeather API`); }}
                           style={{ marginTop: '4px', padding: '6px 10px', background: `${alertColor}18`, border: `1.5px solid ${alertColor}`, borderRadius: '8px', color: alertColor, fontSize: '11px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s' }}
                           onMouseEnter={e => { e.currentTarget.style.background = alertColor; e.currentTarget.style.color = '#fff'; }}
                           onMouseLeave={e => { e.currentTarget.style.background = `${alertColor}18`; e.currentTarget.style.color = alertColor; }}
@@ -466,160 +555,219 @@ export default function AdminSources() {
                           🛡️ Create {dtype} Incident
                         </button>
                       )}
-                    </div>
+                    </button>
                   );
                 })}
               </div>
             )}
           </section>
 
-          {/* ── 3. ReliefWeb ── */}
+          {/* ── 3. Historical & Major Disasters (ReliefWeb & HDX/GLIDE) ── */}
           <section>
-            {sectionTitle(<BookOpen size={20} color="#4299e1" />, '📰 ReliefWeb — Pakistan Disasters', 'LIVE')}
-            {errBanner(errors.rw)}
-            {loading.rw && [1,2,3].map(i => <div key={i} style={skel} />)}
-            {!loading.rw && reliefWebItems.length === 0 && (
-              <div style={{ ...card, textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', padding: '24px' }}>
-                {errors.rw ? '⚠ Could not load ReliefWeb data.' : '✅ No recent Pakistan disaster entries on ReliefWeb.'}
-                <br />
-                <a href="https://reliefweb.int/disasters?search=pakistan" target="_blank" rel="noopener noreferrer"
-                  style={{ color: 'var(--accent)', fontSize: '12px', marginTop: '8px', display: 'inline-block' }}>
-                  View on ReliefWeb →
-                </a>
-              </div>
-            )}
-            <div style={{ display: 'grid', gap: '12px' }}>
-              {reliefWebItems.map((item, i) => {
-                const f    = item.fields || {};
-                const type = f.type?.[0]?.name || 'Disaster';
-                const date = f.date?.created ? new Date(f.date.created).toLocaleDateString('en-PK', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-                const status = f.status || 'current';
-                const statusColor = status === 'current' ? '#e53e3e' : status === 'alert' ? '#dd6b20' : '#38a169';
-                return (
-                  <div key={i} style={{ ...card, borderLeft: `5px solid ${statusColor}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                          <span style={{ fontSize: '11px', fontWeight: 700, background: `${statusColor}18`, color: statusColor, padding: '2px 8px', borderRadius: '6px', textTransform: 'capitalize' }}>{status}</span>
-                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{type} · {date}</span>
-                        </div>
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.4 }}>
-                          {f.name || item.href}
-                        </div>
-                        {f.glide && <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>GLIDE: {f.glide}</div>}
-                      </div>
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                        <a href={`https://reliefweb.int${item.href}`} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '7px 12px', borderRadius: '8px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
-                          <ExternalLink size={12} /> ReliefWeb
-                        </a>
-                      </div>
-                    </div>
+            {sectionTitle(<BookOpen size={20} color="#805ad5" />, '📚 Historical & Major Disasters (ReliefWeb & HDX)')}
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+              {/* ReliefWeb RSS Feed */}
+              <div style={{ ...card, padding: '16px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  📰 ReliefWeb Updates
+                </div>
+                {errBanner(errors.rw)}
+                {loading.rw && [1,2].map(i => <div key={i} style={{...skel, height: '40px'}} />)}
+                {!loading.rw && reliefWebItems.length === 0 && (
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+                    {errors.rw ? '⚠ Could not load ReliefWeb data.' : '✅ No recent Pakistan disaster entries on ReliefWeb.'}
                   </div>
-                );
-              })}
+                )}
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  {reliefWebItems.map((item, i) => {
+                    const f    = item.fields || {};
+                    const type = f.type?.[0]?.name || 'Disaster';
+                    const date = f.date ? new Date(f.date).toLocaleDateString('en-PK', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+                    const status = f.status || 'current';
+                    const statusColor = status === 'current' ? '#e53e3e' : status === 'alert' ? '#dd6b20' : '#38a169';
+                    return (
+                      <a key={i} href={item.fields?.url || `https://reliefweb.int${item.href}`} target="_blank" rel="noopener noreferrer" 
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--bg-surface-2)', borderRadius: '8px', borderLeft: `4px solid ${statusColor}`, textDecoration: 'none', transition: 'background 0.2s' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-3)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: 700, background: `${statusColor}18`, color: statusColor, padding: '2px 6px', borderRadius: '4px', textTransform: 'capitalize' }}>{status}</span>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{type} · {date}</span>
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                            {f.name || item.href}
+                          </div>
+                        </div>
+                        <ExternalLink size={14} color="var(--text-muted)" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* HDX / GLIDE Historical Data Link */}
+              <div style={{ ...card, padding: '16px', background: 'linear-gradient(135deg,rgba(128,90,213,0.07),rgba(49,130,206,0.06))', border: '1.5px solid rgba(128,90,213,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
+                    📊 GLIDE Events & Historical Charts
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                    Access complete historical datastores and interactive charts for past Pakistan disasters (fatalities, affected populations).
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <a href="https://data.humdata.org/dataset/pak-glide-events" target="_blank" rel="noopener noreferrer"
+                    style={{ padding: '8px 16px', background: 'transparent', border: '1.5px solid #805ad5', borderRadius: '8px', color: '#805ad5', fontSize: '12px', fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}
+                  >
+                    HDX Datastore
+                  </a>
+                  <button
+                    onClick={() => navigate('/disasters')}
+                    style={{ padding: '8px 16px', background: '#805ad5', border: 'none', borderRadius: '8px', color: '#fff', fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'opacity 0.15s' }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                  >
+                    Open Charts →
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* ── 4. HDX / GLIDE Events ── */}
+          {/* ── 4. Secondary Monitoring Feeds (PMD & News RSS) ── */}
           <section>
-            {sectionTitle(<Database size={20} color="#805ad5" />, '📊 HDX / GLIDE — Pakistan Disaster Events', 'LIVE')}
-            {errBanner(errors.glide)}
-            {loading.glide && [1,2,3].map(i => <div key={i} style={skel} />)}
-            {!loading.glide && glideEvents.length === 0 && (
-              <div style={{ ...card, textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', padding: '24px' }}>
-                <div style={{ marginBottom: '8px' }}>GLIDE datastore query returned no results. Browse directly:</div>
-                <a href="https://data.humdata.org/dataset/pak-glide-events" target="_blank" rel="noopener noreferrer"
-                  style={{ color: 'var(--accent)', fontWeight: 600 }}>View Pakistan GLIDE Events on HDX →</a>
-              </div>
-            )}
-            <div style={{ display: 'grid', gap: '12px' }}>
-              {glideEvents.map((ev, i) => {
-                const code = ev.event?.slice(0, 2) || 'OT';
-                const info = GLIDE_EVENT_MAP[code] || { label: ev.event, type: 'Other', emoji: '⚠️' };
-                const sevColor = ev.killed > 50 ? '#e53e3e' : ev.killed > 10 ? '#dd6b20' : '#d69e2e';
-                const severity = ev.killed > 50 ? 'Critical' : ev.killed > 10 ? 'High' : 'Medium';
-                const loc = ev.location || 'Pakistan';
-                return (
-                  <div key={i} style={{ ...card, borderLeft: `5px solid ${sevColor}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                          <span style={{ fontSize: '20px' }}>{info.emoji}</span>
-                          <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{info.label}</span>
-                          <span style={{ fontSize: '11px', background: `${sevColor}18`, color: sevColor, fontWeight: 700, padding: '2px 7px', borderRadius: '5px' }}>{severity}</span>
-                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{ev.year}</span>
-                        </div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                          📍 {loc}
-                          {ev.killed ? <span style={{ marginLeft: '12px', color: '#e53e3e', fontWeight: 600 }}>☠ {ev.killed} killed</span> : null}
-                          {ev.affected ? <span style={{ marginLeft: '12px', color: '#dd6b20', fontWeight: 600 }}>👥 {ev.affected?.toLocaleString()} affected</span> : null}
-                        </div>
-                        {ev.glidenumber && <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>GLIDE: {ev.glidenumber}</div>}
-                      </div>
-                      {createBtn('Create Incident',
-                        `/create-official-incident?type=${info.type}&severity=${severity}&locationName=${encodeURIComponent(loc)}&source=NDMA Bulletin`,
-                        sevColor)}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* ── 5. NDMA + RIMES info panels ── */}
-          <section>
-            {sectionTitle(<Radio size={20} color="#d69e2e" />, '🏛️ NDMA & RIMES — Official Authority Feeds')}
+            {sectionTitle(<Radio size={20} color="#d69e2e" />, '🌐 PMD & OSINT / News Monitoring')}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {/* NDMA */}
-              <div style={{ ...card, borderTop: '4px solid #38a169' }}>
+              {/* PMD */}
+              <div style={{ ...card, borderTop: '4px solid #dd6b20' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                  <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg,#145c33,#27ae60)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg,#9c4221,#dd6b20)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Shield size={20} color="#fff" />
                   </div>
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>NDMA</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ndma.gov.pk</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>PMD Warnings</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>pmd.gov.pk</div>
                   </div>
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '0 0 12px' }}>
-                  Pakistan's <strong>official disaster management authority</strong>. Publishes bulletins, situation reports, and alerts. No live public API — use the bulletin link below.
+                  <strong>Pakistan Meteorological Department</strong>. Official early warnings for floods, cyclones, droughts, and heatwaves. Crucial for natural disaster forecasting.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <a href="https://ndma.gov.pk/alerts/" target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'rgba(39,174,96,0.1)', border: '1.5px solid #27ae60', color: '#27ae60', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
-                    <ExternalLink size={12} /> Live Alerts
-                  </a>
-                  <a href="https://ndma.gov.pk/situation-reports/" target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
-                    <BookOpen size={12} /> Sit-Reps
-                  </a>
-                  {createBtn('Enter Manually', '/create-official-incident?source=NDMA Bulletin', '#27ae60')}
+                {loading.pmd ? (
+                  [1,2].map(i => <div key={i} style={{ ...skel, height: '30px' }} />)
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                    {pmdFeeds.length > 0 ? pmdFeeds.slice(0, 3).map((feed, i) => (
+                      <div key={i} style={{ padding: '8px 12px', background: 'var(--bg-surface-2)', borderRadius: '8px', borderLeft: '3px solid #dd6b20' }}>
+                        <a href={feed.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>
+                          {feed.title}
+                        </a>
+                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {new Date(feed.pubDate).toLocaleString()}
+                        </div>
+                      </div>
+                    )) : (
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>No recent PMD alerts found.</div>
+                    )}
+                  </div>
+                )}
+
+                {/* Inline Flood Forecast */}
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#3182ce', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    🌊 Flood Forecasting Division
+                    {loading.flood && <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 400 }}>Loading…</span>}
+                  </div>
+                  {!loading.flood && floodForecast.length === 0 && (
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', padding: '8px 12px', background: 'var(--bg-surface-2)', borderRadius: '8px' }}>
+                      ℹ No active flood bulletins from PMD FFD at this time.
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '220px', overflowY: 'auto' }}>
+                    {floodForecast.slice(0, 6).map((b, i) => {
+                      const sevColor = b.severity === 'High' ? '#e53e3e' : b.severity === 'Medium' ? '#dd6b20' : b.severity === 'Low' ? '#38a169' : '#3182ce';
+                      const issued = b.pubDate ? new Date(b.pubDate).toLocaleString('en-PK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                      return (
+                        <div key={i} style={{ padding: '10px 12px', background: 'var(--bg-surface-2)', borderRadius: '8px', borderLeft: `3px solid ${sevColor}` }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: 700, background: `${sevColor}18`, color: sevColor, padding: '1px 7px', borderRadius: '4px' }}>{b.severity}</span>
+                            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{issued}</span>
+                          </div>
+                          <a href={b.link || 'https://www.pmd.gov.pk/en/'} target="_blank" rel="noopener noreferrer"
+                            style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'none', display: 'block', marginBottom: b.areas?.length ? '4px' : 0, lineHeight: 1.4 }}>
+                            {b.title}
+                          </a>
+                          {b.areas?.length > 0 && (
+                            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                              {b.areas.map(a => (
+                                <span key={a} style={{ fontSize: '10px', background: 'rgba(49,130,206,0.1)', color: '#3182ce', padding: '1px 6px', borderRadius: '4px' }}>📍 {a}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <a href="https://www.pmd.gov.pk/en/" target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'rgba(221,107,32,0.1)', border: '1.5px solid #dd6b20', color: '#dd6b20', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
+                      <ExternalLink size={12} /> PMD Website
+                    </a>
+                    <a href="https://ffd.pmd.gov.pk/" target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
+                      <Database size={12} /> FFD Portal
+                    </a>
+                  </div>
+                  {pmdFeeds.length > 3 && (
+                    <button onClick={() => setFeedModal({ title: 'PMD Warnings', items: pmdFeeds, color: '#dd6b20' })} style={{ background: 'none', border: 'none', color: '#dd6b20', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                      View All →
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {/* RIMES */}
+              {/* Google News */}
               <div style={{ ...card, borderTop: '4px solid #3182ce' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                   <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg,#1a365d,#3182ce)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <AlertCircle size={20} color="#fff" />
+                    <Radio size={20} color="#fff" />
                   </div>
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>RIMES</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>rimes.int</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Google News RSS (OSINT)</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>news.google.com</div>
                   </div>
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '0 0 12px' }}>
-                  <strong>Regional Integrated Multi-Hazard Early Warning System</strong>. Publishes seasonal outlooks, climate bulletins, and flood/drought early warning for South Asia.
+                  <strong>Man-Made Disaster Monitoring</strong> — Unconfirmed headlines for fires, building collapses, explosions, or industrial accidents in Pakistan.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <a href="https://www.rimes.int/data-services/seasonal-outlook/" target="_blank" rel="noopener noreferrer"
+                {loading.news ? (
+                  [1,2].map(i => <div key={i} style={{ ...skel, height: '30px' }} />)
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {newsFeeds.slice(0, 5).map((feed, i) => (
+                      <div key={i} style={{ padding: '8px 12px', background: 'var(--bg-surface-2)', borderRadius: '8px', borderLeft: '3px solid #3182ce' }}>
+                        <a href={feed.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>
+                          {feed.title}
+                        </a>
+                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {new Date(feed.pubDate).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                    {newsFeeds.length > 5 && (
+                      <button onClick={() => setFeedModal({ title: 'Google News (OSINT)', items: newsFeeds, color: '#3182ce' })} style={{ alignSelf: 'flex-end', background: 'none', border: 'none', color: '#3182ce', fontSize: '12px', fontWeight: 700, cursor: 'pointer', marginTop: '4px' }}>
+                        View All →
+                      </button>
+                    )}
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
+                  <a href="https://news.google.com/search?q=Pakistan%20(flood%20OR%20earthquake%20OR%20explosion%20OR%20landslide)" target="_blank" rel="noopener noreferrer"
                     style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'rgba(49,130,206,0.1)', border: '1.5px solid #3182ce', color: '#3182ce', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
-                    <ExternalLink size={12} /> Seasonal Outlook
-                  </a>
-                  <a href="https://www.rimes.int/news/" target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
-                    <BookOpen size={12} /> Bulletins
+                    <ExternalLink size={12} /> Live News Search
                   </a>
                 </div>
               </div>
@@ -690,11 +838,12 @@ export default function AdminSources() {
               {[
                 { label: 'USGS Earthquakes', url: 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson' },
                 { label: 'Open-Meteo API',   url: 'https://open-meteo.com' },
-                { label: 'ReliefWeb API',    url: 'https://apidoc.reliefweb.int' },
+                { label: 'ReliefWeb RSS',    url: 'https://reliefweb.int/disasters/rss.xml?search=country.iso3:pak' },
                 { label: 'HDX GLIDE Events', url: 'https://data.humdata.org/dataset/pak-glide-events' },
-                { label: 'HDX HAPI Docs',    url: 'https://hapi.humdata.org' },
-                { label: 'NDMA Alerts',      url: 'https://ndma.gov.pk/alerts/' },
-                { label: 'RIMES Outlooks',   url: 'https://www.rimes.int/data-services/seasonal-outlook/' },
+                { label: 'PMD CAP Alerts',   url: 'https://cap-sources.s3.amazonaws.com/pk-pmd-en/rss.xml' },
+                { label: 'PMD Official',     url: 'https://www.pmd.gov.pk/en/' },
+                { label: 'NDMA Pakistan',    url: 'https://www.ndma.gov.pk/' },
+                { label: 'RIMES',            url: 'https://www.rimes.int/' },
               ].map(l => (
                 <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer"
                   style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent)', fontSize: '12px', textDecoration: 'none', fontWeight: 500 }}>
@@ -705,6 +854,113 @@ export default function AdminSources() {
           </div>
         </div>
       </div>
+
+      {/* ── Weather Detail Modal ── */}
+      {selectedWeather && (() => {
+        const w  = selectedWeather;
+        const wc = weatherCode(w.wmo ?? 0);
+        const tSev = tempSeverity(w.temp);
+        const alertSev = wc.severity || tSev;
+        const alertColor = alertSev ? SEV_COLOR[alertSev] : 'var(--accent)';
+        return (
+          <div
+            onClick={() => setSelectedWeather(null)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              animation: 'fadeInUp 0.2s ease',
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                borderRadius: '20px', padding: '28px 32px', minWidth: '340px', maxWidth: '420px',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+                borderTop: `4px solid ${alertColor}`,
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                <div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                    {w.city} {wc.emoji}
+                  </h3>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{wc.label}</div>
+                </div>
+                <button onClick={() => setSelectedWeather(null)}
+                  style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '8px', width: '32px', height: '32px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  ✕
+                </button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '18px' }}>
+                {[
+                  { label: 'Temperature',  value: w.temp     !== undefined ? `${w.temp}°C`     : '—', icon: '🌡️' },
+                  { label: 'Feels Like',   value: w.feelsLike !== undefined ? `${w.feelsLike}°C` : '—', icon: '🤔' },
+                  { label: 'Humidity',     value: w.humidity  !== undefined ? `${w.humidity}%`   : '—', icon: '💧' },
+                  { label: 'Wind Speed',   value: w.wind      !== undefined ? `${w.wind} km/h`   : '—', icon: '💨' },
+                  { label: 'Wind Gusts',   value: w.gusts     !== undefined ? `${w.gusts} km/h`  : '—', icon: '🌬️' },
+                  { label: 'UV Index',     value: w.uvIndex   !== undefined ? `${w.uvIndex}`     : '—', icon: '☀️' },
+                  { label: 'Rainfall',     value: w.rain      !== undefined ? `${w.rain} mm/hr`  : '—', icon: '🌧️' },
+                  { label: 'Precipitation',value: w.precip    !== undefined ? `${w.precip} mm`   : '—', icon: '🌂' },
+                ].map(({ label, value, icon }) => (
+                  <div key={label} style={{ background: 'var(--bg-surface-2)', borderRadius: '10px', padding: '10px 12px' }}>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '3px' }}>{icon} {label}</div>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+                ⚙️ These thresholds are checked every 5 min by your monitoring service to auto-trigger alerts (rain ≥15 mm/hr · wind ≥60 km/h · heat ≥43°C).
+              </p>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── Feed Modal ── */}
+      {feedModal && (
+        <div
+          onClick={() => setFeedModal(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            animation: 'fadeInUp 0.2s ease', padding: '20px'
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-surface)', borderRadius: '16px',
+              padding: '24px', width: '100%', maxWidth: '600px',
+              maxHeight: '80vh', display: 'flex', flexDirection: 'column',
+              boxShadow: '0 12px 48px rgba(0,0,0,0.2)', border: '1px solid var(--border)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ fontSize: '18px', fontWeight: 800, color: feedModal.color }}>{feedModal.title}</div>
+              <button onClick={() => setFeedModal(null)} style={{ background: 'var(--bg-surface-2)', border: 'none', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                ✕
+              </button>
+            </div>
+            
+            <div style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '4px' }}>
+              {feedModal.items.map((feed, i) => (
+                <div key={i} style={{ padding: '12px 16px', background: 'var(--bg-surface-2)', borderRadius: '8px', borderLeft: `3px solid ${feedModal.color}` }}>
+                  <a href={feed.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'none', display: 'block', marginBottom: '6px' }}>
+                    {feed.title}
+                  </a>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    {new Date(feed.pubDate).toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

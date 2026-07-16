@@ -40,7 +40,13 @@ export default function Navbar({ isConnected }) {
     ],
   };
 
-  const navLinks = user?.role ? (roleLinks[user.role] || roleLinks.Citizen) : roleLinks.Citizen;
+  const publicLinks = [
+    { to: '/disasters', label: '🗂️ Disasters' },
+    { to: '/map', label: '🗺️ Map' },
+    { to: '/contacts', label: '📞 Contacts' },
+    { to: '/preparedness', label: '📋 Preparedness' },
+  ];
+  const navLinks = user?.role ? (roleLinks[user.role] || roleLinks.Citizen) : publicLinks;
 
   const isActive = (path) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);

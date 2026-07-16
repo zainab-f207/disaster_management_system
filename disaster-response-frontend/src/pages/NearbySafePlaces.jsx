@@ -1,16 +1,71 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapPin, Navigation, RefreshCw, Loader } from 'lucide-react';
+import { MapPin, Navigation, Loader } from 'lucide-react';
 
 const SAFE_PLACE_TYPES = [
-  { key: 'hospital', label: 'Hospitals', emoji: '🏥', color: '#e53e3e', osmKey: 'amenity', osmVal: 'hospital', overpassType: 'hospital' },
-  { key: 'shelter', label: 'Shelters', emoji: '🏠', color: '#3182ce', osmKey: 'social_facility', osmVal: 'shelter', overpassType: 'shelter' },
-  { key: 'police', label: 'Police Stations', emoji: '👮', color: '#2d3748', osmKey: 'amenity', osmVal: 'police', overpassType: 'police' },
-  { key: 'fire', label: 'Fire Stations', emoji: '🚒', color: '#dd6b20', osmKey: 'amenity', osmVal: 'fire_station', overpassType: 'fire_station' },
-  { key: 'pharmacy', label: 'Pharmacies', emoji: '💊', color: '#38a169', osmKey: 'amenity', osmVal: 'pharmacy', overpassType: 'pharmacy' },
+  { key: 'hospital',  label: 'Hospitals',       emoji: '🏥', color: '#e53e3e', osmKey: 'amenity',         osmVal: 'hospital',      overpassType: 'hospital' },
+  { key: 'shelter',   label: 'Shelters',         emoji: '🏠', color: '#3182ce', osmKey: 'social_facility', osmVal: 'shelter',       overpassType: 'shelter' },
+  { key: 'police',    label: 'Police Stations',  emoji: '👮', color: '#2d3748', osmKey: 'amenity',         osmVal: 'police',        overpassType: 'police' },
+  { key: 'fire',      label: 'Fire Stations',    emoji: '🚒', color: '#dd6b20', osmKey: 'amenity',         osmVal: 'fire_station',  overpassType: 'fire_station' },
+  { key: 'pharmacy',  label: 'Pharmacies',       emoji: '💊', color: '#38a169', osmKey: 'amenity',         osmVal: 'pharmacy',      overpassType: 'pharmacy' },
 ];
+
+/* ── Overpass mirror rotation + retry + in-memory cache ── */
+const OVERPASS_MIRRORS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter',
+];
+
+const _cache = new Map(); // key: `lat,lon,radius` → { data, ts }
+const CACHE_TTL = 10 * 60 * 1000; // 10 min
+
+async function fetchOverpass(query, attempt = 0) {
+  const mirror = OVERPASS_MIRRORS[attempt % OVERPASS_MIRRORS.length];
+  const res = await fetch(mirror, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: query,
+  });
+  if (res.status === 429 || res.status === 504) {
+    if (attempt >= OVERPASS_MIRRORS.length - 1) throw new Error('All Overpass mirrors busy');
+    await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
+    return fetchOverpass(query, attempt + 1);
+  }
+  if (!res.ok) throw new Error(`Overpass ${res.status}`);
+  return res.json();
+}
+
+async function getNearbySafePlaces(lat, lon, radius = 3000, osmTypes) {
+  const key = `${lat.toFixed(3)},${lon.toFixed(3)},${radius},${osmTypes.map(t => t.osmVal).join('+')}`;
+  const cached = _cache.get(key);
+  if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.data;
+
+  const unionQuery = osmTypes.map(t =>
+    `node["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});` +
+    `way["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});`
+  ).join('');
+  const query = `[out:json][timeout:20];(${unionQuery});out center;`;
+
+  try {
+    const data = await fetchOverpass(query);
+    _cache.set(key, { data, ts: Date.now() });
+    return data;
+  } catch (err) {
+    if (cached) return cached.data; // graceful stale fallback
+    throw err;
+  }
+}
+
+/* ── GPS drift guard: only re-fetch when coords move > ~50 m ── */
+function coordsMovedSignificantly(a, b, thresholdM = 50) {
+  if (!a || !b) return true;
+  const dLat = (b[0] - a[0]) * 111320;
+  const dLon = (b[1] - a[1]) * 111320 * Math.cos(a[0] * Math.PI / 180);
+  return Math.hypot(dLat, dLon) > thresholdM;
+}
 
 function makeIcon(emoji, color) {
   return L.divIcon({
@@ -20,12 +75,15 @@ function makeIcon(emoji, color) {
 }
 
 export default function NearbySafePlaces() {
-  const [position, setPosition] = useState(null);
+  const [position, setPosition]         = useState(null);
   const [locationError, setLocationError] = useState(null);
-  const [places, setPlaces] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [places, setPlaces]             = useState([]);
+  const [loading, setLoading]           = useState(false);
   const [selectedTypes, setSelectedTypes] = useState(['hospital', 'shelter', 'police']);
-  const [radius, setRadius] = useState(3000); // 3km
+  const [radius, setRadius]             = useState(3000); // 3 km
+
+  // track last-fetched position to avoid re-fetching on GPS micro-drift
+  const lastFetchedPos = useRef(null);
 
   const getLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -35,33 +93,30 @@ export default function NearbySafePlaces() {
     navigator.geolocation.getCurrentPosition(
       pos => setPosition([pos.coords.latitude, pos.coords.longitude]),
       () => {
-        // Default to Lahore if denied
-        setPosition([31.5204, 74.3587]);
+        setPosition([31.5204, 74.3587]); // Default: Lahore
         setLocationError('Location access denied — showing Lahore. Enable location for accurate results.');
       },
       { timeout: 8000 }
     );
   }, []);
 
-  const fetchNearby = useCallback(async () => {
-    if (!position) return;
+  const fetchNearby = useCallback(async (pos, rad, types) => {
+    if (!pos) return;
+    // Skip if coords haven't moved meaningfully
+    if (!coordsMovedSignificantly(lastFetchedPos.current, pos) &&
+        lastFetchedPos.current !== null) return;
+
     setLoading(true);
-    const [lat, lon] = position;
+    const [lat, lon] = pos;
+    const osmTypes = SAFE_PLACE_TYPES.filter(t => types.includes(t.key));
     try {
-      const types = SAFE_PLACE_TYPES.filter(t => selectedTypes.includes(t.key));
-      const unionQuery = types.map(t =>
-        `node["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});` +
-        `way["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});`
-      ).join('');
-      const query = `[out:json][timeout:20];(${unionQuery});out center;`;
-      const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-      const res = await fetch(url);
-      const json = await res.json();
+      const json = await getNearbySafePlaces(lat, lon, rad, osmTypes);
+      lastFetchedPos.current = pos;
       const elements = json.elements || [];
       const mapped = elements.map(el => {
         const elLat = el.lat ?? el.center?.lat;
         const elLon = el.lon ?? el.center?.lon;
-        const typeInfo = types.find(t => el.tags?.[t.osmKey] === t.osmVal);
+        const typeInfo = osmTypes.find(t => el.tags?.[t.osmKey] === t.osmVal);
         return {
           id: el.id,
           name: el.tags?.name || el.tags?.['name:en'] || typeInfo?.label || 'Unknown',
@@ -69,17 +124,25 @@ export default function NearbySafePlaces() {
           type: typeInfo,
           phone: el.tags?.phone || el.tags?.['contact:phone'],
           addr: el.tags?.['addr:full'] || [el.tags?.['addr:street'], el.tags?.['addr:city']].filter(Boolean).join(', '),
-          dist: elLat && elLon ? Math.round(Math.hypot((elLat - lat) * 111320, (elLon - lon) * 111320 * Math.cos(lat * Math.PI / 180))) : null,
+          dist: elLat && elLon
+            ? Math.round(Math.hypot((elLat - lat) * 111320, (elLon - lon) * 111320 * Math.cos(lat * Math.PI / 180)))
+            : null,
         };
       }).filter(p => p.lat && p.lon).sort((a, b) => (a.dist || 9999) - (b.dist || 9999));
       setPlaces(mapped.slice(0, 50));
     } catch {
       setPlaces([]);
-    } finally { setLoading(false); }
-  }, [position, selectedTypes, radius]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => { getLocation(); }, [getLocation]);
-  useEffect(() => { if (position) fetchNearby(); }, [position, fetchNearby]);
+
+  // Re-fetch only when position, radius, or selected types change
+  useEffect(() => {
+    if (position) fetchNearby(position, radius, selectedTypes);
+  }, [position, radius, selectedTypes, fetchNearby]);
 
   const card = { background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' };
   const userIcon = L.divIcon({ html: '<div style="width:14px;height:14px;background:#e53e3e;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 4px rgba(229,62,62,0.3)"></div>', className: '', iconSize: [14, 14], iconAnchor: [7, 7] });
@@ -94,17 +157,19 @@ export default function NearbySafePlaces() {
           </div>
           <div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Nearby Safe Places</h1>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0 0' }}>Hospitals, shelters, police & rescue stations near you</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0 0' }}>Hospitals, shelters, police &amp; rescue stations near you</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <select value={radius} onChange={e => setRadius(Number(e.target.value))} style={{ padding: '8px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}>
+          <select value={radius} onChange={e => { lastFetchedPos.current = null; setRadius(Number(e.target.value)); }}
+            style={{ padding: '8px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}>
             <option value={1000}>1 km</option>
             <option value={3000}>3 km</option>
             <option value={5000}>5 km</option>
             <option value={10000}>10 km</option>
           </select>
-          <button onClick={() => { getLocation(); fetchNearby(); }} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}>
+          <button onClick={() => { lastFetchedPos.current = null; getLocation(); }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}>
             <Navigation size={14} /> Locate Me
           </button>
         </div>
@@ -119,7 +184,8 @@ export default function NearbySafePlaces() {
       {/* Type filters */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
         {SAFE_PLACE_TYPES.map(t => (
-          <button key={t.key} onClick={() => setSelectedTypes(p => p.includes(t.key) ? p.filter(x => x !== t.key) : [...p, t.key])}
+          <button key={t.key}
+            onClick={() => { lastFetchedPos.current = null; setSelectedTypes(p => p.includes(t.key) ? p.filter(x => x !== t.key) : [...p, t.key]); }}
             style={{ padding: '7px 14px', borderRadius: '10px', border: `1.5px solid ${selectedTypes.includes(t.key) ? t.color : 'var(--border)'}`, background: selectedTypes.includes(t.key) ? `${t.color}18` : 'transparent', color: selectedTypes.includes(t.key) ? t.color : 'var(--text-secondary)', cursor: 'pointer', fontSize: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}>
             {t.emoji} {t.label}
           </button>

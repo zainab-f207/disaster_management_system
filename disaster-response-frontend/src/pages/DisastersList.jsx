@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { disasterApi } from '../services/api';
 import { SeverityBadge, StatusBadge, DisasterIcon, SourceBadge } from '../components/ui';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Activity, BarChart2 } from 'lucide-react';
+import DisasterHistory from './DisasterHistory';
 
 const TYPE_OPTIONS = [
   'All','Flood','Earthquake','Fire','Storm','Heatwave','Landslide',
@@ -16,6 +17,7 @@ export default function DisastersList() {
   const [search, setSearch]         = useState('');
   const [typeFilter, setTypeFilter] = useState('All');
   const [sevFilter, setSevFilter]   = useState('All');
+  const [activeTab, setActiveTab]   = useState('active');
 
   useEffect(() => {
     disasterApi.getAll()
@@ -35,22 +37,56 @@ export default function DisastersList() {
 
   return (
     <div style={{
-      maxWidth: '1100px', margin: '0 auto',
-      padding: '88px 24px 60px', minHeight: '100vh',
+      maxWidth: activeTab === 'history' ? '1200px' : '1100px', margin: '0 auto',
+      padding: '88px 24px 60px', minHeight: '100vh', transition: 'max-width 0.3s ease'
     }}>
-      <div style={{ marginBottom: '24px', animation: 'fadeInUp 0.4s ease' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-display)', fontSize: '28px',
-          fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px',
-        }}>
-          🌍 All Disasters
-        </h1>
-        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-          {filtered.length} events — natural and man-made emergencies across Pakistan
-        </p>
+      <div style={{ marginBottom: '24px', animation: 'fadeInUp 0.4s ease', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', alignItems: 'flex-end', gap: '16px' }}>
+        <div>
+          <h1 style={{
+            fontFamily: 'var(--font-display)', fontSize: '28px',
+            fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px',
+          }}>
+            🌍 Disasters Hub
+          </h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+            Track active emergencies and analyze historical disaster trends across Pakistan.
+          </p>
+        </div>
+        
+        {/* Tab Switcher */}
+        <div style={{ display: 'flex', background: 'var(--bg-surface-2)', padding: '4px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <button
+            onClick={() => setActiveTab('active')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 16px', borderRadius: '8px', border: 'none',
+              fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              background: activeTab === 'active' ? 'var(--bg-elevated)' : 'transparent',
+              color: activeTab === 'active' ? 'var(--text-primary)' : 'var(--text-secondary)',
+              boxShadow: activeTab === 'active' ? 'var(--shadow-sm)' : 'none',
+            }}
+          >
+            <Activity size={16} color={activeTab === 'active' ? '#e53e3e' : 'currentColor'} /> Active List
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 16px', borderRadius: '8px', border: 'none',
+              fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              background: activeTab === 'history' ? 'var(--bg-elevated)' : 'transparent',
+              color: activeTab === 'history' ? 'var(--text-primary)' : 'var(--text-secondary)',
+              boxShadow: activeTab === 'history' ? 'var(--shadow-sm)' : 'none',
+            }}
+          >
+            <BarChart2 size={16} color={activeTab === 'history' ? '#805ad5' : 'currentColor'} /> Historical Analytics
+          </button>
+        </div>
       </div>
 
-      <div style={{
+      {activeTab === 'active' ? (
+        <>
+          <div style={{
         display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap',
         padding: '16px', background: 'var(--card-bg)',
         border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)',
@@ -207,6 +243,12 @@ export default function DisastersList() {
               </Link>
             );
           })}
+        </div>
+      )}
+        </>
+      ) : (
+        <div style={{ animation: 'fadeInUp 0.3s ease' }}>
+          <DisasterHistory />
         </div>
       )}
     </div>
