@@ -19,6 +19,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
         public DbSet<ResponderLocationPing> ResponderLocationPings => Set<ResponderLocationPing>();
         public DbSet<ReportVerification> ReportVerifications => Set<ReportVerification>();
         public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+        public DbSet<FamilyConnection> FamilyConnections => Set<FamilyConnection>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,7 +47,12 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
 
             builder.Entity<ResponderLocationPing>()
                 .HasIndex(p => new { p.AssignmentId, p.RecordedAt });
-             
+
+            builder.Entity<FamilyConnection>()
+    .HasOne(f => f.OwnerUser).WithMany().HasForeignKey(f => f.OwnerUserId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<FamilyConnection>()
+                .HasOne(f => f.MemberUser).WithMany().HasForeignKey(f => f.MemberUserId).OnDelete(DeleteBehavior.Restrict);
+
 
 
             builder.Entity<Disaster>()

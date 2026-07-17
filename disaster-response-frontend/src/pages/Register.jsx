@@ -7,6 +7,8 @@ import { useAuthStore } from '../store';
 import { FormInput, FormSelect, SubmitButton } from '../components/forms/FormInput';
 import { Shield, Eye, EyeOff } from 'lucide-react';
 import { useEffect } from 'react';
+import FormAlert from '../components/ui/FormAlert';
+import { extractErrorMessage } from '../utils/errorMessage';
 
 const ROLES = [
   {
@@ -24,40 +26,44 @@ const ROLES = [
 ];
 
 export default function Register() {
-  const navigate              = useNavigate();
-  const { login }             = useAuthStore();
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const [showPass, setShowPass]     = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Citizen');
   const [organizations, setOrganizations] = useState([]);
+  const [formError, setFormError] = useState('');
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const emailParam = queryParams.get('email') || '';
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
-    defaultValues: { role: 'Citizen' },
+    defaultValues: { role: 'Citizen', email: emailParam },
   });
 
   useEffect(() => {
-    orgApi.getAll().then(res => setOrganizations(res.data || [])).catch(() => {});
+    orgApi.getAll().then(res => setOrganizations(res.data || [])).catch(() => { });
   }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       const payload = {
-        fullName:  data.fullName,
-        email:     data.email,
-        password:  data.password,
-        role:      selectedRole,
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        password: data.password,
+        role: selectedRole,
         responderOrganizationId:
           selectedRole === 'Responder' ? parseInt(data.orgId) : null,
       };
 
       const res = await authApi.register(payload);
-      login(res.data, res.data.token);
-      toast.success(`Welcome, ${res.data.fullName?.split(' ')[0]}! 🎉`);
-      navigate('/');
+      toast.success(`Account created for ${data.fullName?.split(' ')[0]}! Please login. 🎉`);
+      navigate('/login');
     } catch (err) {
-      const errors = err.response?.data;
-      const msg = Array.isArray(errors) ? errors[0] : (errors?.message || 'Registration failed.');
+      const msg = extractErrorMessage(err, 'Failed to create account.');
+      setFormError(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -147,6 +153,8 @@ export default function Register() {
             </div>
           </div>
 
+          <FormAlert type="error" message={formError} onClose={() => setFormError('')} />
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput
               label="Full Name"
@@ -169,6 +177,18 @@ export default function Register() {
                 pattern: { value: /\S+@\S+\.\S+/, message: 'Enter a valid email' },
               })}
               error={errors.email}
+            />
+
+            <FormInput
+              label="Phone Number"
+              type="tel"
+              icon="📱"
+              placeholder="03001234567"
+              register={register('phoneNumber', {
+                required: 'Phone number is required',
+                pattern: { value: /^03\d{9}$/, message: 'Enter a valid Pakistani number (03XXXXXXXXX)' },
+              })}
+              error={errors.phoneNumber}
             />
 
             <div style={{ position: 'relative' }}>

@@ -10,6 +10,7 @@ namespace DisasterPreparedness_ResponseSystem.Core.DTOs
      string FullName,
      string Email,
      string Password,
+     string PhoneNumber,
      string Role,                          
      int? ResponderOrganizationId          
  );

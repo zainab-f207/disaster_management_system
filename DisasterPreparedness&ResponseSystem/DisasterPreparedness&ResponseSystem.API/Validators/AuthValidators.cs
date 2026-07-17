@@ -23,6 +23,10 @@ namespace DisasterPreparedness_ResponseSystem.Validators
                 .Matches(@"[0-9]").WithMessage("Password must contain at least one number.")
                 .Matches(@"[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character.");
 
+            RuleFor(x => x.PhoneNumber)
+    .NotEmpty().WithMessage("Phone number is required.")
+    .Matches(@"^03\d{9}$").WithMessage("Enter a valid Pakistani mobile number (e.g. 03001234567).");
+
             RuleFor(x => x.Role)
                 .NotEmpty().WithMessage("Role is required.")
                 .Must(r => new[] { "Admin", "Responder", "Citizen" }.Contains(r))

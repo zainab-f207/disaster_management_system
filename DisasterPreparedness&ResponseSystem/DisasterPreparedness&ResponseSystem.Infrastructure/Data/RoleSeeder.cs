@@ -41,7 +41,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
             UserManager<ApplicationUser> userManager,
             Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
-            const string adminEmail = "admin@ndma.gov.pk";
+            const string adminEmail = "adminpdrs@gmail.com";
             var adminPassword = configuration["AdminPassword"];
             if (string.IsNullOrEmpty(adminPassword))
             {

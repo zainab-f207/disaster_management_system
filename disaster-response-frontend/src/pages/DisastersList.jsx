@@ -187,6 +187,7 @@ export default function DisastersList() {
                   alignItems: 'flex-start', gap: '14px',
                   animation: `fadeInUp 0.3s ease ${i * 25}ms both`,
                   transition: 'all 0.15s', cursor: 'pointer',
+                  overflow: 'hidden',
                 }}
                   onMouseEnter={e => {
                     e.currentTarget.style.background = 'var(--bg-surface-2)';
@@ -223,6 +224,7 @@ export default function DisastersList() {
                         fontSize: '13px', color: 'var(--text-secondary)',
                         margin: '0 0 6px', lineHeight: 1.4,
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        maxWidth: '100%',
                       }}>
                         {d.description}
                       </p>

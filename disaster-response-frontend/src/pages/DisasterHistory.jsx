@@ -557,15 +557,15 @@ export default function DisasterHistory() {
                 </h2>
                 <div style={{ display: 'grid', gap: '10px' }}>
                   {worst5.map((r, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'var(--bg-surface-2)', borderRadius: '12px', borderLeft: `4px solid ${EVENT_COLORS[r.type] || '#718096'}` }}>
-                      <div style={{ fontSize: '18px', fontWeight: 900, color: i === 0 ? '#e53e3e' : 'var(--text-muted)', fontFamily: 'var(--font-display)', minWidth: '24px' }}>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'var(--bg-surface-2)', borderRadius: '12px', borderLeft: `4px solid ${EVENT_COLORS[r.type] || '#718096'}`, overflow: 'hidden' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 900, color: i === 0 ? '#e53e3e' : 'var(--text-muted)', fontFamily: 'var(--font-display)', minWidth: '32px', flexShrink: 0 }}>
                         #{i + 1}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.type} — {r.location}</span>
+                          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{r.type} — {r.location}</span>
                         </div>
-                        {r.glide && <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>GLIDE: {r.glide}</div>}
+                        {r.glide && <div style={{ fontSize: '10px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>GLIDE: {r.glide}</div>}
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: 800, color: '#e53e3e' }}>☠ {r.killed.toLocaleString()}</div>

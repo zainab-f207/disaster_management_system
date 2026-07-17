@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore, useAlertStore } from '../store';
-import { disasterApi, reportApi } from '../services/api';
+import { disasterApi, reportApi, alertApi } from '../services/api';
 import { SeverityBadge, DisasterIcon, StatusBadge } from '../components/ui';
 import { AlertTriangle, FileText, MapPin, Bell } from 'lucide-react';
 import { useCallback } from 'react';
@@ -16,6 +16,7 @@ export default function CitizenDashboard() {
     const [loading, setLoading] = useState(true);
     const [news, setNews] = useState([]);
     const [loadingNews, setLoadingNews] = useState(true);
+    const [apiAlerts, setApiAlerts] = useState([]);
 
     useEffect(() => {
         fetchData();
@@ -24,9 +25,10 @@ export default function CitizenDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [disRes, repRes] = await Promise.all([
+            const [disRes, repRes, alertRes] = await Promise.all([
                 disasterApi.getAll(),
                 reportApi.getMyReports(),
+                alertApi.getAll().catch(() => ({ data: [] })),
             ]);
             // Show only active disasters
             setNearbyDisasters(
@@ -35,6 +37,7 @@ export default function CitizenDashboard() {
                     .slice(0, 5)
             );
             setMyReports((repRes.data || []).slice(0, 5));
+            setApiAlerts((alertRes.data || []).slice(0, 4));
         } catch { }
         finally { setLoading(false); }
     };
@@ -317,38 +320,44 @@ export default function CitizenDashboard() {
                 </div>
             </div>
 
-            {alerts.length > 0 && (
-                <div style={{ marginTop: '28px' }}>
-                    <h3 style={{
-                        fontFamily: 'var(--font-display)', fontSize: '15px',
-                        fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px',
-                    }}>
-                        🔔 Recent Alerts ({alerts.length})
-                    </h3>
-                    <div style={{ display: 'grid', gap: '8px' }}>
-                        {alerts.slice(0, 4).map((a, i) => (
-                            <div key={a.id || i} style={{
-                                padding: '10px 14px',
-                                background: 'var(--card-bg)',
-                                border: '1px solid var(--border)',
-                                borderRadius: '10px', fontSize: '13px',
-                                color: 'var(--text-secondary)',
-                                animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
-                            }}>
-                                <strong style={{ color: 'var(--text-primary)' }}>
-                                    {a.disasterType || a.type} Alert
-                                </strong>
-                                {a.affectedCity && ` — ${a.affectedCity}`}
-                                <span style={{ float: 'right', fontSize: '11px', color: 'var(--text-muted)' }}>
-                                    {new Date(a.createdAt || Date.now()).toLocaleTimeString('en-PK', {
-                                        hour: '2-digit', minute: '2-digit',
-                                    })}
-                                </span>
-                            </div>
-                        ))}
+            {/* Show SignalR real-time alerts, or fall back to API-fetched alerts */}
+            {(() => {
+                const displayAlerts = alerts.length > 0 ? alerts : apiAlerts;
+                if (displayAlerts.length === 0) return null;
+                return (
+                    <div style={{ marginTop: '28px' }}>
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)', fontSize: '15px',
+                            fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px',
+                        }}>
+                            🔔 Recent Alerts ({displayAlerts.length})
+                        </h3>
+                        <div style={{ display: 'grid', gap: '8px' }}>
+                            {displayAlerts.slice(0, 4).map((a, i) => (
+                                <div key={a.id || i} style={{
+                                    padding: '10px 14px',
+                                    background: 'var(--card-bg)',
+                                    border: '1px solid var(--border)',
+                                    borderLeft: `3px solid ${a.severity === 'Critical' ? '#e53e3e' : a.severity === 'High' ? '#dd6b20' : 'var(--accent)'}`,
+                                    borderRadius: '10px', fontSize: '13px',
+                                    color: 'var(--text-secondary)',
+                                    animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
+                                }}>
+                                    <strong style={{ color: 'var(--text-primary)' }}>
+                                        {a.disasterType || a.type || 'Alert'}
+                                    </strong>
+                                    {(a.affectedCity || a.location) && ` — ${a.affectedCity || a.location}`}
+                                    <span style={{ float: 'right', fontSize: '11px', color: 'var(--text-muted)' }}>
+                                        {new Date(a.createdAt || a.sentAt || Date.now()).toLocaleTimeString('en-PK', {
+                                            hour: '2-digit', minute: '2-digit',
+                                        })}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
             
             <div style={{ marginTop: '28px' }}>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>

@@ -20,6 +20,20 @@ export const useThemeStore = create(
   )
 );
 
+// ── Settings Store ───────────────────────────────────────────────────────────
+export const useSettingsStore = create(
+  persist(
+    (set) => ({
+      pushEnabled: true,
+      emailEnabled: true,
+      autoAssign: true,
+      sensitivity: 'High',
+      setSetting: (key, value) => set({ [key]: value }),
+    }),
+    { name: 'system-settings' }
+  )
+);
+
 // ── Auth Store ───────────────────────────────────────────────────────────────
 export const useAuthStore = create(
   persist(

@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.DTOs;
+using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -51,16 +51,43 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             if (dto.Role == "Admin" && !User.IsInRole("Admin"))
                 return Forbid();
 
-            var user = new ApplicationUser
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user != null)
             {
-                FullName = dto.FullName,
-                Email = dto.Email,
-                UserName = dto.Email,
-                EmailConfirmed = true,
-                ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null
-            };
+                if (user.FullName == "Pending Invite" && !user.EmailConfirmed)
+                {
+                    // Upgrade shell user to real user
+                    user.FullName = dto.FullName;
+                    user.PhoneNumber = dto.PhoneNumber;
+                    user.EmailConfirmed = true;
+                    user.ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null;
+                    
+                    var tokenReset = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var resetResult = await _userManager.ResetPasswordAsync(user, tokenReset, dto.Password);
+                    if (!resetResult.Succeeded) return BadRequest(resetResult.Errors.Select(e => e.Description));
+                    
+                    await _userManager.UpdateAsync(user);
+                }
+                else
+                {
+                    return BadRequest(new[] { "User with this email already exists." });
+                }
+            }
+            else
+            {
+                user = new ApplicationUser
+                {
+                    FullName = dto.FullName,
+                    Email = dto.Email,
+                    UserName = dto.Email,
+                    PhoneNumber = dto.PhoneNumber,
+                    EmailConfirmed = true,
+                    ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null
+                };
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
+                var result = await _userManager.CreateAsync(user, dto.Password);
+                if (!result.Succeeded) return BadRequest(result.Errors.Select(e => e.Description));
+            }
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors.Select(e => e.Description));

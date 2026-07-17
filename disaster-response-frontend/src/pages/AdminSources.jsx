@@ -900,9 +900,9 @@ export default function AdminSources() {
                   { label: 'Humidity',     value: w.humidity  !== undefined ? `${w.humidity}%`   : '—', icon: '💧' },
                   { label: 'Wind Speed',   value: w.wind      !== undefined ? `${w.wind} km/h`   : '—', icon: '💨' },
                   { label: 'Wind Gusts',   value: w.gusts     !== undefined ? `${w.gusts} km/h`  : '—', icon: '🌬️' },
-                  { label: 'UV Index',     value: w.uvIndex   !== undefined ? `${w.uvIndex}`     : '—', icon: '☀️' },
-                  { label: 'Rainfall',     value: w.rain      !== undefined ? `${w.rain} mm/hr`  : '—', icon: '🌧️' },
-                  { label: 'Precipitation',value: w.precip    !== undefined ? `${w.precip} mm`   : '—', icon: '🌂' },
+                  { label: 'UV Index',     value: w.uvIndex   !== undefined ? (w.uvIndex === 0 ? '0 (Night/Low)' : `${w.uvIndex}`) : '—', icon: '☀️' },
+                  { label: 'Rainfall',     value: w.rain      !== undefined ? (w.rain === 0 ? '0 mm/hr (Dry)' : `${w.rain} mm/hr`) : '—', icon: '🌧️' },
+                  { label: 'Precipitation',value: w.precip    !== undefined ? (w.precip === 0 ? '0 mm (Clear)' : `${w.precip} mm`) : '—', icon: '🌂' },
                 ].map(({ label, value, icon }) => (
                   <div key={label} style={{ background: 'var(--bg-surface-2)', borderRadius: '10px', padding: '10px 12px' }}>
                     <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '3px' }}>{icon} {label}</div>

@@ -6,12 +6,15 @@ import { authApi } from '../services/api';
 import { useAuthStore } from '../store';
 import { FormInput, SubmitButton } from '../components/forms/FormInput';
 import { Shield, Eye, EyeOff } from 'lucide-react';
+import FormAlert from '../components/ui/FormAlert';
+import { extractErrorMessage } from '../utils/errorMessage';
 
 export default function Login() {
-  const navigate           = useNavigate();
-  const { login }          = useAuthStore();
-  const [loading, setLoading]   = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [formError, setFormError] = useState('');
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -22,11 +25,12 @@ export default function Login() {
       login(res.data, res.data.token);
       toast.success(`Welcome back, ${res.data.fullName?.split(' ')[0]}! 👋`);
 
-      if (res.data.role === 'Admin')      navigate('/admin');
-else if (res.data.role === 'Responder') navigate('/responder');
-else navigate('/');
+      if (res.data.role === 'Admin') navigate('/admin');
+      else if (res.data.role === 'Responder') navigate('/responder');
+      else navigate('/');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Invalid email or password.';
+      const msg = extractErrorMessage(err, 'Invalid email or password.');
+      setFormError(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -82,7 +86,7 @@ else navigate('/');
             </p>
           </div>
 
-          {/* Demo admin hint removed for security */}
+          <FormAlert type="error" message={formError} onClose={() => setFormError('')} />
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput

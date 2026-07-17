@@ -34,8 +34,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
     options.User.RequireUniqueEmail = true;
-
-    // Brute-force protection
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 })
@@ -88,9 +86,17 @@ builder.Services.AddRateLimiter(options =>
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
     {
         var path = httpContext.Request.Path;
-        var limit = (path.StartsWithSegments("/api/auth") || path.StartsWithSegments("/api/reports")) ? 5 : 100;
+        var method = httpContext.Request.Method;
+
+        bool isSensitiveWrite = (method == "POST" || method == "PUT") &&
+            (path.StartsWithSegments("/api/auth") || path.StartsWithSegments("/api/reports"));
+
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var limit = isSensitiveWrite ? 10 : 300;
+        var partitionKey = $"{ip}:{(isSensitiveWrite ? "strict" : "normal")}";
+
         return RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            partitionKey: partitionKey,
             factory: _ => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
@@ -125,10 +131,15 @@ builder.Services.AddScoped<IDuplicateCheckService, DuplicateCheckService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<IDisasterCreationService, DisasterCreationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.Configure<MonitoringConfig>(
     builder.Configuration.GetSection("DisasterMonitoring"));
 builder.Services.AddHostedService<DisasterMonitoringService>();
+
+// Register DailyIncidentReportService as singleton so it can be injected into AdminController
+builder.Services.AddSingleton<DailyIncidentReportService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<DailyIncidentReportService>());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

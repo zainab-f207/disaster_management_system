@@ -11,7 +11,7 @@ import NearbySafePlaces from './pages/NearbySafePlaces';
 import DisasterHistory from './pages/DisasterHistory';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { useThemeStore, useAuthStore } from './store';
+import { useThemeStore, useAuthStore, useSettingsStore } from './store';
 import { useSignalR } from './hooks/useSignalR';
 import { usePushNotifications } from './hooks/usePushNotifications';
 import Navbar from './components/layout/Navbar';
@@ -34,6 +34,7 @@ import SafetyCheck from './pages/SafetyCheck';
 import ResponderNavigate from './pages/ResponderNavigate';
 import AdminSettings from './pages/AdminSettings';
 import CitizenSafeRoute from './pages/CitizenSafeRoute';
+import FamilySafety from './pages/FamilySafety';
 
 function HomeRoute() {
   const { isAuthenticated, user } = useAuthStore();
@@ -57,6 +58,37 @@ function AppContent() {
   usePushNotifications();
 
   useEffect(() => { initTheme(); }, [initTheme]);
+
+  // Apply theme to DOM whenever it changes in the Zustand store
+  useEffect(() => {
+    return useThemeStore.subscribe((state) => {
+      document.documentElement.setAttribute('data-theme', state.theme);
+    });
+  }, []);
+
+  // Sync settings and theme across multiple tabs in real-time via storage events
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (e.key === 'theme-preference' && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          const newTheme = parsed?.state?.theme;
+          if (newTheme) {
+            useThemeStore.setState({ theme: newTheme });
+            document.documentElement.setAttribute('data-theme', newTheme);
+          }
+        } catch {}
+      }
+      if (e.key === 'system-settings' && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed?.state) useSettingsStore.setState(parsed.state);
+        } catch {}
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   return (
     <BrowserRouter>
@@ -116,6 +148,7 @@ function AppContent() {
         <Route path="/admin/settings" element={
           <ProtectedRoute requiredRole="Admin"><AdminSettings /></ProtectedRoute>
         } />
+        <Route path="/family" element={<ProtectedRoute><FamilySafety /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

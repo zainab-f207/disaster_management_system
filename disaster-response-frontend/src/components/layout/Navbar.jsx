@@ -38,6 +38,7 @@ export default function Navbar({ isConnected }) {
       { to: '/safety-check', label: '❤️ Safety' },
       { to: '/preparedness', label: 'Be Prepared' },
       { to: '/ai-assistant', label: '🤖 AI Help' },
+      { to: '/family', label: '👨‍👩‍👧 Family' },
     ],
   };
 

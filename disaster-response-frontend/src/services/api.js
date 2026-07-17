@@ -77,6 +77,10 @@ export const alertApi = {
   getAll: () => api.get('/alerts'),
 };
 
+export const adminApi = {
+  sendDailyReport: () => api.post('/admin/send-daily-report'),
+};
+
 export const responderApi = {
   getMyAvailability: () => api.get('/users/me/availability'),
   setAvailability: (status) => api.put('/users/me/availability', { status }),
