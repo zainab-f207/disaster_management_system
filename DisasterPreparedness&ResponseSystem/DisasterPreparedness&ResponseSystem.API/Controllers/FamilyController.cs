@@ -33,25 +33,8 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             
             if (target == null)
             {
-                // Create a "shell" user to hold the connection
-                target = new ApplicationUser 
-                { 
-                    UserName = dto.Email, 
-                    Email = dto.Email, 
-                    FullName = "Pending Invite",
-                    EmailConfirmed = false
-                };
-                var pwd = Guid.NewGuid().ToString("N") + "A1!";
-                var shellResult = await _userManager.CreateAsync(target, pwd);
-                if (!shellResult.Succeeded) return BadRequest(new { Error = "Failed to prepare invitation." });
-
-                // Create the pending connection
-                var shellConn = new FamilyConnection { OwnerUserId = myId, MemberUserId = target.Id, Status = "Pending" };
-                _db.FamilyConnections.Add(shellConn);
-                await _db.SaveChangesAsync();
-
-                // Send email invitation
-                var inviteLink = $"http://localhost:5173/register?email={Uri.EscapeDataString(dto.Email)}";
+                // Send email invitation if the user doesn't exist
+                var inviteLink = $"http://localhost:5173/register?email={Uri.EscapeDataString(dto.Email)}&inviterId={Uri.EscapeDataString(myId)}";
                 var myUser = await _userManager.FindByIdAsync(myId);
                 var subject = $"{myUser?.FullName ?? "A family member"} wants to connect with you on Pakistan DRS";
                 var message = $@"

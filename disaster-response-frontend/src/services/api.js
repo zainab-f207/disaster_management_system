@@ -39,6 +39,8 @@ api.interceptors.response.use(
   }
 );
 
+
+
 export const disasterApi = {
   getAll: (status) => api.get('/disasters', { params: status ? { status } : {} }),
   getById: (id) => api.get(`/disasters/${id}`),
@@ -57,6 +59,7 @@ export const reportApi = {
   createDisaster: (id, data) => api.put(`/reports/${id}/create-disaster`, data),
   mergeExisting: (id, disasterId) => api.put(`/reports/${id}/merge-existing`, { disasterId }),
   reject: (id, reason) => api.put(`/reports/${id}/reject`, { reason }),
+  getSuggestedSeverity: (id) => api.get(`/reports/${id}/suggested-severity`),
 };
 
 export const authApi = {
@@ -90,4 +93,6 @@ export const chatApi = {
   getMessages: (orgId) => api.get(`/chat/${orgId}/messages`),
   sendMessage: (orgId, message) => api.post(`/chat/${orgId}/messages`, { message }),
 };
+
+
 export default api;

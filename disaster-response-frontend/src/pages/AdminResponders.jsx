@@ -2,12 +2,19 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { UserCheck, Search, RefreshCw, Power, Eye, MapPin } from 'lucide-react';
+import { orgApi } from '../services/api';
+import { Mail, Plus, Trash2 } from 'lucide-react';
 
 export default function AdminResponders() {
   const [responders, setResponders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  const [organizations, setOrganizations] = useState([]);
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ fullName: '', email: '', phoneNumber: '', organizationId: '' });
+  const [inviting, setInviting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const fetchResponders = useCallback(async () => {
     setLoading(true);
@@ -24,6 +31,34 @@ export default function AdminResponders() {
   }, []);
 
   useEffect(() => { fetchResponders(); }, [fetchResponders]);
+  useEffect(() => {
+    orgApi.getAll().then(res => setOrganizations(res.data || [])).catch(() => { });
+  }, []);
+
+  const handleInvite = async () => {
+    const { fullName, email, phoneNumber, organizationId } = inviteForm;
+    if (!fullName.trim() || !email.trim() || !organizationId) {
+      toast.error('Full name, email, and organization are required.');
+      return;
+    }
+    setInviting(true);
+    try {
+      await api.post('/ResponderInvites', { fullName, email, phoneNumber, responderOrganizationId: parseInt(organizationId) });
+      toast.success('Invitation sent!');
+      setShowInvite(false);
+      setInviteForm({ fullName: '', email: '', phoneNumber: '', organizationId: '' });
+      fetchResponders();
+    } catch (err) {
+      toast.error(err.response?.data?.[0] || err.response?.data?.Error || 'Failed to send invite');
+    } finally { setInviting(false); }
+  };
+
+  const handleResend = async (id) => {
+    try {
+      await api.post(`/ResponderInvites/${id}/resend`);
+      toast.success('Invitation resent!');
+    } catch { toast.error('Failed to resend invite'); }
+  };
 
   const toggleActive = async (r) => {
     try {
@@ -31,6 +66,16 @@ export default function AdminResponders() {
       toast.success(`Responder ${r.isActive ? 'deactivated' : 'activated'}`);
       fetchResponders();
     } catch { toast.error('Failed to update responder status'); }
+  };
+
+  const deleteResponder = async (r) => {
+    try {
+      await api.delete(`/users/${r.id}`);
+      toast.success(`${r.fullName || r.name || 'Responder'}'s account deleted.`);
+      setResponders(prev => prev.filter(u => u.id !== r.id));
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete account.');
+    } finally { setConfirmDelete(null); }
   };
 
   const filtered = responders.filter(r => {
@@ -58,6 +103,9 @@ export default function AdminResponders() {
         <button onClick={fetchResponders} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}>
           <RefreshCw size={14} /> Refresh
         </button>
+        <button onClick={() => setShowInvite(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 16px', background: 'linear-gradient(135deg,#145c33,#27ae60)', border: 'none', borderRadius: '10px', color: '#fff', cursor: 'pointer', fontSize: '13px', fontWeight: 700 }}>
+          <Plus size={14} /> Invite Responder
+        </button>
       </div>
 
       {/* Filters */}
@@ -75,7 +123,7 @@ export default function AdminResponders() {
 
       {loading ? (
         <div style={{ display: 'grid', gap: '12px' }}>
-          {[1,2,3,4].map(i => <div key={i} style={{ height: '80px', borderRadius: '16px', background: 'var(--bg-surface-2)', animation: 'skeleton-pulse 1.5s infinite' }} />)}
+          {[1, 2, 3, 4].map(i => <div key={i} style={{ height: '80px', borderRadius: '16px', background: 'var(--bg-surface-2)', animation: 'skeleton-pulse 1.5s infinite' }} />)}
         </div>
       ) : (
         <div style={{ display: 'grid', gap: '12px' }}>
@@ -98,9 +146,23 @@ export default function AdminResponders() {
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={() => toggleActive(r)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: r.isActive !== false ? 'rgba(229,62,62,0.1)' : 'rgba(39,174,96,0.1)', border: `1px solid ${r.isActive !== false ? '#e53e3e' : '#27ae60'}`, color: r.isActive !== false ? '#e53e3e' : '#27ae60', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                  <Power size={12} /> {r.isActive !== false ? 'Deactivate' : 'Activate'}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                {r.isPending ? (
+                  <>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#d69e2e', background: 'rgba(214,158,46,0.1)', padding: '4px 10px', borderRadius: '8px' }}>⏳ Pending Invite</span>
+                    <button onClick={() => handleResend(r.id)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'rgba(66,153,225,0.1)', border: '1px solid #4299e1', color: '#4299e1', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
+                      <Mail size={12} /> Resend Invite
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={() => toggleActive(r)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px', borderRadius: '9px', cursor: 'pointer', fontSize: '12px', fontWeight: 700, border: 'none', transition: 'all 0.15s', background: r.isActive !== false ? 'linear-gradient(135deg,#c0392b,#e53e3e)' : 'linear-gradient(135deg,#145c33,#27ae60)', color: '#fff', boxShadow: r.isActive !== false ? '0 3px 10px rgba(229,62,62,0.35)' : '0 3px 10px rgba(39,174,96,0.35)' }}>
+                    <Power size={12} /> {r.isActive !== false ? 'Deactivate' : 'Activate'}
+                  </button>
+                )}
+                <button onClick={() => setConfirmDelete(r)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 12px', borderRadius: '8px', background: 'rgba(229,62,62,0.08)', border: '1px solid #e53e3e', color: '#e53e3e', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
+                  <Trash2 size={12} /> Delete
                 </button>
               </div>
             </div>
@@ -111,6 +173,47 @@ export default function AdminResponders() {
               <div>No responders found.</div>
             </div>
           )}
+        </div>
+      )}
+      {showInvite && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '16px', width: '100%', maxWidth: '460px', padding: '28px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '18px' }}>Invite a Responder</h2>
+            <div style={{ display: 'grid', gap: '12px', marginBottom: '20px' }}>
+              <input placeholder="Full name" value={inviteForm.fullName} onChange={e => setInviteForm(p => ({ ...p, fullName: e.target.value }))} style={{ padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px' }} />
+              <input placeholder="Email address" value={inviteForm.email} onChange={e => setInviteForm(p => ({ ...p, email: e.target.value }))} style={{ padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px' }} />
+              <input placeholder="Phone (03XXXXXXXXX)" value={inviteForm.phoneNumber} onChange={e => setInviteForm(p => ({ ...p, phoneNumber: e.target.value }))} style={{ padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px' }} />
+              <select value={inviteForm.organizationId} onChange={e => setInviteForm(p => ({ ...p, organizationId: e.target.value }))} style={{ padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px' }}>
+                <option value="">-- Select organization --</option>
+                {organizations.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
+              </select>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => setShowInvite(false)} style={{ flex: 1, padding: '11px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)' }}>Cancel</button>
+              <button onClick={handleInvite} disabled={inviting} style={{ flex: 2, padding: '11px', background: 'linear-gradient(135deg,#145c33,#27ae60)', border: 'none', borderRadius: '10px', color: '#fff', cursor: 'pointer', fontWeight: 700 }}>
+                {inviting ? 'Sending...' : '✉️ Send Invitation'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {confirmDelete && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 1200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: 'var(--bg-elevated)', border: '1.5px solid #e53e3e', borderRadius: '18px', width: '100%', maxWidth: '400px', padding: '30px 28px', boxShadow: '0 20px 60px rgba(229,62,62,0.2)', animation: 'scaleIn 0.2s ease' }}>
+            <div style={{ fontSize: '44px', textAlign: 'center', marginBottom: '14px' }}>🗑️</div>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, color: '#e53e3e', textAlign: 'center', margin: '0 0 10px' }}>Delete Responder Account?</h2>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 20px', lineHeight: 1.6 }}>
+              Permanently delete <strong style={{ color: 'var(--text-primary)' }}>{confirmDelete.fullName || confirmDelete.name}</strong>'s account? This cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => setConfirmDelete(null)} style={{ flex: 1, padding: '11px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '13px' }}>Cancel</button>
+              <button onClick={() => deleteResponder(confirmDelete)} style={{ flex: 1, padding: '11px', background: 'linear-gradient(135deg,#c0392b,#e53e3e)', border: 'none', borderRadius: '10px', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: '13px', boxShadow: '0 4px 14px rgba(229,62,62,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                <Trash2 size={13} /> Yes, Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

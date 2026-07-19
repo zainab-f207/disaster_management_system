@@ -132,6 +132,7 @@ builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<IDisasterCreationService, DisasterCreationService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddHttpClient<ISeverityAnalysisService, SeverityAnalysisService>();
 
 builder.Services.Configure<MonitoringConfig>(
     builder.Configuration.GetSection("DisasterMonitoring"));

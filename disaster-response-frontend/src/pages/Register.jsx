@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { authApi, orgApi } from '../services/api';
@@ -16,13 +16,7 @@ const ROLES = [
     emoji: '👤',
     label: 'Citizen',
     desc: 'Report accidents, disasters, and emergencies in your area',
-  },
-  {
-    value: 'Responder',
-    emoji: '🚒',
-    label: 'Responder',
-    desc: 'Field worker for Rescue 1122, Edhi, PDMA, or other organizations',
-  },
+  }
 ];
 
 export default function Register() {
@@ -34,11 +28,12 @@ export default function Register() {
   const [organizations, setOrganizations] = useState([]);
   const [formError, setFormError] = useState('');
 
-  const queryParams = new URLSearchParams(window.location.search);
-  const emailParam = queryParams.get('email') || '';
+  const [searchParams] = useSearchParams();
+  const inviteEmail = searchParams.get('email') || '';
+  const inviterId = searchParams.get('inviterId') || null;
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
-    defaultValues: { role: 'Citizen', email: emailParam },
+    defaultValues: { role: 'Citizen', email: inviteEmail },
   });
 
   useEffect(() => {
@@ -47,19 +42,18 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     setLoading(true);
+    setFormError('');
     try {
       const payload = {
         fullName: data.fullName,
         email: data.email,
         phoneNumber: data.phoneNumber,
         password: data.password,
-        role: selectedRole,
-        responderOrganizationId:
-          selectedRole === 'Responder' ? parseInt(data.orgId) : null,
+        role: 'Citizen',
+        responderOrganizationId: null,
       };
-
-      const res = await authApi.register(payload);
-      toast.success(`Account created for ${data.fullName?.split(' ')[0]}! Please login. 🎉`);
+      await authApi.register(payload);
+      toast.success('Registration successful! Please check your email to verify your account.');
       navigate('/login');
     } catch (err) {
       const msg = extractErrorMessage(err, 'Failed to create account.');

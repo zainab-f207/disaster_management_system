@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using DisasterPreparedness_ResponseSystem.Core.Interfaces;
 using DisasterPreparedness_ResponseSystem.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,8 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
                 var json = await response.Content.ReadAsStringAsync();
                 var data = JsonSerializer.Deserialize<EarthquakeApiResponse>(json, JsonOptions);
 
-                return data?.Features ?? new();
+                var features = data?.Features ?? new();
+                return features.Where(f => f.Properties?.Place != null && f.Properties.Place.Contains("Pakistan", StringComparison.OrdinalIgnoreCase)).ToList();
             }
             catch
             {

@@ -2,7 +2,6 @@ using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,63 +14,52 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ITokenService tokenService,
+            IEmailService emailService,
             IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _emailService = emailService;
             _config = config;
         }
 
-        /// <summary>
-        /// Register a new user account with a specified role.
-        /// Open endpoint—citizens can self-register. Only existing Admins can create other Admins.
-        /// </summary>
-        /// <remarks>
-        /// Available roles: Citizen, Responder, Admin.
-        /// Responders must specify their organization ID (Rescue 1122, Edhi, PDMA, etc.).
-        /// Email must be unique. Password must be at least 6 characters and include at least one non-alphanumeric character.
-        /// </remarks>
-        /// <param name="dto">Registration data: FullName, Email, Password, Role, ResponderOrganizationId (if Responder)</param>
-        /// <returns>JWT token, user ID, role, and token expiration timestamp</returns>
-        // POST /api/auth/register
+        // POST /api/auth/register — Citizens only. Responders are invited by Admin.
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
-            if (!new[] { "Admin", "Responder", "Citizen" }.Contains(dto.Role))
-                return BadRequest("Role must be Admin, Responder, or Citizen.");
+            if (dto.Role != "Citizen")
+                return BadRequest(new { Error = "Self-registration is only available for Citizens. Responders are invited by an Admin." });
 
-            // Prevent self-registration as Admin (only existing Admin can create other Admins)
-            if (dto.Role == "Admin" && !User.IsInRole("Admin"))
-                return Forbid();
+            var existing = await _userManager.FindByEmailAsync(dto.Email);
 
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user != null)
+            ApplicationUser user;
+
+            if (existing != null && existing.FullName == "Pending Invite" && !existing.EmailConfirmed)
             {
-                if (user.FullName == "Pending Invite" && !user.EmailConfirmed)
-                {
-                    // Upgrade shell user to real user
-                    user.FullName = dto.FullName;
-                    user.PhoneNumber = dto.PhoneNumber;
-                    user.EmailConfirmed = true;
-                    user.ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null;
-                    
-                    var tokenReset = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var resetResult = await _userManager.ResetPasswordAsync(user, tokenReset, dto.Password);
-                    if (!resetResult.Succeeded) return BadRequest(resetResult.Errors.Select(e => e.Description));
-                    
-                    await _userManager.UpdateAsync(user);
-                }
-                else
-                {
-                    return BadRequest(new[] { "User with this email already exists." });
-                }
+                // This email was pre-created as a "shell" via a Family Safety invite.
+                // Upgrade it into a real account — but it STILL requires verification.
+                user = existing;
+                user.FullName = dto.FullName;
+                user.PhoneNumber = dto.PhoneNumber;
+                user.EmailConfirmed = false; // do NOT auto-confirm
+
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetResult = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
+                if (!resetResult.Succeeded) return BadRequest(resetResult.Errors.Select(e => e.Description));
+
+                await _userManager.UpdateAsync(user);
+            }
+            else if (existing != null)
+            {
+                return BadRequest(new { Error = "A user with this email already exists." });
             }
             else
             {
@@ -81,52 +69,38 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     Email = dto.Email,
                     UserName = dto.Email,
                     PhoneNumber = dto.PhoneNumber,
-                    EmailConfirmed = true,
-                    ResponderOrganizationId = dto.Role == "Responder" ? dto.ResponderOrganizationId : null
+                    EmailConfirmed = false, // must verify before first login
                 };
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
                 if (!result.Succeeded) return BadRequest(result.Errors.Select(e => e.Description));
             }
 
-            if (!result.Succeeded)
-                return BadRequest(result.Errors.Select(e => e.Description));
+            if (!await _userManager.IsInRoleAsync(user, "Citizen"))
+                await _userManager.AddToRoleAsync(user, "Citizen");
 
-            await _userManager.AddToRoleAsync(user, dto.Role);
+            await SendVerificationEmailAsync(user);
 
-            var token = await _tokenService.GenerateTokenAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return Ok(new AuthResponseDto(
-                Token: token,
-                UserId: user.Id,
-                FullName: user.FullName,
-                Email: user.Email!,
-                Role: roles.FirstOrDefault() ?? dto.Role,
-                OrganizationId: user.ResponderOrganizationId,
-                ExpiresAt: DateTime.UtcNow.AddHours(24)
-            ));
+            return Ok(new { Message = "Registration successful! Please check your email to verify your account before logging in." });
         }
 
-        /// <summary>
-        /// Authenticate a user and issue a JWT token.
-        /// Open endpoint—all users (Citizen, Responder, Admin) can log in with email and password.
-        /// </summary>
-        /// <remarks>
-        /// Returns a JWT token valid for 24 hours. Token must be included in subsequent requests as:
-        /// Authorization: Bearer {token}
-        /// </remarks>
-        /// <param name="dto">Login credentials: Email and Password</param>
-        /// <returns>JWT token, user ID, full name, role, organization (if Responder), and token expiration</returns>
         // POST /api/auth/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null) return Unauthorized("Invalid email or password.");
+            if (user == null) return Unauthorized(new { Error = "Invalid email or password." });
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: false);
-            if (!result.Succeeded) return Unauthorized("Invalid email or password.");
+            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: true);
+
+            if (result.IsLockedOut)
+                return Unauthorized(new { Error = "Too many failed attempts. Please try again in a few minutes." });
+
+            if (!result.Succeeded)
+                return Unauthorized(new { Error = "Invalid email or password." });
+
+            if (!user.EmailConfirmed)
+                return Unauthorized(new { Error = "Please verify your email before logging in. Check your inbox for the verification link." });
 
             var token = await _tokenService.GenerateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -142,16 +116,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             ));
         }
 
-        /// <summary>
-        /// Retrieve the currently logged-in user's profile information.
-        /// Restricted to authenticated users (requires valid JWT token).
-        /// </summary>
-        /// <remarks>
-        /// Used by frontends to populate user profile, display role, verify authentication status.
-        /// Token expiration is returned as zero since this endpoint does not issue a new token.
-        /// </remarks>
-        /// <returns>Current user's ID, full name, email, role, and organization (if applicable)</returns>
-        // GET /api/auth/me  — returns currently logged-in user's info
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
@@ -161,14 +125,55 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new AuthResponseDto(
-                Token: "",
-                UserId: user.Id,
-                FullName: user.FullName,
-                Email: user.Email!,
-                Role: roles.FirstOrDefault() ?? "",
-                OrganizationId: user.ResponderOrganizationId,
+                Token: "", UserId: user.Id, FullName: user.FullName, Email: user.Email!,
+                Role: roles.FirstOrDefault() ?? "", OrganizationId: user.ResponderOrganizationId,
                 ExpiresAt: DateTime.UtcNow
             ));
+        }
+
+        // POST /api/auth/confirm-email
+        [HttpPost("confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return BadRequest(new { Error = "Invalid confirmation link." });
+            if (user.EmailConfirmed) return Ok(new { Message = "Your email is already verified. You can log in." });
+
+            var result = await _userManager.ConfirmEmailAsync(user, dto.Token);
+            if (!result.Succeeded)
+                return BadRequest(new { Error = "This confirmation link is invalid or has expired." });
+
+            return Ok(new { Message = "Email verified successfully! You can now log in." });
+        }
+
+        // POST /api/auth/resend-verification
+        [HttpPost("resend-verification")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return Ok(new { Message = "If an account with that email exists, a verification link has been sent." });
+            if (user.EmailConfirmed) return BadRequest(new { Error = "This email is already verified. Please log in." });
+
+            await SendVerificationEmailAsync(user);
+            return Ok(new { Message = "Verification email sent." });
+        }
+
+        private async Task SendVerificationEmailAsync(ApplicationUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:5173";
+            var link = $"{frontendUrl}/verify-email?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
+
+            var subject = "Verify your email — Pakistan Disaster Response System";
+            var body = $@"
+                <h2>Welcome, {user.FullName}!</h2>
+                <p>Please confirm your email address to activate your account:</p>
+                <p><a href='{link}'>{link}</a></p>
+                <p>If you didn't create this account, you can ignore this email.</p>
+            ";
+            await _emailService.SendEmailAsync(user.Email!, subject, body);
         }
     }
 }

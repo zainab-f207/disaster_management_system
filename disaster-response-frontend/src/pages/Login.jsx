@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { authApi } from '../services/api';
+import api from '../services/api';
 import { useAuthStore } from '../store';
 import { FormInput, SubmitButton } from '../components/forms/FormInput';
 import { Shield, Eye, EyeOff } from 'lucide-react';
@@ -15,11 +16,17 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [formError, setFormError] = useState('');
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [lastEmail, setLastEmail] = useState('');
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     setLoading(true);
+    setFormError('');
+    setNeedsVerification(false);
+    setLastEmail(data.email);
     try {
       const res = await authApi.login(data);
       login(res.data, res.data.token);
@@ -31,9 +38,23 @@ export default function Login() {
     } catch (err) {
       const msg = extractErrorMessage(err, 'Invalid email or password.');
       setFormError(msg);
+      if (msg.toLowerCase().includes('verify')) setNeedsVerification(true);
       toast.error(msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!lastEmail) return;
+    setResending(true);
+    try {
+      await api.post('/auth/resend-verification', { email: lastEmail });
+      toast.success('Verification email sent — check your inbox.');
+    } catch {
+      toast.error('Failed to resend verification email.');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -87,6 +108,22 @@ export default function Login() {
           </div>
 
           <FormAlert type="error" message={formError} onClose={() => setFormError('')} />
+
+          {needsVerification && (
+            <div style={{ marginTop: '-10px', marginBottom: '18px', textAlign: 'center' }}>
+              <button
+                onClick={handleResend}
+                disabled={resending}
+                style={{
+                  background: 'none', border: 'none', color: 'var(--accent)',
+                  fontSize: '13px', fontWeight: 700, cursor: resending ? 'not-allowed' : 'pointer',
+                  textDecoration: 'underline',
+                }}
+              >
+                {resending ? 'Sending...' : 'Resend verification email'}
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput

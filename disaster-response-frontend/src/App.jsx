@@ -35,6 +35,8 @@ import ResponderNavigate from './pages/ResponderNavigate';
 import AdminSettings from './pages/AdminSettings';
 import CitizenSafeRoute from './pages/CitizenSafeRoute';
 import FamilySafety from './pages/FamilySafety';
+import AcceptInvite from './pages/AcceptInvite';
+import VerifyEmail from './pages/VerifyEmail';
 
 function HomeRoute() {
   const { isAuthenticated, user } = useAuthStore();
@@ -77,13 +79,13 @@ function AppContent() {
             useThemeStore.setState({ theme: newTheme });
             document.documentElement.setAttribute('data-theme', newTheme);
           }
-        } catch {}
+        } catch { }
       }
       if (e.key === 'system-settings' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
           if (parsed?.state) useSettingsStore.setState(parsed.state);
-        } catch {}
+        } catch { }
       }
     };
     window.addEventListener('storage', handleStorage);
@@ -149,6 +151,8 @@ function AppContent() {
           <ProtectedRoute requiredRole="Admin"><AdminSettings /></ProtectedRoute>
         } />
         <Route path="/family" element={<ProtectedRoute><FamilySafety /></ProtectedRoute>} />
+        <Route path="/accept-invite" element={<AcceptInvite />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

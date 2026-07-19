@@ -294,6 +294,21 @@ await _alertService.SendNewReportNotificationAsync(report, user?.FullName ?? "Ci
             return Ok(new { Message = "Vote recorded." });
         }
 
+        /// <summary>
+        /// Returns an AI-estimated (or rule-based fallback) severity suggestion for a pending report.
+        /// This is a suggestion only — the admin still picks the final severity.
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{id}/suggested-severity")]
+        public async Task<IActionResult> GetSuggestedSeverity(int id, [FromServices] ISeverityAnalysisService severityService)
+        {
+            var report = await _db.DisasterReports.FindAsync(id);
+            if (report == null) return NotFound();
+
+            var severity = await severityService.EstimateSeverityAsync(report.Description);
+            return Ok(new { SuggestedSeverity = severity });
+        }
+
         public record VerifyReportDto(bool Confirmed);
 
     }

@@ -174,7 +174,7 @@ export default function CitizenDashboard() {
                     🚨 Report Now
                 </Link>
             </div>
-            
+
             <div style={{
                 padding: '20px 24px', marginBottom: '28px',
                 background: 'linear-gradient(135deg, #1A365D, #3182ce)',
@@ -320,10 +320,10 @@ export default function CitizenDashboard() {
                 </div>
             </div>
 
-            {/* Show SignalR real-time alerts, or fall back to API-fetched alerts */}
             {(() => {
                 const displayAlerts = alerts.length > 0 ? alerts : apiAlerts;
                 if (displayAlerts.length === 0) return null;
+                const sevColor = { Critical: '#e53e3e', High: '#dd6b20', Medium: '#d69e2e', Low: '#38a169' };
                 return (
                     <div style={{ marginTop: '28px' }}>
                         <h3 style={{
@@ -333,32 +333,44 @@ export default function CitizenDashboard() {
                             🔔 Recent Alerts ({displayAlerts.length})
                         </h3>
                         <div style={{ display: 'grid', gap: '8px' }}>
-                            {displayAlerts.slice(0, 4).map((a, i) => (
-                                <div key={a.id || i} style={{
-                                    padding: '10px 14px',
-                                    background: 'var(--card-bg)',
-                                    border: '1px solid var(--border)',
-                                    borderLeft: `3px solid ${a.severity === 'Critical' ? '#e53e3e' : a.severity === 'High' ? '#dd6b20' : 'var(--accent)'}`,
-                                    borderRadius: '10px', fontSize: '13px',
-                                    color: 'var(--text-secondary)',
-                                    animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
-                                }}>
-                                    <strong style={{ color: 'var(--text-primary)' }}>
-                                        {a.disasterType || a.type || 'Alert'}
-                                    </strong>
-                                    {(a.affectedCity || a.location) && ` — ${a.affectedCity || a.location}`}
-                                    <span style={{ float: 'right', fontSize: '11px', color: 'var(--text-muted)' }}>
-                                        {new Date(a.createdAt || a.sentAt || Date.now()).toLocaleTimeString('en-PK', {
-                                            hour: '2-digit', minute: '2-digit',
-                                        })}
-                                    </span>
-                                </div>
-                            ))}
+                            {displayAlerts.slice(0, 4).map((a, i) => {
+                                const color = sevColor[a.severity] || 'var(--accent)';
+                                // real-time SignalR alerts have disasterType + description separately;
+                                // API-fetched alert history only has a combined "message" string.
+                                const title = a.disasterType
+                                    ? `${a.severity ? a.severity + ' ' : ''}${a.disasterType} Alert${a.affectedCity ? ` — ${a.affectedCity}` : ''}`
+                                    : (a.message?.split(':')[0] || 'Disaster Alert');
+                                const body = a.disasterType ? a.description : a.message;
+                                return (
+                                    <div key={a.id || i} style={{
+                                        padding: '10px 14px',
+                                        background: 'var(--card-bg)',
+                                        border: '1px solid var(--border)',
+                                        borderLeft: `3px solid ${color}`,
+                                        borderRadius: '10px', fontSize: '13px',
+                                        animation: `fadeInUp 0.3s ease ${i * 30}ms both`,
+                                    }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                                            <strong style={{ color: 'var(--text-primary)' }}>{title}</strong>
+                                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                                {new Date(a.createdAt || a.sentAt || Date.now()).toLocaleTimeString('en-PK', {
+                                                    hour: '2-digit', minute: '2-digit',
+                                                })}
+                                            </span>
+                                        </div>
+                                        {body && (
+                                            <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '12px', lineHeight: 1.4 }}>
+                                                {body.length > 100 ? body.slice(0, 100) + '...' : body}
+                                            </p>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 );
             })()}
-            
+
             <div style={{ marginTop: '28px' }}>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>
                     📰 Latest News

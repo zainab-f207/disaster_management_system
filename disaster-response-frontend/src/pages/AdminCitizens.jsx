@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { Users, Search, RefreshCw, Ban, FileText, Star } from 'lucide-react';
+import { Users, Search, RefreshCw, Ban, FileText, Star, Trash2 } from 'lucide-react';
 
 export default function AdminCitizens() {
   const [citizens, setCitizens] = useState([]);
@@ -43,6 +43,19 @@ export default function AdminCitizens() {
       fetchCitizens();
       if (selected?.id === c.id) setSelected(p => ({ ...p, isActive: !p.isActive }));
     } catch { toast.error('Failed to update account status'); }
+  };
+
+  const [confirmDelete, setConfirmDelete] = useState(null); // stores citizen to delete
+
+  const deleteUser = async (c) => {
+    try {
+      await api.delete(`/users/${c.id}`);
+      toast.success(`${c.fullName || c.name || 'User'}'s account deleted.`);
+      setCitizens(prev => prev.filter(u => u.id !== c.id));
+      if (selected?.id === c.id) setSelected(null);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete account.');
+    } finally { setConfirmDelete(null); }
   };
 
   const filtered = citizens.filter(c =>
@@ -96,7 +109,7 @@ export default function AdminCitizens() {
                       <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{c.email}</div>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                     {c.trustScore !== undefined && (
                       <span style={{ fontSize: '11px', color: '#d69e2e', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 700 }}>
                         <Star size={11} fill="#d69e2e" /> {c.trustScore}%
@@ -109,6 +122,10 @@ export default function AdminCitizens() {
                       style={{ padding: '5px 10px', borderRadius: '7px', background: c.isActive !== false ? 'rgba(229,62,62,0.1)' : 'rgba(39,174,96,0.1)', border: `1px solid ${c.isActive !== false ? '#e53e3e' : '#27ae60'}`, color: c.isActive !== false ? '#e53e3e' : '#27ae60', cursor: 'pointer', fontSize: '11px', fontWeight: 600 }}>
                       <Ban size={11} style={{ display: 'inline', marginRight: '3px' }} />
                       {c.isActive !== false ? 'Suspend' : 'Reinstate'}
+                    </button>
+                    <button onClick={e => { e.stopPropagation(); setConfirmDelete(c); }}
+                      style={{ padding: '5px 10px', borderRadius: '7px', background: 'rgba(229,62,62,0.08)', border: '1px solid #e53e3e', color: '#e53e3e', cursor: 'pointer', fontSize: '11px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Trash2 size={11} /> Delete
                     </button>
                   </div>
                 </div>
@@ -168,6 +185,25 @@ export default function AdminCitizens() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDelete && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 1200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: 'var(--bg-elevated)', border: '1.5px solid #e53e3e', borderRadius: '18px', width: '100%', maxWidth: '400px', padding: '30px 28px', boxShadow: '0 20px 60px rgba(229,62,62,0.2)', animation: 'scaleIn 0.2s ease' }}>
+            <div style={{ fontSize: '44px', textAlign: 'center', marginBottom: '14px' }}>🗑️</div>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, color: '#e53e3e', textAlign: 'center', margin: '0 0 10px' }}>Delete Account?</h2>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 20px', lineHeight: 1.6 }}>
+              Permanently delete <strong style={{ color: 'var(--text-primary)' }}>{confirmDelete.fullName || confirmDelete.name}</strong>'s account? This cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => setConfirmDelete(null)} style={{ flex: 1, padding: '11px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '13px' }}>Cancel</button>
+              <button onClick={() => deleteUser(confirmDelete)} style={{ flex: 1, padding: '11px', background: 'linear-gradient(135deg,#c0392b,#e53e3e)', border: 'none', borderRadius: '10px', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: '13px', boxShadow: '0 4px 14px rgba(229,62,62,0.35)' }}>
+                <Trash2 size={13} style={{ display: 'inline', marginRight: '5px' }} />Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

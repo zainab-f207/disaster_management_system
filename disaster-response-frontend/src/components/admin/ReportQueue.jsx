@@ -6,15 +6,17 @@ import { SeverityBadge, DisasterIcon } from '../ui';
 const SEVERITY_OPTIONS = ['Low', 'Medium', 'High', 'Critical'];
 
 export default function ReportQueue() {
-  const [reports, setReports]           = useState([]);
-  const [loading, setLoading]           = useState(true);
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeReport, setActiveReport] = useState(null); // report currently being reviewed
-  const [action, setAction]             = useState('');   // 'new' | 'merge' | 'reject'
-  const [disasters, setDisasters]       = useState([]);
-  const [severity, setSeverity]         = useState('High');
-  const [mergeId, setMergeId]           = useState('');
+  const [action, setAction] = useState('');   // 'new' | 'merge' | 'reject'
+  const [disasters, setDisasters] = useState([]);
+  const [severity, setSeverity] = useState('High');
+  const [mergeId, setMergeId] = useState('');
   const [rejectReason, setRejectReason] = useState('');
-  const [submitting, setSubmitting]     = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [suggestedSeverity, setSuggestedSeverity] = useState(null);
+  const [loadingSuggestion, setLoadingSuggestion] = useState(false);
 
   useEffect(() => {
     fetchReports();
@@ -39,7 +41,7 @@ export default function ReportQueue() {
       setDisasters((res.data || []).filter(d =>
         !['Resolved', 'FalseAlarm'].includes(d.status)
       ));
-    } catch {}
+    } catch { }
   };
 
   const handleCreateDisaster = async () => {
@@ -219,7 +221,15 @@ export default function ReportQueue() {
 
               {activeReport?.id !== report.id ? (
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <ActionBtn color="#38a169" onClick={() => { setActiveReport(report); setAction('new'); }}>
+                  <ActionBtn color="#38a169" onClick={async () => {
+                    setActiveReport(report); setAction('new'); setSuggestedSeverity(null);
+                    setLoadingSuggestion(true);
+                    try {
+                      const res = await reportApi.getSuggestedSeverity(report.id);
+                      setSuggestedSeverity(res.data?.suggestedSeverity);
+                      if (res.data?.suggestedSeverity) setSeverity(res.data.suggestedSeverity);
+                    } catch { } finally { setLoadingSuggestion(false); }
+                  }}>
                     ✅ New Disaster
                   </ActionBtn>
                   <ActionBtn color="#4299e1" onClick={() => { setActiveReport(report); setAction('merge'); }}>
@@ -244,7 +254,17 @@ export default function ReportQueue() {
                       <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                         Severity Level
                       </label>
-                      <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {loadingSuggestion && (
+                          <div style={{ fontSize: '12px', color: '#4299e1', background: 'rgba(66,153,225,0.1)', padding: '6px 10px', borderRadius: '6px', fontWeight: 600 }}>
+                            🤖 AI analyzing severity...
+                          </div>
+                        )}
+                        {suggestedSeverity && !loadingSuggestion && (
+                          <div style={{ fontSize: '12px', color: '#38a169', background: 'rgba(56,161,105,0.1)', padding: '6px 10px', borderRadius: '6px', fontWeight: 600 }}>
+                            🤖 AI Suggested: {suggestedSeverity}
+                          </div>
+                        )}
                         {SEVERITY_OPTIONS.map(s => (
                           <button
                             key={s}

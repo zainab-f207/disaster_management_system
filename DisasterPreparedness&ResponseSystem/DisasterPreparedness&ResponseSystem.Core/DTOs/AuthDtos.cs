@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,8 @@ namespace DisasterPreparedness_ResponseSystem.Core.DTOs
      string Password,
      string PhoneNumber,
      string Role,                          
-     int? ResponderOrganizationId          
+     int? ResponderOrganizationId,
+     string? InviterId = null
  );
 
     public record LoginDto(
@@ -29,4 +30,6 @@ namespace DisasterPreparedness_ResponseSystem.Core.DTOs
         int? OrganizationId,
         DateTime ExpiresAt
     );
+    public record ConfirmEmailDto(string Email, string Token);
+    public record ResendVerificationDto(string Email);
 }

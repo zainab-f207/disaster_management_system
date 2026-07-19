@@ -98,6 +98,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     u.ResponderOrganizationId,
                     OrganizationName = u.ResponderOrganization?.Name,
                     IsActive = isActive,
+                    IsPending = !u.EmailConfirmed,
                     TrustScore = trustScore,
                     ReportCount = totalReports
                 });
@@ -143,6 +144,35 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 return BadRequest(result.Errors.Select(e => e.Description));
 
             return Ok(new { Message = "User status updated successfully", IsActive = dto.IsActive });
+        }
+
+        // DELETE /api/users/{id} — Admin permanently deletes a citizen or responder account
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound(new { Message = "User not found." });
+
+            // Prevent admins from being deleted via this endpoint
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin"))
+                return Forbid();
+
+            // Remove associated family connections
+            var familyLinks = _db.FamilyConnections.Where(f => f.OwnerUserId == id || f.MemberUserId == id);
+            _db.FamilyConnections.RemoveRange(familyLinks);
+
+            // Orphan the user's disaster reports (keep the reports, just clear the reporter link)
+            var reports = await _db.DisasterReports.Where(r => r.ReportedByUserId == id).ToListAsync();
+            foreach (var r in reports) r.ReportedByUserId = null;
+
+            await _db.SaveChangesAsync();
+
+            var deleteResult = await _userManager.DeleteAsync(user);
+            if (!deleteResult.Succeeded)
+                return BadRequest(deleteResult.Errors.Select(e => e.Description));
+
+            return Ok(new { Message = "Account deleted successfully." });
         }
 
         /// <summary>
