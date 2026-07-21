@@ -338,7 +338,9 @@ export default function Navbar({ isConnected }) {
               borderRadius: '24px',
               padding: '32px 24px 24px',
               maxWidth: '90%',
+              width: '380px',
               maxHeight: '90%',
+              overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -368,8 +370,8 @@ export default function Navbar({ isConnected }) {
               src="/logo.svg" 
               alt="Nigehbaan Premium Logo" 
               style={{
-                width: 'min(320px, 70vw)',
-                height: 'min(320px, 70vw)',
+                width: 'min(200px, 50vw)',
+                height: 'min(200px, 50vw)',
                 filter: 'drop-shadow(0 8px 24px rgba(33,150,83,0.25))',
                 marginBottom: '16px',
               }}
@@ -379,7 +381,7 @@ export default function Navbar({ isConnected }) {
             <h2 style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 900,
-              fontSize: '22px',
+              fontSize: '20px',
               color: 'var(--text-primary)',
               margin: '0 0 4px',
             }}>

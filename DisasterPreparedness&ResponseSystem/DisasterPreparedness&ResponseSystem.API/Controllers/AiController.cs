@@ -15,10 +15,12 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
     {
         private readonly IConfiguration _config;
         private readonly HttpClient _httpClient;
+        private readonly Microsoft.Extensions.Logging.ILogger<AiController> _logger;
 
-        public AiController(IConfiguration config)
+        public AiController(IConfiguration config, Microsoft.Extensions.Logging.ILogger<AiController> logger)
         {
             _config = config;
+            _logger = logger;
             _httpClient = new HttpClient();
         }
 
@@ -100,6 +102,7 @@ You are NOT a replacement for emergency services. Always direct people to call e
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Gemini API call failed with HTTP status code {StatusCode}: {ErrorResponse}", response.StatusCode, error);
                 return StatusCode((int)response.StatusCode, new { error });
             }
 

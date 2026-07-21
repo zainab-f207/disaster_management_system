@@ -23,6 +23,30 @@ const _cache = new Map(); // key: `lat,lon,radius` → { data, ts }
 const CACHE_TTL = 10 * 60 * 1000; // 10 min
 
 async function fetchOverpass(query, attempt = 0) {
+  // Try querying through our backend proxy first to avoid browser CORS policy blocking
+  try {
+    const getApiUrl = () => {
+      let url = import.meta.env.VITE_API_URL || 'https://localhost:7129';
+      if (!url.endsWith('/api') && !url.endsWith('/api/')) {
+        url = url.replace(/\/$/, '') + '/api';
+      }
+      return url.replace(/\/$/, '');
+    };
+    
+    const res = await fetch(`${getApiUrl()}/monitoring/overpass`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: query }),
+    });
+    
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend Overpass proxy unavailable or failed. Falling back to direct mirrors...", err);
+  }
+
+  // Fallback: Direct query to Overpass mirrors
   const mirror = OVERPASS_MIRRORS[attempt % OVERPASS_MIRRORS.length];
   const res = await fetch(mirror, {
     method: 'POST',
