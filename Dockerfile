@@ -25,6 +25,7 @@ COPY --from=publish /app/publish .
 
 # Expose common port for free hosting providers
 ENV ASPNETCORE_URLS=http://+:8080
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "DisasterPreparedness&ResponseSystem.API.dll"]
