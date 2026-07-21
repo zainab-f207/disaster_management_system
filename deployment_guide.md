@@ -63,6 +63,9 @@ We will deploy the ASP.NET Core Web API using Docker, since Render's free tier s
    - Click **Add Environment Variable** again:
      - **Key**: `ASPNETCORE_ENVIRONMENT`
      - **Value**: `Production`
+   - Click **Add Environment Variable** again:
+     - **Key**: `GeminiApiKey`
+     - **Value**: `YOUR_GEMINI_API_KEY` (Paste your real Gemini API key from Google AI Studio here)
 6. Click **Create Web Service** at the bottom of the page.
 7. Render will build the container using the Dockerfile and deploy it. Once the build finishes, copy the URL of your live API (e.g., `https://nigehbaan-api.onrender.com`).
 
@@ -86,3 +89,48 @@ Vercel is the easiest and most powerful static site hosting platform, with a ric
 6. Click **Deploy**.
 7. Once deployed, Vercel will give you a public URL (e.g., `https://nigehbaan.vercel.app`).
 8. Page refreshes are automatically handled by the `vercel.json` rewrite file we added.
+
+---
+
+## Part 5: Building a Capacitor Mobile App (Android)
+
+Capacitor allows you to wrap your web frontend into a native Android/iOS app with 100% free local builds.
+
+### 1. Setup Capacitor in your Frontend:
+Run these commands in your frontend directory (`disaster-response-frontend`):
+```bash
+# 1. Install Capacitor Core and CLI
+npm install @capacitor/core @capacitor/cli
+
+# 2. Initialize Capacitor with your App Name and Package ID
+npx cap init Nigehbaan com.nigehbaan.app --web-dir=dist
+
+# 3. Add the Android Platform
+npm install @capacitor/android
+npx cap add android
+```
+
+### 2. Configure Local/Production API URLs:
+Make sure your frontend API configuration dynamically checks if it is running on a mobile device or inside Capacitor, and points to the deployed Render API:
+- In `disaster-response-frontend/src/services/api.js` (or wherever your API URL is defined), fallback to your live Render API URL:
+  `const API_URL = import.meta.env.VITE_API_URL || 'https://nigehbaan-api.onrender.com';`
+
+### 3. Build & Sync:
+Every time you make a change in the web app and want to update the Android app:
+```bash
+# 1. Build the production assets of the Vite app
+npm run build
+
+# 2. Copy the built web assets into the Android native project
+npx cap sync
+```
+
+### 4. Open in Android Studio & Compile:
+```bash
+# Open the Android project in Android Studio
+npx cap open android
+```
+1. Inside **Android Studio**, wait for Gradle sync to complete.
+2. Go to **Build** -> **Build Bundle(s) / APK(s)** -> **Build APK(s)**.
+3. Once completed, Android Studio will display a popup. Click **Locate** to find your compiled debug APK (`app-debug.apk`).
+4. You can transfer this APK directly to your phone and install it for free, no developer account or credit cards required!
