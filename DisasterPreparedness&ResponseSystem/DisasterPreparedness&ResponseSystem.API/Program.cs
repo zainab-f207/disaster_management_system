@@ -29,7 +29,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (connStr != null && (connStr.StartsWith("postgresql://") || connStr.StartsWith("postgres://") || connStr.Contains("Host=") || connStr.Contains("Port=")))
+    if (connStr != null && (connStr.StartsWith("postgresql://") || connStr.StartsWith("postgres://")))
+    {
+        var uri = new Uri(connStr);
+        var userInfo = uri.UserInfo.Split(':');
+        var builderDb = new Npgsql.NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.IsDefaultPort ? 5432 : uri.Port,
+            Username = userInfo[0],
+            Password = userInfo.Length > 1 ? userInfo[1] : "",
+            Database = uri.LocalPath.TrimStart('/'),
+            SslMode = Npgsql.SslMode.Require,
+            TrustServerCertificate = true
+        };
+        options.UseNpgsql(builderDb.ToString());
+    }
+    else if (connStr != null && (connStr.Contains("Host=") || connStr.Contains("Port=")))
     {
         options.UseNpgsql(connStr);
     }
