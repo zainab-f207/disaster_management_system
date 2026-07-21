@@ -12,6 +12,7 @@ export default function Navbar({ isConnected }) {
   const { isAuthenticated, user, logout } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [logoModalOpen, setLogoModalOpen] = useState(false);
   const location = useLocation();
 
   const roleLinks = {
@@ -67,25 +68,37 @@ export default function Navbar({ isConnected }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         {/* Logo */}
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-          <img src="/logo.svg" alt="Nigehbaan Logo" style={{
-            width: '38px',
-            height: '38px',
-            filter: 'drop-shadow(0 0 8px rgba(39,174,96,0.3))'
-          }} />
-          <div>
-            <div style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 700, fontSize: '17px',
-              color: 'var(--text-primary)', lineHeight: 1.1,
-            }}>
-              Nigehbaan
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          <img 
+            src="/logo.svg" 
+            alt="Nigehbaan Logo" 
+            title="Click to view full logo"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setLogoModalOpen(true); }}
+            style={{
+              width: '38px',
+              height: '38px',
+              cursor: 'pointer',
+              filter: 'drop-shadow(0 0 8px rgba(39,174,96,0.3))',
+              transition: 'transform 0.2s ease',
+            }} 
+            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+          />
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700, fontSize: '17px',
+                color: 'var(--text-primary)', lineHeight: 1.1,
+              }}>
+                Nigehbaan
+              </div>
+              <div style={{ fontSize: '9px', color: 'var(--text-muted)', lineHeight: 1.2 }}>
+                Pakistan's Guardian Network
+              </div>
             </div>
-            <div style={{ fontSize: '9px', color: 'var(--text-muted)', lineHeight: 1.2 }}>
-              Pakistan's Guardian Network
-            </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
         {/* Center nav links — desktop */}
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }} className="desktop-nav">
@@ -299,6 +312,97 @@ export default function Navbar({ isConnected }) {
               🚨 SOS
             </Link>
           )}
+        </div>
+      )}
+
+      {/* Logo Modal Popup */}
+      {logoModalOpen && (
+        <div 
+          onClick={() => setLogoModalOpen(false)}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 9999,
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-elevated)',
+              border: '1.5px solid var(--border-strong)',
+              borderRadius: '24px',
+              padding: '32px 24px 24px',
+              maxWidth: '90%',
+              maxHeight: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: 'var(--shadow-lg)',
+              position: 'relative',
+              boxSizing: 'border-box',
+            }}
+          >
+            {/* Close Button */}
+            <button 
+              onClick={() => setLogoModalOpen(false)}
+              style={{
+                position: 'absolute', top: '16px', right: '16px',
+                background: 'var(--bg-surface-2)',
+                border: '1px solid var(--border)',
+                borderRadius: '50%',
+                width: '36px', height: '36px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', color: 'var(--text-primary)',
+              }}
+            >
+              <X size={16} />
+            </button>
+
+            {/* Logo Image */}
+            <img 
+              src="/logo.svg" 
+              alt="Nigehbaan Premium Logo" 
+              style={{
+                width: 'min(320px, 70vw)',
+                height: 'min(320px, 70vw)',
+                filter: 'drop-shadow(0 8px 24px rgba(33,150,83,0.25))',
+                marginBottom: '16px',
+              }}
+            />
+
+            {/* Logo Details */}
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 900,
+              fontSize: '22px',
+              color: 'var(--text-primary)',
+              margin: '0 0 4px',
+            }}>
+              NIGEHBAN
+            </h2>
+            <p style={{
+              fontSize: '11px',
+              color: 'var(--accent)',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              margin: '0 0 12px',
+            }}>
+              PAKISTAN'S GUARDIAN NETWORK
+            </p>
+            <p style={{
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+              maxWidth: '280px',
+              lineHeight: 1.5,
+              margin: 0,
+            }}>
+              Featuring the protective shield, crescent &amp; star, emergency response relief cross, medical safety heart, and connected responder mesh network.
+            </p>
+          </div>
         </div>
       )}
     </nav>
