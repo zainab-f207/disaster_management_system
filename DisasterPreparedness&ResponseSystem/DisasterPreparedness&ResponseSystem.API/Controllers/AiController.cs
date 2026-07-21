@@ -45,7 +45,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] ChatRequest request)
         {
-            var apiKey = _config["GeminiApiKey"];
+            var apiKey = _config["GeminiApiKey"] 
+                         ?? _config["GEMINI_API_KEY"] 
+                         ?? _config["Gemini_Api_Key"]
+                         ?? Environment.GetEnvironmentVariable("GeminiApiKey")
+                         ?? Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             
             // If no API key is provided, return a mock response for now
             if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_API_KEY_HERE")
@@ -93,7 +97,7 @@ You are NOT a replacement for emergency services. Always direct people to call e
                 }
             };
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
             var jsonPayload = JsonSerializer.Serialize(payload);
             var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 

@@ -391,6 +391,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             try
             {
                 var client = _httpFactory.CreateClient();
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 client.Timeout = TimeSpan.FromSeconds(25);
 
                 var mirrors = new[]
@@ -407,7 +408,10 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 {
                     try
                     {
-                        var content = new StringContent(request.Query, System.Text.Encoding.UTF8, "text/plain");
+                        var content = new FormUrlEncodedContent(new[]
+                        {
+                            new KeyValuePair<string, string>("data", request.Query)
+                        });
                         response = await client.PostAsync(mirror, content);
                         if (response.IsSuccessStatusCode)
                         {
