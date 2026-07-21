@@ -259,7 +259,21 @@ using (var scope = app.Services.CreateScope())
     var db = services.GetRequiredService<AppDbContext>();
     if (db.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
     {
-        await db.Database.EnsureCreatedAsync();
+        bool created = await db.Database.EnsureCreatedAsync();
+        if (!created)
+        {
+            try
+            {
+                // Check if a core table exists. If not, it means the DB was left in a corrupted/partial state.
+                await db.Database.ExecuteSqlRawAsync("SELECT 1 FROM \"AspNetRoles\" LIMIT 1");
+            }
+            catch (Exception)
+            {
+                // Table doesn't exist, meaning the database is incomplete. Force drop and recreate.
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+        }
     }
     else
     {
