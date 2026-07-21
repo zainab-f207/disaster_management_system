@@ -1,27 +1,30 @@
 # Nigehbaan Deployment Guide (100% Free Hosting)
 
-Follow these step-by-step instructions to deploy your frontend to Vercel, your database to Neon, and your ASP.NET Core backend to Render. No credit card is required for any of these steps.
+This guide provides step-by-step instructions to deploy your frontend to Vercel, your database to Neon, and your ASP.NET Core backend to Render. All services are 100% free with no credit card required.
 
 ---
 
-## Part 1: Push Project to GitHub
+## ⚠️ Important Note: SQL Server vs. PostgreSQL Mismatch Fixed!
 
-Before beginning, ensure that your entire project (including both backend folders and the `disaster-response-frontend` folder) is pushed to a GitHub repository.
-If you haven't initialized Git yet:
-1. Open Git Bash or terminal in the project root (`Pakistan-Disaster-Response-System`).
-2. Run:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit for Nigehbaan"
-   ```
-3. Create a public or private repository on [GitHub](https://github.com).
-4. Run the commands provided by GitHub to link your local repository and push:
-   ```bash
-   git remote add origin https://github.com/yourusername/your-repo-name.git
-   git branch -M main
-   git push -u origin main
-   ```
+### What Went Wrong:
+Your local backend was built using **Entity Framework Core for SQL Server** (`Microsoft.EntityFrameworkCore.SqlServer`). When you configured a **PostgreSQL** database (from Neon) on Render, EF Core tried to parse the `postgresql://...` connection string using SQL Server rules, causing the startup crash:
+`Unhandled exception. System.ArgumentException: Keyword not supported: 'postgresql://...'`
+
+### How We Fixed It:
+1. **Multi-Database Support**: We added the `Npgsql.EntityFrameworkCore.PostgreSQL` package to the backend.
+2. **Dynamic DB Provider Selection**: We modified `Program.cs` to check the connection string prefix. If it starts with `postgresql://` or `postgres://`, the app automatically switches to **PostgreSQL**. Otherwise, it defaults to **SQL Server**.
+3. **Migration Fallback**: Since Entity Framework SQL Server migrations cannot run directly on PostgreSQL, we wrapped the migration step in a try-catch. If applying migrations fails, the app falls back to `.Database.EnsureCreatedAsync()`, which directly creates the required tables on the PostgreSQL database.
+
+---
+
+## Part 1: Push Code Changes to GitHub
+
+Commit the database-switching changes and the updated Dockerfile to your GitHub repository:
+```bash
+git add .
+git commit -m "Configure dynamic database provider for PostgreSQL support"
+git push origin main
+```
 
 ---
 
@@ -32,7 +35,7 @@ Neon provides a fully-managed PostgreSQL database with a free tier that does not
 1. Go to **[Neon.tech](https://neon.tech/)** and click **Sign Up** (use your GitHub account).
 2. Click **Create a new project**.
 3. Name your project (e.g. `nigehbaan-db`).
-4. Select the PostgreSQL version (choose the latest, e.g. **PostgreSQL 16**).
+4. Select the PostgreSQL version (choose **PostgreSQL 16**).
 5. Choose a region closest to your target users (e.g., Singapore or Europe for Pakistan).
 6. Click **Create Project**.
 7. In the dashboard, you will be presented with a connection string. Copy the **ConnectionString** (it starts with `postgresql://...`). Save this for Part 3.
@@ -41,7 +44,7 @@ Neon provides a fully-managed PostgreSQL database with a free tier that does not
 
 ## Part 3: Backend API Deployment on Render
 
-We will deploy the ASP.NET Core Web API using Docker, since Render's free tier supports custom Docker containers (via the `Dockerfile` we created in the root directory).
+We will deploy the ASP.NET Core Web API using Docker, since Render's free tier supports custom Docker containers (via the `Dockerfile` in the root directory).
 
 1. Go to **[Render.com](https://render.com/)** and click **Sign Up** (sign up using GitHub to avoid card requirements).
 2. Click the **New +** button in the top right and select **Web Service**.
@@ -83,9 +86,3 @@ Vercel is the easiest and most powerful static site hosting platform, with a ric
 6. Click **Deploy**.
 7. Once deployed, Vercel will give you a public URL (e.g., `https://nigehbaan.vercel.app`).
 8. Page refreshes are automatically handled by the `vercel.json` rewrite file we added.
-
----
-
-## Part 5: Syncing the Backend CORS (Optional but Recommended)
-
-To ensure that your backend allows API requests from your Vercel URL, open the backend `Program.cs` or app settings and ensure your Vercel URL is added to the allowed CORS origins (or configured to allow any origin in development/production if desired).

@@ -148,7 +148,7 @@ export default function AdminPanel() {
       <div style={{ marginBottom: '24px', animation: 'fadeInUp 0.4s ease' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <img src="/logo.svg" alt="NigehbaanPK Logo" style={{
+            <img src="/logo.svg" alt="Nigehbaan Logo" style={{
               width: '48px', height: '48px',
               filter: 'drop-shadow(0 6px 12px rgba(33,150,83,0.3))',
             }} />

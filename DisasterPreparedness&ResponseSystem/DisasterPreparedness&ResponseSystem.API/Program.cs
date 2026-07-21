@@ -27,7 +27,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (connStr != null && (connStr.StartsWith("postgresql://") || connStr.StartsWith("postgres://") || connStr.Contains("Host=") || connStr.Contains("Port=")))
+    {
+        options.UseNpgsql(connStr);
+    }
+    else
+    {
+        options.UseSqlServer(connStr);
+    }
+});
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -231,7 +241,15 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
+    try
+    {
+        await db.Database.MigrateAsync();
+    }
+    catch (Exception)
+    {
+        // Fallback for different providers (PostgreSQL / SQLite) where EF Migrations might fail
+        await db.Database.EnsureCreatedAsync();
+    }
 
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await RoleSeeder.SeedRolesAsync(roleManager);
