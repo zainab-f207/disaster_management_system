@@ -48,7 +48,14 @@ export default function AIAssistant() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://localhost:7129/api/ai/chat', {
+      const getApiUrl = () => {
+        let url = import.meta.env.VITE_API_URL || 'https://localhost:7129';
+        if (!url.endsWith('/api') && !url.endsWith('/api/')) {
+          url = url.replace(/\/$/, '') + '/api';
+        }
+        return url.replace(/\/$/, '');
+      };
+      const response = await fetch(`${getApiUrl()}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

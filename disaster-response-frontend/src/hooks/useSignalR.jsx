@@ -5,7 +5,13 @@ import { setActiveConnection } from '../services/signalrConnection';
 import toast from 'react-hot-toast';
 
 
-const HUB_URL = 'https://localhost:7129/hubs/disasters';
+const getBaseUrl = () => {
+  let url = import.meta.env.VITE_API_URL || 'https://localhost:7129';
+  url = url.replace(/\/api\/?$/, '');
+  return url.replace(/\/$/, '');
+};
+
+const HUB_URL = `${getBaseUrl()}/hubs/disasters`;
 
 export function useSignalR() {
   const connectionRef = useRef(null);
