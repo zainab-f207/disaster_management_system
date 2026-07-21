@@ -257,14 +257,20 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<AppDbContext>();
-    try
+    if (db.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
     {
-        await db.Database.MigrateAsync();
-    }
-    catch (Exception)
-    {
-        // Fallback for different providers (PostgreSQL / SQLite) where EF Migrations might fail
         await db.Database.EnsureCreatedAsync();
+    }
+    else
+    {
+        try
+        {
+            await db.Database.MigrateAsync();
+        }
+        catch (Exception)
+        {
+            await db.Database.EnsureCreatedAsync();
+        }
     }
 
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
