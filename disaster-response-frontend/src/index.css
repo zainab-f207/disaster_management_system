@@ -226,3 +226,91 @@ body {
 }
 .disaster-popup .leaflet-popup-content { margin: 0; }
 .disaster-popup .leaflet-popup-tip { background: var(--bg-elevated); }
+
+/* ── Mobile Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hide desktop nav links on mobile */
+  .desktop-nav {
+    display: none !important;
+  }
+
+  /* Show hamburger button on mobile */
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  /* Navbar inner: prevent overflow */
+  nav > div:first-child {
+    padding: 0 16px;
+    overflow: hidden;
+  }
+
+  /* Hide live indicator text label on very small screens */
+  .live-label {
+    display: none;
+  }
+
+  /* SOS button — shrink on mobile */
+  .sos-btn {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Page content padding — account for fixed navbar */
+  body > #root > * {
+    padding-top: 64px;
+  }
+
+  /* General card grid — single column on mobile */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Stat grids — 2 cols max on mobile */
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Prevent horizontal scroll on all pages */
+  .page-wrapper, main, section {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Tables — allow horizontal scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Modal — full width on mobile */
+  .modal-box {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    padding: 20px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Logo subtitle — hide on very small screens */
+  .logo-subtitle {
+    display: none;
+  }
+
+  /* Navbar height control */
+  nav > div:first-child {
+    height: 56px;
+  }
+
+  /* Stat grids — single col on tiny screens */
+  .stat-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Shrink notification icon area */
+  .notif-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}

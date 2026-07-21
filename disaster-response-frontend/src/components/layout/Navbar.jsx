@@ -93,7 +93,7 @@ export default function Navbar({ isConnected }) {
               }}>
                 Nigehbaan
               </div>
-              <div style={{ fontSize: '9px', color: 'var(--text-muted)', lineHeight: 1.2 }}>
+              <div className="logo-subtitle" style={{ fontSize: '9px', color: 'var(--text-muted)', lineHeight: 1.2 }}>
                 Pakistan's Guardian Network
               </div>
             </div>
@@ -164,7 +164,7 @@ export default function Navbar({ isConnected }) {
           }}>
             <Radio size={10} color={isConnected ? '#27ae60' : '#e53e3e'}
               style={{ animation: isConnected ? 'pulse-dot 2s infinite' : 'none' }} />
-            <span style={{
+            <span className="live-label" style={{
               fontSize: '11px', fontWeight: 600,
               color: isConnected ? '#27ae60' : '#e53e3e',
             }}>
@@ -206,7 +206,9 @@ export default function Navbar({ isConnected }) {
                 }}
               >
                 <User size={14} />
-                {user?.fullName?.split(' ')[0]}
+                <span style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user?.fullName?.split(' ')[0]}
+                </span>
                 <ChevronDown size={12} />
               </button>
               {userMenuOpen && (
