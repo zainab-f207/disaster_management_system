@@ -55,7 +55,8 @@ export default function Navbar({ isConnected }) {
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
-    <nav style={{
+    <>
+      <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
       background: 'var(--navbar-bg)',
       backdropFilter: 'blur(20px)',
@@ -317,6 +318,8 @@ export default function Navbar({ isConnected }) {
         </div>
       )}
 
+      </nav>
+
       {/* Logo Modal Popup */}
       {logoModalOpen && (
         <div 
@@ -404,11 +407,11 @@ export default function Navbar({ isConnected }) {
               lineHeight: 1.5,
               margin: 0,
             }}>
-              Featuring the protective shield, crescent &amp; star, emergency response relief cross, medical safety heart, and connected responder mesh network.
+              Featuring the protective shield, crescent & star, emergency response relief cross, medical safety heart, and connected responder mesh network.
             </p>
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }
