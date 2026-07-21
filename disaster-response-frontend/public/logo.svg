@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <!-- Base Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#05331B" />
+      <stop offset="50%" stop-color="#094A29" />
+      <stop offset="100%" stop-color="#021C0E" />
+    </linearGradient>
+
+    <!-- Gold/Bronze Metallic Gradients -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="30%" stop-color="#FFB300" />
+      <stop offset="70%" stop-color="#FF8F00" />
+      <stop offset="100%" stop-color="#FF6F00" />
+    </linearGradient>
+
+    <!-- Silver/Glass Edge Gradient -->
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+      <stop offset="35%" stop-color="#B0BEC5" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#37474F" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Glowing Alert Signals -->
+    <radialGradient id="alertGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF3D00" stop-opacity="1" />
+      <stop offset="40%" stop-color="#FF9100" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#FF3D00" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Mesh Network Connections Gradient -->
+    <linearGradient id="meshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26A69A" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#27AE60" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- Filters for Glowing Elements -->
+    <filter id="glowEffect" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="shadowEffect" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- ==================== 1. MAIN SHIELD (Protection / Guardian) ==================== -->
+  <!-- Shadow under shield -->
+  <path d="M200 20 L330 65 C330 65 340 180 330 240 C315 300 240 365 200 375 C160 365 85 300 70 240 C60 180 70 65 70 65 Z" 
+        fill="#000000" fill-opacity="0.4" filter="url(#shadowEffect)" />
+
+  <!-- Shield Base Body -->
+  <path d="M200 20 L330 65 C330 65 340 180 330 240 C315 300 240 365 200 375 C160 365 85 300 70 240 C60 180 70 65 70 65 Z" 
+        fill="url(#bgGrad)" />
+
+  <!-- Inner Silver Border (Glassmorphic Outer Frame) -->
+  <path d="M200 23 L327 67 C327 67 336 178 327 237 C312 296 239 360 200 370 C161 360 88 296 73 237 C64 178 73 67 73 67 Z" 
+        fill="none" stroke="url(#silverGrad)" stroke-width="4.5" />
+
+  <!-- ==================== 2. MESH NETWORK (Connected Responders/Helpline) ==================== -->
+  <g opacity="0.4">
+    <!-- Lines joining the network -->
+    <line x1="200" y1="310" x2="130" y2="280" stroke="url(#meshGrad)" stroke-width="2" />
+    <line x1="200" y1="310" x2="270" y2="280" stroke="url(#meshGrad)" stroke-width="2" />
+    <line x1="130" y1="280" x2="100" y2="210" stroke="url(#meshGrad)" stroke-width="1.5" />
+    <line x1="270" y1="280" x2="300" y2="210" stroke="url(#meshGrad)" stroke-width="1.5" />
+    <line x1="100" y1="210" x2="200" y2="150" stroke="url(#meshGrad)" stroke-width="1.5" />
+    <line x1="300" y1="210" x2="200" y2="150" stroke="url(#meshGrad)" stroke-width="1.5" />
+    
+    <!-- Glowing Network Node Points -->
+    <circle cx="200" cy="310" r="5" fill="#26A69A" filter="url(#glowEffect)" />
+    <circle cx="130" cy="280" r="4.5" fill="#27AE60" />
+    <circle cx="270" cy="280" r="4.5" fill="#27AE60" />
+    <circle cx="100" cy="210" r="4" fill="#00E676" />
+    <circle cx="300" cy="210" r="4" fill="#00E676" />
+  </g>
+
+  <!-- ==================== 3. MAP MARKER PIN & EMERGENY BEACON (Live Tracking & SOS) ==================== -->
+  <!-- Radiating Alert/Rescue Signal Waves -->
+  <circle cx="200" cy="120" r="55" fill="none" stroke="#FF5722" stroke-width="2.5" stroke-dasharray="10, 8" opacity="0.75" filter="url(#glowEffect)" />
+  <circle cx="200" cy="120" r="35" fill="none" stroke="#FF9100" stroke-width="2" stroke-dasharray="8, 6" opacity="0.85" />
+
+  <!-- Outer Map Pin Frame -->
+  <path d="M200 65 C165 65 140 92 140 125 C140 165 190 220 200 230 C210 220 260 165 260 125 C260 92 235 65 200 65 Z" 
+        fill="url(#goldGrad)" opacity="0.95" filter="url(#shadowEffect)" />
+  
+  <!-- Inner Glass Pin Core -->
+  <path d="M200 70 C170 70 146 94 146 125 C146 158 190 210 200 220 C210 210 254 158 254 125 C254 94 230 70 200 70 Z" 
+        fill="#042F19" fill-opacity="0.75" stroke="#FFFFFF" stroke-width="1.5" />
+
+  <!-- Glowing SOS Center Light -->
+  <circle cx="200" cy="120" r="28" fill="url(#alertGlow)" filter="url(#glowEffect)" />
+
+  <!-- ==================== 4. CRESCENT & STAR (Pakistan Theme) ==================== -->
+  <!-- Centered perfectly inside the glowing beacon -->
+  <g transform="translate(182, 102)">
+    <!-- Crescent -->
+    <path d="M12 4 A16 16 0 1 0 32 24 A13 13 0 1 1 12 4" fill="#FFFFFF" />
+    <!-- Star -->
+    <polygon points="26,6 28,11 33,11 29,14 31,19 26,16 21,19 23,14 19,11 24,11" fill="#FFFFFF" />
+  </g>
+
+  <!-- ==================== 5. TEXT ELEMENT: NIGEHBAN / نگہبان ==================== -->
+  <!-- Background banner block for text readability -->
+  <rect x="90" y="325" width="220" height="42" rx="10" fill="#042010" fill-opacity="0.85" stroke="url(#goldGrad)" stroke-width="2" filter="url(#shadowEffect)" />
+
+  <!-- English Text -->
+  <text x="200" y="347" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" letter-spacing="3" text-anchor="middle">
+    NIGEHBAN
+  </text>
+  
+  <!-- Urdu Subtext (نگہبان - Guardian) -->
+  <text x="200" y="361" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="700" font-size="10" fill="#FFC107" letter-spacing="1" text-anchor="middle">
+    PAKISTAN'S GUARDIAN NETWORK · نگہبان
+  </text>
+</svg>

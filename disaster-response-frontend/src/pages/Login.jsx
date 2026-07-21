@@ -85,16 +85,11 @@ export default function Login() {
           boxShadow: 'var(--shadow-lg)',
         }}>
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{
-              width: '56px', height: '56px', margin: '0 auto 14px',
-              background: 'linear-gradient(135deg, #145c33, #27ae60)',
-              borderRadius: '16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(33,150,83,0.3)',
+             <img src="/logo.svg" alt="Nigehbaan Logo" style={{
+              width: '74px', height: '74px', margin: '0 auto 14px',
+              filter: 'drop-shadow(0 8px 16px rgba(33,150,83,0.3))',
               animation: 'float 3s ease-in-out infinite',
-            }}>
-              <Shield size={26} color="#fff" />
-            </div>
+            }} />
             <h1 style={{
               fontFamily: 'var(--font-display)',
               fontSize: '22px', fontWeight: 800,
@@ -103,7 +98,7 @@ export default function Login() {
               Sign In
             </h1>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-              Pakistan Disaster Response System
+              Nigehbaan — Pakistan's Guardian Network
             </p>
           </div>
 

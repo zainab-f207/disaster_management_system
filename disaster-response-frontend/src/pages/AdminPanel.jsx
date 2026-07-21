@@ -148,15 +148,10 @@ export default function AdminPanel() {
       <div style={{ marginBottom: '24px', animation: 'fadeInUp 0.4s ease' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{
-              width: '52px', height: '52px',
-              background: 'linear-gradient(135deg, #145c33, #27ae60)',
-              borderRadius: '14px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 6px 20px rgba(33,150,83,0.3)',
-            }}>
-              <Shield size={24} color="#fff" />
-            </div>
+            <img src="/logo.svg" alt="NigehbaanPK Logo" style={{
+              width: '48px', height: '48px',
+              filter: 'drop-shadow(0 6px 12px rgba(33,150,83,0.3))',
+            }} />
             <div>
               <h1 style={{
                 fontFamily: 'var(--font-display)', fontSize: '24px',
@@ -165,7 +160,7 @@ export default function AdminPanel() {
                 Admin Control Panel
               </h1>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '3px' }}>
-                {user?.fullName} · Pakistan Disaster Response System
+                {user?.fullName} · Nigehbaan Command Center
               </p>
             </div>
           </div>

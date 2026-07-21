@@ -115,7 +115,7 @@ export default function Dashboard() {
                 color: 'var(--text-primary)',
                 lineHeight: 1.1,
               }}>
-                Pakistan Disaster Response
+                 Nigehbaan
                 <span style={{ color: 'var(--accent)' }}> Command</span>
               </h1>
             </div>

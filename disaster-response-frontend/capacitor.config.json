@@ -1,0 +1,6 @@
+{
+  "appId": "com.nigehbaanpk.app",
+  "appName": "NigehbaanPK",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

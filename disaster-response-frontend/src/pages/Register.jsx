@@ -40,10 +40,13 @@ export default function Register() {
     orgApi.getAll().then(res => setOrganizations(res.data || [])).catch(() => { });
   }, []);
 
+
+
   const onSubmit = async (data) => {
     setLoading(true);
     setFormError('');
     try {
+
       const payload = {
         fullName: data.fullName,
         email: data.email,
@@ -51,6 +54,7 @@ export default function Register() {
         password: data.password,
         role: 'Citizen',
         responderOrganizationId: null,
+        inviterId: inviterId || null,
       };
       await authApi.register(payload);
       toast.success('Registration successful! Please check your email to verify your account.');
@@ -89,15 +93,10 @@ export default function Register() {
           boxShadow: 'var(--shadow-lg)',
         }}>
           <div style={{ textAlign: 'center', marginBottom: '26px' }}>
-            <div style={{
-              width: '56px', height: '56px', margin: '0 auto 14px',
-              background: 'linear-gradient(135deg, #145c33, #27ae60)',
-              borderRadius: '16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(33,150,83,0.3)',
-            }}>
-              <Shield size={26} color="#fff" />
-            </div>
+             <img src="/logo.svg" alt="Nigehbaan Logo" style={{
+              width: '74px', height: '74px', margin: '0 auto 14px',
+              filter: 'drop-shadow(0 8px 16px rgba(33,150,83,0.3))'
+            }} />
             <h1 style={{
               fontFamily: 'var(--font-display)', fontSize: '22px',
               fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px',
@@ -105,7 +104,7 @@ export default function Register() {
               Create Account
             </h1>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-              Join Pakistan's disaster response network
+              Join Nigehbaan — Pakistan's Guardian Network
             </p>
           </div>
 

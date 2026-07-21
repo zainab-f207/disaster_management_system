@@ -68,25 +68,21 @@ export default function Navbar({ isConnected }) {
       }}>
         {/* Logo */}
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-          <div style={{
-            width: '36px', height: '36px',
-            background: 'linear-gradient(135deg, var(--pk-green-600), var(--pk-green-400))',
-            borderRadius: '10px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 16px rgba(39,174,96,0.4)',
-          }}>
-            <Shield size={18} color="#fff" />
-          </div>
+          <img src="/logo.svg" alt="Nigehbaan Logo" style={{
+            width: '38px',
+            height: '38px',
+            filter: 'drop-shadow(0 0 8px rgba(39,174,96,0.3))'
+          }} />
           <div>
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontWeight: 700, fontSize: '15px',
-              color: 'var(--text-primary)', lineHeight: 1,
+              fontWeight: 700, fontSize: '17px',
+              color: 'var(--text-primary)', lineHeight: 1.1,
             }}>
-              Pakistan DRS
+              Nigehbaan
             </div>
-            <div style={{ fontSize: '10px', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-              Disaster Response System
+            <div style={{ fontSize: '9px', color: 'var(--text-muted)', lineHeight: 1.2 }}>
+              Pakistan's Guardian Network
             </div>
           </div>
         </Link>

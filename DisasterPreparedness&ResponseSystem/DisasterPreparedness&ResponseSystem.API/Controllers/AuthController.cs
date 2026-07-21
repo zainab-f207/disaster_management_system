@@ -1,9 +1,11 @@
 using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Interfaces;
+using DisasterPreparedness_ResponseSystem.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DisasterPreparedness_ResponseSystem.Controllers
 {
@@ -16,19 +18,22 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
+        private readonly AppDbContext _db;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ITokenService tokenService,
             IEmailService emailService,
-            IConfiguration config)
+            IConfiguration config,
+            AppDbContext appDbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _emailService = emailService;
             _config = config;
+            _db=appDbContext;
         }
 
         // POST /api/auth/register — Citizens only. Responders are invited by Admin.
@@ -44,12 +49,10 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             if (existing != null && existing.FullName == "Pending Invite" && !existing.EmailConfirmed)
             {
-                // This email was pre-created as a "shell" via a Family Safety invite.
-                // Upgrade it into a real account — but it STILL requires verification.
                 user = existing;
                 user.FullName = dto.FullName;
                 user.PhoneNumber = dto.PhoneNumber;
-                user.EmailConfirmed = false; // do NOT auto-confirm
+                user.EmailConfirmed = false; 
 
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var resetResult = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
@@ -69,7 +72,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     Email = dto.Email,
                     UserName = dto.Email,
                     PhoneNumber = dto.PhoneNumber,
-                    EmailConfirmed = false, // must verify before first login
+                    EmailConfirmed = false, 
                 };
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
@@ -78,6 +81,24 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             if (!await _userManager.IsInRoleAsync(user, "Citizen"))
                 await _userManager.AddToRoleAsync(user, "Citizen");
+
+            if (!string.IsNullOrEmpty(dto.InviterId) && dto.InviterId != user.Id)
+            {
+                var exists = await _db.FamilyConnections.AnyAsync(f =>
+                    (f.OwnerUserId == dto.InviterId && f.MemberUserId == user.Id) ||
+                    (f.OwnerUserId == user.Id && f.MemberUserId == dto.InviterId));
+
+                if (!exists)
+                {
+                    _db.FamilyConnections.Add(new FamilyConnection
+                    {
+                        OwnerUserId = dto.InviterId,
+                        MemberUserId = user.Id,
+                        Status = "Accepted" 
+                    });
+                    await _db.SaveChangesAsync();
+                }
+            }
 
             await SendVerificationEmailAsync(user);
 
