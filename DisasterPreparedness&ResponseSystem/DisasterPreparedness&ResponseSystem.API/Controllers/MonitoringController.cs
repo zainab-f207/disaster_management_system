@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 
@@ -55,33 +55,25 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 client.Timeout = TimeSpan.FromSeconds(10);
 
-                // Fetch ReliefWeb Disasters RSS instead of the restricted JSON API
                 var response = await client.GetAsync("https://reliefweb.int/disasters/rss.xml?search=country.iso3:pak");
                 response.EnsureSuccessStatusCode();
                 var xml = await response.Content.ReadAsStringAsync();
-                
+
                 var doc = System.Xml.Linq.XDocument.Parse(xml);
                 var items = doc.Descendants("item").Take(50).Select(x => {
                     var title = x.Element("title")?.Value ?? "Unknown Disaster";
                     var link = x.Element("link")?.Value ?? "";
                     var pubDate = x.Element("pubDate")?.Value ?? "";
-                    
-                    // Extract GLIDE from categories
                     var glide = x.Elements("category").FirstOrDefault(c => c.Value.Contains("-PAK"))?.Value ?? "";
-                    
-                    // Infer type from title
                     var type = "Other";
                     var tLow = title.ToLower();
                     if (tLow.Contains("flood")) type = "Flood";
                     else if (tLow.Contains("earthquake")) type = "Earthquake";
                     else if (tLow.Contains("heat")) type = "Heat Wave";
                     else if (tLow.Contains("storm") || tLow.Contains("cyclone")) type = "Cyclone";
-                    
-                    // Determine if current (within last 30 days)
                     var status = "past";
                     if (DateTime.TryParse(pubDate, out var dt) && (DateTime.UtcNow - dt).TotalDays < 30)
                         status = "current";
-
                     return new {
                         id = link.Split('/').LastOrDefault() ?? Guid.NewGuid().ToString(),
                         fields = new {
@@ -97,7 +89,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
                 var jsonObj = new { data = items };
                 var json = System.Text.Json.JsonSerializer.Serialize(jsonObj);
-
                 _reliefWebCache = (DateTime.UtcNow, json);
                 Response.Headers["X-Cache"] = "MISS";
                 return Content(json, "application/json");
@@ -105,8 +96,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching ReliefWeb RSS. Falling back to mock disasters.");
-                
-                // Return realistic fallback disasters if the server blocks the Render IP address
                 var fallbackItems = new[]
                 {
                     new {
@@ -143,7 +132,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                         }
                     }
                 };
-
                 var jsonObj = new { data = fallbackItems };
                 var json = System.Text.Json.JsonSerializer.Serialize(jsonObj);
                 return Content(json, "application/json");
@@ -237,7 +225,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 client.Timeout = TimeSpan.FromSeconds(12);
 
-                // Try multiple PMD/NDMA flood sources in order
                 var feedUrls = new string[]
                 {
                     "https://cap-sources.s3.amazonaws.com/pk-pmd-en/rss.xml",
@@ -271,26 +258,23 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     var pub   = x.Element("pubDate")?.Value ?? "";
                     var catEl = x.Elements("category").Select(c => c.Value).ToList();
 
-                    // Detect severity from title/description
                     var titleLow = (title + " " + desc).ToLower();
                     var severity = titleLow.Contains("severe") || titleLow.Contains("high flood") || titleLow.Contains("very high") ? "High"
                                  : titleLow.Contains("medium") || titleLow.Contains("moderate") ? "Medium"
                                  : titleLow.Contains("low flood") ? "Low"
                                  : "Warning";
 
-                    // Extract rivers/areas mentioned
                     var riverKeywords = new[] { "Indus", "Chenab", "Jhelum", "Ravi", "Sutlej", "Kabul", "Swat", "Chitral",
                                                 "Sindh", "Punjab", "Balochistan", "KPK", "Khyber", "Gilgit" };
                     var mentioned = riverKeywords.Where(r => titleLow.Contains(r.ToLower())).ToList();
 
-                    // Detect if this is flood-related
                     bool isFlood = titleLow.Contains("flood") || titleLow.Contains("ffd") || titleLow.Contains("river")
                                 || titleLow.Contains("rainfall") || catEl.Any(c => c.ToLower().Contains("flood"));
 
                     return new
                     {
                         title,
-                        description = desc.Length > 400 ? desc[..400] + "…" : desc,
+                        description = desc.Length > 400 ? desc[..400] + "..." : desc,
                         link,
                         pubDate = pub,
                         severity,
@@ -300,7 +284,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                         issuedAt = DateTime.TryParse(pub, out var dt) ? dt.ToString("o") : ""
                     };
                 })
-                .Where(x => x.isFlood || x.title.Length > 5)  // keep flood items + general alerts
+                .Where(x => x.isFlood || x.title.Length > 5)
                 .OrderByDescending(x => x.issuedAt)
                 .ToList();
 
@@ -320,10 +304,9 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
         }
 
-
-
         /// <summary>
         /// Proxies Google News RSS for OSINT (man-made disasters).
+        /// Returns an empty RSS feed if Google blocks the server IP instead of a 502.
         /// </summary>
         [HttpGet("news-rss")]
         [AllowAnonymous]
@@ -349,14 +332,13 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 client.Timeout = TimeSpan.FromSeconds(15);
 
-                // Query for man-made disasters in Pakistan from reliable local sources
                 var query = "Pakistan (\"fire\" OR \"road accident\" OR \"building collapse\" OR \"industrial accident\" OR \"urban fire\" OR \"gas explosion\" OR \"train accident\" OR \"stampede\" OR \"water contamination\")";
                 var url = $"https://news.google.com/rss/search?q={Uri.EscapeDataString(query)}&hl=en-PK&gl=PK&ceid=PK:en";
 
                 var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning("Google News RSS returned {StatusCode} — returning empty feed.", response.StatusCode);
+                    _logger.LogWarning("Google News RSS returned {StatusCode} - returning empty feed.", response.StatusCode);
                     return Content("<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Pakistan Disaster News</title></channel></rss>", "application/xml");
                 }
 
@@ -446,11 +428,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         }
 
         private static readonly string[] OverpassMirrors =
-{
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
-    "https://overpass.openstreetmap.ru/api/interpreter",
-};
+        {
+            "https://overpass-api.de/api/interpreter",
+            "https://overpass.kumi.systems/api/interpreter",
+            "https://overpass.openstreetmap.ru/api/interpreter",
+        };
 
         private static readonly ConcurrentDictionary<string, (DateTime ts, string json)> _placesCache = new();
         private static readonly TimeSpan PlacesCacheTtl = TimeSpan.FromMinutes(10);
@@ -460,7 +442,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         /// Avoids browser CORS failures and public rate-limit issues.
         /// types = comma-separated "osmKey:osmVal" pairs, e.g. "amenity:hospital,social_facility:shelter"
         /// </summary>
-
         [HttpGet("nearby-places")]
         [AllowAnonymous]
         public async Task<IActionResult> GetNearbyPlaces(
