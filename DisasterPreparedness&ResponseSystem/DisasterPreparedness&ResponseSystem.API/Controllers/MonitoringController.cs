@@ -354,16 +354,21 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 var url = $"https://news.google.com/rss/search?q={Uri.EscapeDataString(query)}&hl=en-PK&gl=PK&ceid=PK:en";
 
                 var response = await client.GetAsync(url);
-                if (!response.IsSuccessStatusCode) return StatusCode(502);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("Google News RSS returned {StatusCode} — returning empty feed.", response.StatusCode);
+                    return Content("<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Pakistan Disaster News</title></channel></rss>", "application/xml");
+                }
 
                 var xml = await response.Content.ReadAsStringAsync();
                 _newsCache = (DateTime.UtcNow, xml);
                 Response.Headers["X-Cache"] = "MISS";
                 return Content(xml, "application/xml");
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(502);
+                _logger.LogWarning("Google News RSS fetch failed: {Msg}", ex.Message);
+                return Content("<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Pakistan Disaster News</title></channel></rss>", "application/xml");
             }
             finally
             {
@@ -455,6 +460,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         /// Avoids browser CORS failures and public rate-limit issues.
         /// types = comma-separated "osmKey:osmVal" pairs, e.g. "amenity:hospital,social_facility:shelter"
         /// </summary>
+
         [HttpGet("nearby-places")]
         [AllowAnonymous]
         public async Task<IActionResult> GetNearbyPlaces(
@@ -511,7 +517,10 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             if (_placesCache.TryGetValue(cacheKey, out var stale))
                 return Content(stale.json, "application/json");
 
-            return StatusCode(502, new { Error = "Nearby places service is temporarily unavailable. Please try again shortly." });
+            // Return empty result set so the frontend shows "No places found"
+            // instead of a 502 error in the browser console.
+            var empty = System.Text.Json.JsonSerializer.Serialize(new { version = 0.6, elements = Array.Empty<object>() });
+            return Content(empty, "application/json");
         }
     }
 }
