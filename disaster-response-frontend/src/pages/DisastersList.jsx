@@ -36,7 +36,7 @@ export default function DisastersList() {
   });
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: activeTab === 'history' ? '1200px' : '1100px', margin: '0 auto',
       padding: '88px 24px 60px', minHeight: '100vh', transition: 'max-width 0.3s ease'
     }}>

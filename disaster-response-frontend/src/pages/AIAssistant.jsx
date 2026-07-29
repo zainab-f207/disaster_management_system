@@ -92,7 +92,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '760px', margin: '0 auto',
       padding: '88px 24px 40px',
       display: 'flex', flexDirection: 'column',

@@ -66,7 +66,7 @@ export default function AdminCitizens() {
   const card = { background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' };
 
   return (
-    <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#553c9a,#805ad5)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(128,90,213,0.3)' }}>
@@ -82,7 +82,7 @@ export default function AdminCitizens() {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 1fr' : '1fr', gap: '24px' }}>
+      <div className="admin-citizens-grid" style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 1fr' : '1fr', gap: '24px' }}>
         {/* Citizens list */}
         <div>
           <div style={{ ...card, padding: '14px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -204,6 +204,11 @@ export default function AdminCitizens() {
           </div>
         </div>
       )}
+      <style>{`
+        @media (max-width: 900px) {
+          .admin-citizens-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

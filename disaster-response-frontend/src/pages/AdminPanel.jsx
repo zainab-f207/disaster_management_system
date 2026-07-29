@@ -140,7 +140,7 @@ export default function AdminPanel() {
   if (!isAuthenticated || user?.role !== 'Admin') return null;
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '1300px', margin: '0 auto',
       padding: '88px 24px 60px', minHeight: '100vh',
     }}>
@@ -255,7 +255,7 @@ export default function AdminPanel() {
       )}
 
       {stats?.bySeverity && (
-        <div style={{
+        <div className="admin-severity-grid" style={{
           display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
           gap: '8px', marginBottom: '24px',
         }}>
@@ -637,6 +637,14 @@ export default function AdminPanel() {
           </div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 600px) {
+          .admin-severity-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 400px) {
+          .admin-severity-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

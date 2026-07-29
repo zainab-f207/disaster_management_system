@@ -35,7 +35,7 @@ export default function EmergencyContacts() {
   const card = { background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '900px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ ...card, padding: '24px', marginBottom: '24px', background: 'linear-gradient(135deg, rgba(229,62,62,0.07), rgba(197,48,48,0.03))', borderTop: '4px solid #e53e3e', animation: 'fadeInUp 0.4s ease' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

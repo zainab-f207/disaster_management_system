@@ -275,7 +275,7 @@ export default function SubmitReport() {
   }
 
   return (
-    <div style={{ maxWidth: '640px', margin: '0 auto', padding: '88px 24px 60px' }}>
+    <div className="responsive-page" style={{ maxWidth: '640px', margin: '0 auto', padding: '88px 24px 60px' }}>
       <div style={{ marginBottom: '24px', animation: 'fadeInUp 0.4s ease' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
           <h1 style={{

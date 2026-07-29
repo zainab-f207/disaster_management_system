@@ -411,7 +411,7 @@ export default function AdminSources() {
   ];
 
   return (
-    <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
 
       {/* ── Header ── */}
       <div style={{
@@ -459,7 +459,7 @@ export default function AdminSources() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', alignItems: 'flex-start' }}>
+      <div className="admin-sources-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', alignItems: 'flex-start' }}>
 
         {/* ═══ LEFT: Live Data Feeds ═══ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -961,6 +961,11 @@ export default function AdminSources() {
         </div>
       )}
 
+      <style>{`
+        @media (max-width: 900px) {
+          .admin-sources-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

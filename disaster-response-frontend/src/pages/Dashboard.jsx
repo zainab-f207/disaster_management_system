@@ -95,7 +95,7 @@ export default function Dashboard() {
   const recentAlerts = alerts.slice(0, 5);
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '88px 24px 40px',

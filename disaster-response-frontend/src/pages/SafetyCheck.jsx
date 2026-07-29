@@ -79,7 +79,7 @@ export default function SafetyCheck() {
     }[s] || '#38a169');
 
     return (
-        <div style={{
+        <div className="responsive-page" style={{
             maxWidth: '800px', margin: '0 auto',
             padding: '88px 24px 60px', minHeight: '100vh',
         }}>

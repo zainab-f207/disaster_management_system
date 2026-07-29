@@ -45,31 +45,26 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] ChatRequest request)
         {
-            var apiKey = _config["GeminiApiKey"] 
-                         ?? _config["GEMINI_API_KEY"] 
-                         ?? _config["Gemini_Api_Key"]
-                         ?? Environment.GetEnvironmentVariable("GeminiApiKey")
-                         ?? Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            var apiKey = _config["ClaudeApiKey"] 
+                         ?? _config["CLAUDE_API_KEY"] 
+                         ?? _config["Claude_Api_Key"]
+                         ?? Environment.GetEnvironmentVariable("ClaudeApiKey")
+                         ?? Environment.GetEnvironmentVariable("CLAUDE_API_KEY");
             
-            // If no API key is provided, return a mock response for now
-            if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_API_KEY_HERE")
+            if (string.IsNullOrEmpty(apiKey))
             {
-                await Task.Delay(1500); // Simulate network delay
+                await Task.Delay(1500); 
                 return Ok(new { 
                     content = new[] { 
-                        new { text = "⚠️ **[Mock Mode]** I am the Nigehbaan AI assistant. (Gemini API Key is not configured in the backend).\n\nCall **1122** if this is a real emergency!" } 
+                        new { text = "⚠️ **[Mock Mode]** I am the Nigehbaan AI assistant. (Claude API Key is not configured in the backend).\n\nCall **1122** if this is a real emergency!" } 
                     }
                 });
             }
 
-            // Map incoming messages to Gemini format (roles: user or model)
-            var geminiContents = request.Messages.Select(m => new
+            var claudeMessages = request.Messages.Select(m => new
             {
-                role = m.Role == "assistant" ? "model" : "user",
-                parts = new[]
-                {
-                    new { text = m.Content }
-                }
+                role = m.Role == "assistant" ? "assistant" : "user",
+                content = m.Content
             }).ToArray();
 
             var systemPrompt = @"You are Pakistan's Emergency Disaster Assistant inside the 'Nigehbaan' app (Pakistan's Guardian Network). You help citizens during disasters and emergencies in Pakistan.
@@ -85,28 +80,29 @@ Rules:
 
 You are NOT a replacement for emergency services. Always direct people to call emergency numbers.";
 
+            var modelName = _config["ClaudeModel"] ?? "claude-3-5-sonnet-20241022";
+
             var payload = new
             {
-                contents = geminiContents,
-                systemInstruction = new
-                {
-                    parts = new[]
-                    {
-                        new { text = systemPrompt }
-                    }
-                }
+                model = modelName,
+                max_tokens = 1024,
+                system = systemPrompt,
+                messages = claudeMessages
             };
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
-            var jsonPayload = JsonSerializer.Serialize(payload);
-            var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.anthropic.com/v1/messages");
+            requestMessage.Headers.Add("x-api-key", apiKey);
+            requestMessage.Headers.Add("anthropic-version", "2023-06-01");
 
-            var response = await _httpClient.PostAsync(url, content);
+            var jsonPayload = JsonSerializer.Serialize(payload);
+            requestMessage.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.SendAsync(requestMessage);
             
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Gemini API call failed with HTTP status code {StatusCode}: {ErrorResponse}", response.StatusCode, error);
+                _logger.LogError("Claude API call failed with HTTP status code {StatusCode}: {ErrorResponse}", response.StatusCode, error);
                 return StatusCode((int)response.StatusCode, new { error });
             }
 
@@ -116,13 +112,15 @@ You are NOT a replacement for emergency services. Always direct people to call e
             var root = doc.RootElement;
             string? replyText = null;
             
-            if (root.TryGetProperty("candidates", out var candidates) && 
-                candidates.GetArrayLength() > 0 &&
-                candidates[0].TryGetProperty("content", out var geminiContent) &&
-                geminiContent.TryGetProperty("parts", out var parts) &&
-                parts.GetArrayLength() > 0)
+            if (root.TryGetProperty("content", out var contentProp) && 
+                contentProp.ValueKind == JsonValueKind.Array &&
+                contentProp.GetArrayLength() > 0)
             {
-                replyText = parts[0].GetProperty("text").GetString();
+                var firstContent = contentProp[0];
+                if (firstContent.TryGetProperty("text", out var textProp))
+                {
+                    replyText = textProp.GetString();
+                }
             }
 
             if (string.IsNullOrEmpty(replyText))
@@ -130,7 +128,6 @@ You are NOT a replacement for emergency services. Always direct people to call e
                 replyText = "I could not generate a response. Please call 1122 immediately.";
             }
 
-            // Return in the format the frontend expects (Anthropic style compatibility)
             var formattedResponse = new
             {
                 content = new[]

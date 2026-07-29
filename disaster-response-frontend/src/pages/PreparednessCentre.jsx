@@ -165,7 +165,7 @@ export default function PreparednessCentre() {
   const guide = GUIDES.find(g => g.type === selected);
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '960px', margin: '0 auto',
       padding: '88px 24px 60px', minHeight: '100vh',
     }}>

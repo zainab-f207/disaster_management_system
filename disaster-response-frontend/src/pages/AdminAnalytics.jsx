@@ -215,7 +215,7 @@ export default function AdminAnalytics() {
   const loading = loadingLive || loadingHist;
 
   return (
-    <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '1300px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#1a365d,#4299e1)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(66,153,225,0.3)' }}>
@@ -294,7 +294,7 @@ export default function AdminAnalytics() {
                 )}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '20px' }}>
+              <div className="analytics-double-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '20px' }}>
                 <div style={card}>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <BarChart3 size={16} color="var(--accent)" /> Disasters by Type
@@ -344,7 +344,7 @@ export default function AdminAnalytics() {
                 {topCities.length === 0 ? (
                   <div style={{ color: 'var(--text-muted)', fontSize: '13px', textAlign: 'center', padding: '20px' }}>No location data for selected period.</div>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px' }}>
+                  <div className="analytics-double-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px' }}>
                     {topCities.map(([city, count]) => (
                       <BarRow key={city} label={city} value={count} max={topCities[0][1]} color="#e53e3e" emoji="📍" />
                     ))}
@@ -375,7 +375,7 @@ export default function AdminAnalytics() {
                     <StatCard icon={<BookOpen size={20} color="#38a169" />} label="Avg Events / Year (last 10y)" value={avgEventsPerYear} color="#38a169" />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '24px', marginBottom: '20px' }}>
+                  <div className="analytics-double-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '24px', marginBottom: '20px' }}>
                     <div style={card}>
                       <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>
                         Events per Year
@@ -471,6 +471,11 @@ export default function AdminAnalytics() {
           )}
         </>
       )}
+      <style>{`
+        @media (max-width: 900px) {
+          .analytics-double-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

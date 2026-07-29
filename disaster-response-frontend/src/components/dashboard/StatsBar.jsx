@@ -14,7 +14,7 @@ export default function StatsBar({ disasters, loading }) {
 
   if (loading) {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
         {[...Array(4)].map((_, i) => (
           <div key={i} className="skeleton" style={{ height: '96px', borderRadius: 'var(--radius-lg)' }} />
         ))}
@@ -23,7 +23,7 @@ export default function StatsBar({ disasters, loading }) {
   }
 
   return (
-    <div style={{
+    <div className="stats-grid" style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: '16px',

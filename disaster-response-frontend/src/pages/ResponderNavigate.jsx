@@ -143,7 +143,7 @@ export default function ResponderNavigate() {
     }, [myPos, assignment, loadRoutes]);
 
     if (!assignment) {
-        return <div style={{ padding: '88px 24px', textAlign: 'center', color: 'var(--text-muted)' }}>{error || 'Loading assignment…'}</div>;
+        return <div className="responsive-page" style={{ padding: '88px 24px', textAlign: 'center', color: 'var(--text-muted)' }}>{error || 'Loading assignment…'}</div>;
     }
 
     const dist = chosenRoute?.distanceKm ?? (myPos ? distanceKm(myPos[0], myPos[1], assignment.disasterLat, assignment.disasterLon) : null);

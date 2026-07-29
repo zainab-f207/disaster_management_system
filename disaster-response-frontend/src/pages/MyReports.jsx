@@ -40,7 +40,7 @@ export default function MyReports() {
   const typeEmojis = { Flood: '🌊', Earthquake: '🌍', Storm: '⛈️', Heatwave: '🌡️', UrbanFire: '🔥', Other: '⚠️', RoadAccident: '🚗', BuildingCollapse: '🏚️' };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '900px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#2d3748,#4a5568)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

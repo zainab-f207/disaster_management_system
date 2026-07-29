@@ -62,7 +62,7 @@ export default function DisasterDetail() {
   };
 
   if (loading) return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '88px 24px' }}>
+    <div className="responsive-page" style={{ maxWidth: '800px', margin: '0 auto', padding: '88px 24px' }}>
       {[...Array(4)].map((_, i) => (
         <div key={i} className="skeleton" style={{ height: '80px', borderRadius: '12px', marginBottom: '12px' }} />
       ))}
@@ -70,7 +70,7 @@ export default function DisasterDetail() {
   );
 
   if (error || !disaster) return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '800px', margin: '0 auto', padding: '88px 24px',
       textAlign: 'center',
     }}>
@@ -101,7 +101,7 @@ export default function DisasterDetail() {
   });
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '900px', margin: '0 auto',
       padding: '88px 24px 60px', minHeight: '100vh',
     }}>

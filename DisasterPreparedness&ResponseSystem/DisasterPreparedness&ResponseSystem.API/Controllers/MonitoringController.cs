@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Concurrent;
 
 namespace DisasterPreparedness_ResponseSystem.Controllers
 {
@@ -437,6 +438,80 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             {
                 return StatusCode(500, new { error = ex.Message });
             }
+        }
+
+        private static readonly string[] OverpassMirrors =
+{
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.openstreetmap.ru/api/interpreter",
+};
+
+        private static readonly ConcurrentDictionary<string, (DateTime ts, string json)> _placesCache = new();
+        private static readonly TimeSpan PlacesCacheTtl = TimeSpan.FromMinutes(10);
+
+        /// <summary>
+        /// Proxies Overpass API queries server-side (mirror rotation + caching).
+        /// Avoids browser CORS failures and public rate-limit issues.
+        /// types = comma-separated "osmKey:osmVal" pairs, e.g. "amenity:hospital,social_facility:shelter"
+        /// </summary>
+        [HttpGet("nearby-places")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetNearbyPlaces(
+            [FromQuery] double lat, [FromQuery] double lon,
+            [FromQuery] double radius, [FromQuery] string types)
+        {
+            var cacheKey = $"{lat:F3},{lon:F3},{radius},{types}";
+            if (_placesCache.TryGetValue(cacheKey, out var cached) && DateTime.UtcNow - cached.ts < PlacesCacheTtl)
+            {
+                Response.Headers["X-Cache"] = "HIT";
+                return Content(cached.json, "application/json");
+            }
+
+            var pairs = (types ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Split(':'))
+                .Where(p => p.Length == 2)
+                .ToList();
+
+            if (pairs.Count == 0) return BadRequest(new { Error = "No valid place types provided." });
+
+            var unionQuery = string.Join("", pairs.Select(p =>
+                $"node[\"{p[0]}\"=\"{p[1]}\"](around:{radius},{lat},{lon});" +
+                $"way[\"{p[0]}\"=\"{p[1]}\"](around:{radius},{lat},{lon});"));
+            var query = $"[out:json][timeout:20];({unionQuery});out center;";
+
+            var client = _httpFactory.CreateClient();
+            client.Timeout = TimeSpan.FromSeconds(15);
+
+            Exception? lastEx = null;
+            foreach (var mirror in OverpassMirrors)
+            {
+                try
+                {
+                    var content = new StringContent(query, System.Text.Encoding.UTF8, "text/plain");
+                    var response = await client.PostAsync(mirror, content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        lastEx = new Exception($"{mirror} returned {response.StatusCode}");
+                        continue;
+                    }
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    _placesCache[cacheKey] = (DateTime.UtcNow, json);
+                    Response.Headers["X-Cache"] = "MISS";
+                    return Content(json, "application/json");
+                }
+                catch (Exception ex)
+                {
+                    lastEx = ex;
+                }
+            }
+
+            _logger.LogWarning("All Overpass mirrors failed: {Msg}", lastEx?.Message);
+            if (_placesCache.TryGetValue(cacheKey, out var stale))
+                return Content(stale.json, "application/json");
+
+            return StatusCode(502, new { Error = "Nearby places service is temporarily unavailable. Please try again shortly." });
         }
     }
 }

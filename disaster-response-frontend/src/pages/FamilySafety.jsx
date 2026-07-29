@@ -56,7 +56,7 @@ export default function FamilySafety() {
     const card = { background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '14px', padding: '18px' };
 
     return (
-        <div style={{ maxWidth: '700px', margin: '0 auto', padding: '88px 24px 60px' }}>
+        <div className="responsive-page" style={{ maxWidth: '700px', margin: '0 auto', padding: '88px 24px 60px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                 <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#c41a1a,#e53e3e)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Users size={22} color="#fff" />

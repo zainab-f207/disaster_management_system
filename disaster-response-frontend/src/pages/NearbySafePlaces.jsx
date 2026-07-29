@@ -3,87 +3,38 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPin, Navigation, Loader } from 'lucide-react';
+import api from '../services/api';
 
 const SAFE_PLACE_TYPES = [
-  { key: 'hospital',  label: 'Hospitals',       emoji: '🏥', color: '#e53e3e', osmKey: 'amenity',         osmVal: 'hospital',      overpassType: 'hospital' },
-  { key: 'shelter',   label: 'Shelters',         emoji: '🏠', color: '#3182ce', osmKey: 'social_facility', osmVal: 'shelter',       overpassType: 'shelter' },
-  { key: 'police',    label: 'Police Stations',  emoji: '👮', color: '#2d3748', osmKey: 'amenity',         osmVal: 'police',        overpassType: 'police' },
-  { key: 'fire',      label: 'Fire Stations',    emoji: '🚒', color: '#dd6b20', osmKey: 'amenity',         osmVal: 'fire_station',  overpassType: 'fire_station' },
-  { key: 'pharmacy',  label: 'Pharmacies',       emoji: '💊', color: '#38a169', osmKey: 'amenity',         osmVal: 'pharmacy',      overpassType: 'pharmacy' },
+  { key: 'hospital', label: 'Hospitals', emoji: '🏥', color: '#e53e3e', osmKey: 'amenity', osmVal: 'hospital', overpassType: 'hospital' },
+  { key: 'shelter', label: 'Shelters', emoji: '🏠', color: '#3182ce', osmKey: 'social_facility', osmVal: 'shelter', overpassType: 'shelter' },
+  { key: 'police', label: 'Police Stations', emoji: '👮', color: '#2d3748', osmKey: 'amenity', osmVal: 'police', overpassType: 'police' },
+  { key: 'fire', label: 'Fire Stations', emoji: '🚒', color: '#dd6b20', osmKey: 'amenity', osmVal: 'fire_station', overpassType: 'fire_station' },
+  { key: 'pharmacy', label: 'Pharmacies', emoji: '💊', color: '#38a169', osmKey: 'amenity', osmVal: 'pharmacy', overpassType: 'pharmacy' },
 ];
 
-/* ── Overpass mirror rotation + retry + in-memory cache ── */
-const OVERPASS_MIRRORS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.openstreetmap.ru/api/interpreter',
-];
 
 const _cache = new Map(); // key: `lat,lon,radius` → { data, ts }
 const CACHE_TTL = 10 * 60 * 1000; // 10 min
 
-async function fetchOverpass(query, attempt = 0) {
-  // Try querying through our backend proxy first to avoid browser CORS policy blocking
-  try {
-    const getApiUrl = () => {
-      let url = import.meta.env.VITE_API_URL || 'https://localhost:7129';
-      if (!url.endsWith('/api') && !url.endsWith('/api/')) {
-        url = url.replace(/\/$/, '') + '/api';
-      }
-      return url.replace(/\/$/, '');
-    };
-    
-    const res = await fetch(`${getApiUrl()}/monitoring/overpass`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: query }),
-    });
-    
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (err) {
-    console.warn("Backend Overpass proxy unavailable or failed. Falling back to direct mirrors...", err);
-  }
-
-  // Fallback: Direct query to Overpass mirrors
-  const mirror = OVERPASS_MIRRORS[attempt % OVERPASS_MIRRORS.length];
-  const res = await fetch(mirror, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body: query,
-  });
-  if (res.status === 429 || res.status === 504) {
-    if (attempt >= OVERPASS_MIRRORS.length - 1) throw new Error('All Overpass mirrors busy');
-    await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
-    return fetchOverpass(query, attempt + 1);
-  }
-  if (!res.ok) throw new Error(`Overpass ${res.status}`);
-  return res.json();
-}
-
-async function getNearbySafePlaces(lat, lon, radius = 3000, osmTypes) {
+async function getNearbySafePlaces(lat, lon, radius, osmTypes) {
   const key = `${lat.toFixed(3)},${lon.toFixed(3)},${radius},${osmTypes.map(t => t.osmVal).join('+')}`;
   const cached = _cache.get(key);
   if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.data;
 
-  const unionQuery = osmTypes.map(t =>
-    `node["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});` +
-    `way["${t.osmKey}"="${t.osmVal}"](around:${radius},${lat},${lon});`
-  ).join('');
-  const query = `[out:json][timeout:20];(${unionQuery});out center;`;
+  const typesParam = osmTypes.map(t => `${t.osmKey}:${t.osmVal}`).join(',');
 
   try {
-    const data = await fetchOverpass(query);
-    _cache.set(key, { data, ts: Date.now() });
-    return data;
+    const res = await api.get('/monitoring/nearby-places', {
+      params: { lat, lon, radius, types: typesParam },
+    });
+    _cache.set(key, { data: res.data, ts: Date.now() });
+    return res.data;
   } catch (err) {
     if (cached) return cached.data; // graceful stale fallback
     throw err;
   }
 }
-
-/* ── GPS drift guard: only re-fetch when coords move > ~50 m ── */
 function coordsMovedSignificantly(a, b, thresholdM = 50) {
   if (!a || !b) return true;
   const dLat = (b[0] - a[0]) * 111320;
@@ -99,12 +50,12 @@ function makeIcon(emoji, color) {
 }
 
 export default function NearbySafePlaces() {
-  const [position, setPosition]         = useState(null);
+  const [position, setPosition] = useState(null);
   const [locationError, setLocationError] = useState(null);
-  const [places, setPlaces]             = useState([]);
-  const [loading, setLoading]           = useState(false);
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState(['hospital', 'shelter', 'police']);
-  const [radius, setRadius]             = useState(3000); // 3 km
+  const [radius, setRadius] = useState(3000); // 3 km
 
   // track last-fetched position to avoid re-fetching on GPS micro-drift
   const lastFetchedPos = useRef(null);
@@ -128,7 +79,7 @@ export default function NearbySafePlaces() {
     if (!pos) return;
     // Skip if coords haven't moved meaningfully
     if (!coordsMovedSignificantly(lastFetchedPos.current, pos) &&
-        lastFetchedPos.current !== null) return;
+      lastFetchedPos.current !== null) return;
 
     setLoading(true);
     const [lat, lon] = pos;
@@ -172,7 +123,7 @@ export default function NearbySafePlaces() {
   const userIcon = L.divIcon({ html: '<div style="width:14px;height:14px;background:#e53e3e;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 4px rgba(229,62,62,0.3)"></div>', className: '', iconSize: [14, 14], iconAnchor: [7, 7] });
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -216,7 +167,7 @@ export default function NearbySafePlaces() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '20px' }}>
+      <div className="nearby-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '20px' }}>
         {/* Map */}
         <div style={{ ...card, overflow: 'hidden' }}>
           {position ? (
@@ -279,6 +230,11 @@ export default function NearbySafePlaces() {
           })}
         </div>
       </div>
+      <style>{`
+        @media (max-width: 900px) {
+          .nearby-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -65,7 +65,7 @@ export default function CitizenDashboard() {
     const criticalCount = nearbyDisasters.filter(d => d.severity === 'Critical').length;
 
     return (
-        <div style={{
+        <div className="responsive-page" style={{
             maxWidth: '900px', margin: '0 auto',
             padding: '88px 24px 60px', minHeight: '100vh',
         }}>

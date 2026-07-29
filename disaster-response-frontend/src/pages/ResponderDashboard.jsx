@@ -123,7 +123,7 @@ export default function ResponderDashboard() {
   if (!isAuthenticated || user?.role !== 'Responder') return null;
 
   return (
-    <div style={{
+    <div className="responsive-page" style={{
       maxWidth: '960px', margin: '0 auto',
       padding: '88px 24px 60px', minHeight: '100vh',
     }}>

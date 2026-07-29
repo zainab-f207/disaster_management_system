@@ -68,7 +68,7 @@ export default function AdminOrganizations() {
   const input = { width: '100%', padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', boxSizing: 'border-box' };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
+    <div className="responsive-page" style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#1a365d,#3182ce)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(49,130,206,0.3)' }}>

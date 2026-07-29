@@ -84,7 +84,7 @@ export default function AdminSettings() {
     );
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh', display: 'grid', gap: '24px' }}>
+        <div className="responsive-page" style={{ maxWidth: '1000px', margin: '0 auto', padding: '88px 24px 60px', minHeight: '100vh', display: 'grid', gap: '24px' }}>
 
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
