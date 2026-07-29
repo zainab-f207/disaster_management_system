@@ -56,6 +56,7 @@ export default function NearbySafePlaces() {
   const [loading, setLoading] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState(['hospital', 'shelter', 'police']);
   const [radius, setRadius] = useState(3000); // 3 km
+  const [fetchError, setFetchError] = useState(false);
 
   // track last-fetched position to avoid re-fetching on GPS micro-drift
   const lastFetchedPos = useRef(null);
@@ -75,18 +76,20 @@ export default function NearbySafePlaces() {
     );
   }, []);
 
+  const lastFetchedKeyRef = useRef(null);
+
   const fetchNearby = useCallback(async (pos, rad, types) => {
     if (!pos) return;
-    // Skip if coords haven't moved meaningfully
-    if (!coordsMovedSignificantly(lastFetchedPos.current, pos) &&
-      lastFetchedPos.current !== null) return;
+
+    const key = `${pos[0].toFixed(3)},${pos[1].toFixed(3)},${rad},${[...types].sort().join('+')}`;
+    if (lastFetchedKeyRef.current === key) return;
 
     setLoading(true);
     const [lat, lon] = pos;
     const osmTypes = SAFE_PLACE_TYPES.filter(t => types.includes(t.key));
     try {
       const json = await getNearbySafePlaces(lat, lon, rad, osmTypes);
-      lastFetchedPos.current = pos;
+      lastFetchedKeyRef.current = key;
       const elements = json.elements || [];
       const mapped = elements.map(el => {
         const elLat = el.lat ?? el.center?.lat;
@@ -105,8 +108,10 @@ export default function NearbySafePlaces() {
         };
       }).filter(p => p.lat && p.lon).sort((a, b) => (a.dist || 9999) - (b.dist || 9999));
       setPlaces(mapped.slice(0, 50));
+      setFetchError(false);
     } catch {
       setPlaces([]);
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -136,14 +141,14 @@ export default function NearbySafePlaces() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <select value={radius} onChange={e => { lastFetchedPos.current = null; setRadius(Number(e.target.value)); }}
+          <select value={radius} onChange={e => { lastFetchedKeyRef.current = null; setRadius(Number(e.target.value)); }}
             style={{ padding: '8px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}>
             <option value={1000}>1 km</option>
             <option value={3000}>3 km</option>
             <option value={5000}>5 km</option>
             <option value={10000}>10 km</option>
           </select>
-          <button onClick={() => { lastFetchedPos.current = null; getLocation(); }}
+          <button onClick={() => { lastFetchedKeyRef.current = null; getLocation(); }}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', background: 'var(--bg-surface-2)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}>
             <Navigation size={14} /> Locate Me
           </button>
@@ -160,7 +165,7 @@ export default function NearbySafePlaces() {
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
         {SAFE_PLACE_TYPES.map(t => (
           <button key={t.key}
-            onClick={() => { lastFetchedPos.current = null; setSelectedTypes(p => p.includes(t.key) ? p.filter(x => x !== t.key) : [...p, t.key]); }}
+            onClick={() => { lastFetchedKeyRef.current = null; setSelectedTypes(p => p.includes(t.key) ? p.filter(x => x !== t.key) : [...p, t.key]); }}
             style={{ padding: '7px 14px', borderRadius: '10px', border: `1.5px solid ${selectedTypes.includes(t.key) ? t.color : 'var(--border)'}`, background: selectedTypes.includes(t.key) ? `${t.color}18` : 'transparent', color: selectedTypes.includes(t.key) ? t.color : 'var(--text-secondary)', cursor: 'pointer', fontSize: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}>
             {t.emoji} {t.label}
           </button>
@@ -204,7 +209,12 @@ export default function NearbySafePlaces() {
               <Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> Finding nearby places...
             </div>
           )}
-          {!loading && places.length === 0 && (
+          {!loading && fetchError && (
+            <div style={{ ...card, padding: '30px', textAlign: 'center', color: '#e53e3e', fontSize: '13px' }}>
+              ⚠️ Could not reach the places service right now. Try again in a moment.
+            </div>
+          )}
+          {!loading && !fetchError && places.length === 0 && (
             <div style={{ ...card, padding: '30px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
               No places found nearby. Try increasing the radius or enabling more types.
             </div>

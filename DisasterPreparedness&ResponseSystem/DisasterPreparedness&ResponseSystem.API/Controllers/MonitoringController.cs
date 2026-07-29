@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 
@@ -476,7 +476,10 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             {
                 try
                 {
-                    var content = new StringContent(query, System.Text.Encoding.UTF8, "text/plain");
+                    var content = new FormUrlEncodedContent(new[]
+                    {
+                        new KeyValuePair<string, string>("data", query)
+                    });
                     var response = await client.PostAsync(mirror, content);
                     if (!response.IsSuccessStatusCode)
                     {

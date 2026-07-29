@@ -47,20 +47,18 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] ChatRequest request)
         {
-            // ── Look up Gemini API key ──────────────────────────────────────────
-            var apiKey = _config["GeminiApiKey"] 
-                         ?? _config["GEMINI_API_KEY"] 
+            var apiKey = _config["GeminiApiKey"]
+                         ?? _config["GEMINI_API_KEY"]
                          ?? _config["Gemini_Api_Key"]
                          ?? Environment.GetEnvironmentVariable("GeminiApiKey")
                          ?? Environment.GetEnvironmentVariable("GEMINI_API_KEY");
-            
+
             if (string.IsNullOrEmpty(apiKey))
             {
-                await Task.Delay(1500); 
-                return Ok(new { 
-                    content = new[] { 
-                        new { text = "⚠️ **[Mock Mode]** I am the Nigehbaan AI assistant. (Gemini API Key is not configured in the backend).\n\nCall **1122** if this is a real emergency!" } 
-                    }
+                await Task.Delay(500);
+                return Ok(new
+                {
+                    content = new[] { new { text = "⚠️ **[Mock Mode]** Gemini API Key is not configured on the server.\n\nCall **1122** if this is a real emergency!" } }
                 });
             }
 
@@ -77,71 +75,74 @@ Rules:
 
 You are NOT a replacement for emergency services. Always direct people to call emergency numbers.";
 
-            // ── Build Gemini request ────────────────────────────────────────────
             var geminiContents = request.Messages.Select(m => new
             {
                 role = m.Role == "assistant" ? "model" : "user",
-                parts = new[]
-                {
-                    new { text = m.Content }
-                }
+                parts = new[] { new { text = m.Content } }
             }).ToArray();
 
             var payload = new
             {
                 contents = geminiContents,
-                systemInstruction = new
+                systemInstruction = new { parts = new[] { new { text = systemPrompt } } }
+            };
+
+            // Use a known-good, current model id. Make it configurable so you
+            // can swap models without redeploying.
+            var model = _config["GeminiModel"] ?? "gemini-2.5-flash";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
+
+            try
+            {
+                var jsonPayload = JsonSerializer.Serialize(payload);
+                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(url, content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    parts = new[]
+                    // Log the REAL reason server-side, but never bubble a raw
+                    // error status back to the browser — that's what was causing
+                    // the "403" to show up in devtools.
+                    _logger.LogError(
+                        "Gemini API call failed ({StatusCode}): {Body}",
+                        response.StatusCode, responseBody);
+
+                    var friendly = response.StatusCode == System.Net.HttpStatusCode.Forbidden
+                        ? "AI assistant is temporarily unavailable (API key issue). "
+                        : "AI assistant is temporarily unavailable. ";
+
+                    return Ok(new
                     {
-                        new { text = systemPrompt }
-                    }
+                        content = new[] { new { text = $"⚠️ {friendly}Please call **1122** (Rescue) or **115** (Edhi) directly for any real emergency." } }
+                    });
                 }
-            };
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={apiKey}";
-            var jsonPayload = JsonSerializer.Serialize(payload);
-            var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+                using var doc = JsonDocument.Parse(responseBody);
+                var root = doc.RootElement;
+                string? replyText = null;
 
-            var response = await _httpClient.PostAsync(url, content);
-            
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Gemini API call failed with HTTP status code {StatusCode}: {ErrorResponse}", response.StatusCode, error);
-                return StatusCode((int)response.StatusCode, new { error });
-            }
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            
-            using var doc = JsonDocument.Parse(responseBody);
-            var root = doc.RootElement;
-            string? replyText = null;
-            
-            if (root.TryGetProperty("candidates", out var candidates) && 
-                candidates.GetArrayLength() > 0 &&
-                candidates[0].TryGetProperty("content", out var geminiContent) &&
-                geminiContent.TryGetProperty("parts", out var parts) &&
-                parts.GetArrayLength() > 0)
-            {
-                replyText = parts[0].GetProperty("text").GetString();
-            }
-
-            if (string.IsNullOrEmpty(replyText))
-            {
-                replyText = "I could not generate a response. Please call 1122 immediately.";
-            }
-
-            // Return in the format the frontend expects
-            var formattedResponse = new
-            {
-                content = new[]
+                if (root.TryGetProperty("candidates", out var candidates) &&
+                    candidates.GetArrayLength() > 0 &&
+                    candidates[0].TryGetProperty("content", out var geminiContent) &&
+                    geminiContent.TryGetProperty("parts", out var parts) &&
+                    parts.GetArrayLength() > 0)
                 {
-                    new { text = replyText }
+                    replyText = parts[0].GetProperty("text").GetString();
                 }
-            };
 
-            return Ok(formattedResponse);
+                replyText ??= "I could not generate a response. Please call 1122 immediately.";
+
+                return Ok(new { content = new[] { new { text = replyText } } });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled error calling Gemini API");
+                return Ok(new
+                {
+                    content = new[] { new { text = "⚠️ Connection error reaching the AI assistant. Please call **1122** immediately if this is an emergency." } }
+                });
+            }
         }
     }
 }
