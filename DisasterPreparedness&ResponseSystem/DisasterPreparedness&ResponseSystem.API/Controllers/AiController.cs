@@ -99,7 +99,7 @@ You are NOT a replacement for emergency services. Always direct people to call e
                 }
             };
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={apiKey}";
             var jsonPayload = JsonSerializer.Serialize(payload);
             var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 

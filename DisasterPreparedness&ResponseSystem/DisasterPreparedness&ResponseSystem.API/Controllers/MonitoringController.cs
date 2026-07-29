@@ -468,6 +468,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             var query = $"[out:json][timeout:20];({unionQuery});out center;";
 
             var client = _httpFactory.CreateClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) PakistanDRS/1.0");
             client.Timeout = TimeSpan.FromSeconds(15);
 
             Exception? lastEx = null;

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useThemeStore, useAuthStore } from '../../store';
 import {
   Sun, Moon, Menu, X, Shield, LogOut, User, ChevronDown, Radio
 } from 'lucide-react';
 
 import NotificationPanel from './NotificationPanel';
+
 
 export default function Navbar({ isConnected }) {
   const { theme, toggleTheme } = useThemeStore();
@@ -14,6 +15,7 @@ export default function Navbar({ isConnected }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [logoModalOpen, setLogoModalOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const roleLinks = {
     Admin: [
@@ -232,7 +234,7 @@ export default function Navbar({ isConnected }) {
                       </div>
                     </div>
                     <button
-                      onClick={() => { logout(); setUserMenuOpen(false); }}
+                      onClick={() => { logout(); setUserMenuOpen(false); navigate('/login'); }}
                       style={{
                         width: '100%', padding: '10px 16px',
                         display: 'flex', alignItems: 'center', gap: '8px',
