@@ -87,9 +87,7 @@ You are NOT a replacement for emergency services. Always direct people to call e
                 systemInstruction = new { parts = new[] { new { text = systemPrompt } } }
             };
 
-            // Use a known-good, current model id. Make it configurable so you
-            // can swap models without redeploying.
-            var model = _config["GeminiModel"] ?? "gemini-2.5-flash";
+            var model = _config["GeminiModel"] ?? "gemini-1.5-flash";
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
 
             try
@@ -101,9 +99,6 @@ You are NOT a replacement for emergency services. Always direct people to call e
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // Log the REAL reason server-side, but never bubble a raw
-                    // error status back to the browser — that's what was causing
-                    // the "403" to show up in devtools.
                     _logger.LogError(
                         "Gemini API call failed ({StatusCode}): {Body}",
                         response.StatusCode, responseBody);

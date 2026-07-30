@@ -448,7 +448,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             [FromQuery] double lat, [FromQuery] double lon,
             [FromQuery] double radius, [FromQuery] string types)
         {
-            var cacheKey = $"{lat:F3},{lon:F3},{radius},{types}";
+            var latStr = lat.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var lonStr = lon.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var radStr = radius.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+            var cacheKey = $"{latStr},{lonStr},{radStr},{types}";
             if (_placesCache.TryGetValue(cacheKey, out var cached) && DateTime.UtcNow - cached.ts < PlacesCacheTtl)
             {
                 Response.Headers["X-Cache"] = "HIT";
@@ -462,14 +466,49 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
             if (pairs.Count == 0) return BadRequest(new { Error = "No valid place types provided." });
 
-            var unionQuery = string.Join("", pairs.Select(p =>
-                $"node[\"{p[0]}\"=\"{p[1]}\"](around:{radius},{lat},{lon});" +
-                $"way[\"{p[0]}\"=\"{p[1]}\"](around:{radius},{lat},{lon});"));
-            var query = $"[out:json][timeout:20];({unionQuery});out center;";
+            var queryParts = new List<string>();
+            foreach (var p in pairs)
+            {
+                var k = p[0];
+                var v = p[1];
+                queryParts.Add($"node[\"{k}\"=\"{v}\"](around:{radStr},{latStr},{lonStr});");
+                queryParts.Add($"way[\"{k}\"=\"{v}\"](around:{radStr},{latStr},{lonStr});");
+                queryParts.Add($"relation[\"{k}\"=\"{v}\"](around:{radStr},{latStr},{lonStr});");
+
+                if (k == "amenity" && v == "hospital")
+                {
+                    queryParts.Add($"node[\"amenity\"=\"clinic\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"way[\"amenity\"=\"clinic\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"relation[\"amenity\"=\"clinic\"](around:{radStr},{latStr},{lonStr});");
+
+                    queryParts.Add($"node[\"healthcare\"=\"hospital\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"way[\"healthcare\"=\"hospital\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"relation[\"healthcare\"=\"hospital\"](around:{radStr},{latStr},{lonStr});");
+                }
+                else if (k == "social_facility" && v == "shelter")
+                {
+                    queryParts.Add($"node[\"amenity\"=\"shelter\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"way[\"amenity\"=\"shelter\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"relation[\"amenity\"=\"shelter\"](around:{radStr},{latStr},{lonStr});");
+
+                    queryParts.Add($"node[\"amenity\"=\"community_centre\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"way[\"amenity\"=\"community_centre\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"relation[\"amenity\"=\"community_centre\"](around:{radStr},{latStr},{lonStr});");
+                }
+                else if (k == "amenity" && v == "pharmacy")
+                {
+                    queryParts.Add($"node[\"healthcare\"=\"pharmacy\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"way[\"healthcare\"=\"pharmacy\"](around:{radStr},{latStr},{lonStr});");
+                    queryParts.Add($"relation[\"healthcare\"=\"pharmacy\"](around:{radStr},{latStr},{lonStr});");
+                }
+            }
+
+            var unionQuery = string.Join("", queryParts);
+            var query = $"[out:json][timeout:25];({unionQuery});out center;";
 
             var client = _httpFactory.CreateClient();
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) PakistanDRS/1.0");
-            client.Timeout = TimeSpan.FromSeconds(15);
+            client.Timeout = TimeSpan.FromSeconds(20);
 
             Exception? lastEx = null;
             foreach (var mirror in OverpassMirrors)
@@ -488,9 +527,13 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     }
 
                     var json = await response.Content.ReadAsStringAsync();
-                    _placesCache[cacheKey] = (DateTime.UtcNow, json);
-                    Response.Headers["X-Cache"] = "MISS";
-                    return Content(json, "application/json");
+                    using var doc = System.Text.Json.JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("elements", out var elems))
+                    {
+                        _placesCache[cacheKey] = (DateTime.UtcNow, json);
+                        Response.Headers["X-Cache"] = "MISS";
+                        return Content(json, "application/json");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -498,14 +541,9 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 }
             }
 
-            _logger.LogWarning("All Overpass mirrors failed: {Msg}", lastEx?.Message);
-            if (_placesCache.TryGetValue(cacheKey, out var stale))
-                return Content(stale.json, "application/json");
-
-            // Return empty result set so the frontend shows "No places found"
-            // instead of a 502 error in the browser console.
-            var empty = System.Text.Json.JsonSerializer.Serialize(new { version = 0.6, elements = Array.Empty<object>() });
-            return Content(empty, "application/json");
+            _logger.LogWarning("Overpass mirrors failed or timed out: {Msg}", lastEx?.Message);
+            var emptyJson = System.Text.Json.JsonSerializer.Serialize(new { version = 0.6, elements = Array.Empty<object>() });
+            return Content(emptyJson, "application/json");
         }
     }
 }
