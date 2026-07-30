@@ -17,7 +17,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly IHttpClientFactory _httpFactory;
         private readonly ILogger<MonitoringController> _logger;
 
-        // Simple in-process cache (adequate for a single-instance deployment)
         private static (DateTime ts, string json)? _reliefWebCache;
         private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(15);
         private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
@@ -74,9 +73,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                     var status = "past";
                     if (DateTime.TryParse(pubDate, out var dt) && (DateTime.UtcNow - dt).TotalDays < 30)
                         status = "current";
-                    return new {
+                    return new
+                    {
                         id = link.Split('/').LastOrDefault() ?? Guid.NewGuid().ToString(),
-                        fields = new {
+                        fields = new
+                        {
                             name = title,
                             date = pubDate,
                             status = status,
@@ -142,7 +143,6 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
         }
 
-        // Cache for PMD RSS
         private static (DateTime ts, string xml)? _pmdCache;
         private static SemaphoreSlim _pmdLock = new SemaphoreSlim(1, 1);
 
@@ -189,11 +189,9 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
         }
 
-        // Simple cache for news RSS
         private static (DateTime ts, string xml)? _newsCache;
         private static SemaphoreSlim _newsLock = new SemaphoreSlim(1, 1);
 
-        // Cache for flood forecast
         private static (DateTime ts, string json)? _floodCache;
         private static SemaphoreSlim _floodLock = new SemaphoreSlim(1, 1);
 
@@ -253,9 +251,9 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 var items = doc.Descendants("item").Take(20).Select(x =>
                 {
                     var title = x.Element("title")?.Value ?? "";
-                    var desc  = x.Element("description")?.Value ?? "";
-                    var link  = x.Element("link")?.Value ?? "";
-                    var pub   = x.Element("pubDate")?.Value ?? "";
+                    var desc = x.Element("description")?.Value ?? "";
+                    var link = x.Element("link")?.Value ?? "";
+                    var pub = x.Element("pubDate")?.Value ?? "";
                     var catEl = x.Elements("category").Select(c => c.Value).ToList();
 
                     var titleLow = (title + " " + desc).ToLower();
@@ -380,14 +378,9 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             {
                 var client = _httpFactory.CreateClient();
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                client.Timeout = TimeSpan.FromSeconds(25);
+                client.Timeout = TimeSpan.FromSeconds(35);
 
-                var mirrors = new[]
-                {
-                    "https://overpass-api.de/api/interpreter",
-                    "https://overpass.kumi.systems/api/interpreter",
-                    "https://overpass.openstreetmap.ru/api/interpreter"
-                };
+                var mirrors = OverpassMirrors;
 
                 HttpResponseMessage? response = null;
                 string? errorDetail = null;
@@ -427,11 +420,16 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
         }
 
+        // ── Overpass mirrors (rotated, retried) ────────────────────────────
+        // More mirrors = better resilience against a single instance rate-limiting
+        // or blocking cloud-hosting IP ranges (common with free-tier hosts).
         private static readonly string[] OverpassMirrors =
         {
             "https://overpass-api.de/api/interpreter",
             "https://overpass.kumi.systems/api/interpreter",
             "https://overpass.openstreetmap.ru/api/interpreter",
+            "https://overpass.private.coffee/api/interpreter",
+            "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
         };
 
         private static readonly ConcurrentDictionary<string, (DateTime ts, string json)> _placesCache = new();
@@ -441,6 +439,11 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         /// Proxies Overpass API queries server-side (mirror rotation + caching).
         /// Avoids browser CORS failures and public rate-limit issues.
         /// types = comma-separated "osmKey:osmVal" pairs, e.g. "amenity:hospital,social_facility:shelter"
+        ///
+        /// IMPORTANT: On total mirror failure this returns HTTP 502 with a real error body
+        /// instead of a fake empty success — this lets the frontend correctly show
+        /// "service unavailable" instead of silently rendering "no places found" for what
+        /// is actually a failed request.
         /// </summary>
         [HttpGet("nearby-places")]
         [AllowAnonymous]
@@ -504,46 +507,80 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
             }
 
             var unionQuery = string.Join("", queryParts);
-            var query = $"[out:json][timeout:25];({unionQuery});out center;";
+           
+            var query = $"[out:json][timeout:40];({unionQuery});out center;";
 
             var client = _httpFactory.CreateClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) PakistanDRS/1.0");
-            client.Timeout = TimeSpan.FromSeconds(20);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) PakistanDRS/1.0 (contact: webadmin@ndma.gov.pk)");
+            client.Timeout = TimeSpan.FromSeconds(45);
 
-            Exception? lastEx = null;
+            var attemptLog = new List<string>();
+
             foreach (var mirror in OverpassMirrors)
             {
-                try
+                for (int attempt = 1; attempt <= 2; attempt++)
                 {
-                    var content = new FormUrlEncodedContent(new[]
+                    try
                     {
-                        new KeyValuePair<string, string>("data", query)
-                    });
-                    var response = await client.PostAsync(mirror, content);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        lastEx = new Exception($"{mirror} returned {response.StatusCode}");
-                        continue;
-                    }
+                        var content = new FormUrlEncodedContent(new[]
+                        {
+                            new KeyValuePair<string, string>("data", query)
+                        });
+                        var response = await client.PostAsync(mirror, content);
 
-                    var json = await response.Content.ReadAsStringAsync();
-                    using var doc = System.Text.Json.JsonDocument.Parse(json);
-                    if (doc.RootElement.TryGetProperty("elements", out var elems))
-                    {
-                        _placesCache[cacheKey] = (DateTime.UtcNow, json);
-                        Response.Headers["X-Cache"] = "MISS";
-                        return Content(json, "application/json");
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var bodySnippet = "";
+                            try { bodySnippet = (await response.Content.ReadAsStringAsync())?.Substring(0, Math.Min(200, (await response.Content.ReadAsStringAsync())?.Length ?? 0)) ?? ""; } catch { }
+                            attemptLog.Add($"{mirror} (try {attempt}) -> {(int)response.StatusCode} {response.StatusCode}");
+
+                            if ((response.StatusCode == System.Net.HttpStatusCode.TooManyRequests
+                                 || response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
+                                && attempt == 1)
+                            {
+                                await Task.Delay(800);
+                                continue;
+                            }
+                            break; 
+                        }
+
+                        var json = await response.Content.ReadAsStringAsync();
+                        using var doc = System.Text.Json.JsonDocument.Parse(json);
+                        if (doc.RootElement.TryGetProperty("elements", out var elems))
+                        {
+                            _placesCache[cacheKey] = (DateTime.UtcNow, json);
+                            Response.Headers["X-Cache"] = "MISS";
+                            _logger.LogInformation("Overpass success via {Mirror} ({Count} elements) for {CacheKey}",
+                                mirror, elems.GetArrayLength(), cacheKey);
+                            return Content(json, "application/json");
+                        }
+
+                        attemptLog.Add($"{mirror} (try {attempt}) -> 200 but no 'elements' property in response");
+                        break;
                     }
-                }
-                catch (Exception ex)
-                {
-                    lastEx = ex;
+                    catch (TaskCanceledException)
+                    {
+                        attemptLog.Add($"{mirror} (try {attempt}) -> timed out after {client.Timeout.TotalSeconds}s");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        attemptLog.Add($"{mirror} (try {attempt}) -> {ex.GetType().Name}: {ex.Message}");
+                        break;
+                    }
                 }
             }
 
-            _logger.LogWarning("Overpass mirrors failed or timed out: {Msg}", lastEx?.Message);
-            var emptyJson = System.Text.Json.JsonSerializer.Serialize(new { version = 0.6, elements = Array.Empty<object>() });
-            return Content(emptyJson, "application/json");
+            
+            _logger.LogError("All Overpass mirrors failed for {CacheKey}. Attempts: {Log}",
+                cacheKey, string.Join(" | ", attemptLog));
+
+            return StatusCode(502, new
+            {
+                error = "All Overpass (OpenStreetMap) mirrors are currently unavailable or rate-limited.",
+                detail = attemptLog,
+                suggestion = "This is usually temporary public-instance rate limiting. Try again in a minute, or widen the search radius."
+            });
         }
     }
 }
