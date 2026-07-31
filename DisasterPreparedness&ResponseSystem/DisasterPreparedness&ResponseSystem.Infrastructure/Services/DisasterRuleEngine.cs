@@ -66,7 +66,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
         }
 
         public static (DisasterType Type, SeverityLevel Severity, string Description)?
-            EvaluateAirQuality(AirQualityData aqi, string city, ThresholdConfig t)
+    EvaluateAirQuality(AirQualityData aqi, string city, ThresholdConfig t)
         {
             if (aqi.Us_Aqi >= t.AqiUnhealthy)
             {
@@ -74,12 +74,10 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
                                aqi.Us_Aqi >= 150 ? SeverityLevel.High :
                                                    SeverityLevel.Medium;
 
-                // Note: We'd need to add Smog to DisasterType for full accuracy
-                // For now mapping to Other — mention this in defense as future improvement
-                return (DisasterType.Other, severity,
+                return (DisasterType.Smog, severity,
                     $"Hazardous air quality in {city}: AQI {aqi.Us_Aqi:F0} (US scale). " +
                     $"PM2.5: {aqi.Pm2_5:F1}µg/m³, PM10: {aqi.Pm10:F1}µg/m³. " +
-                    $"Health emergency for sensitive groups.");
+                    DisasterCategoryHelper.GetPrecautionMessage(DisasterType.Smog));
             }
             return null;
         }
