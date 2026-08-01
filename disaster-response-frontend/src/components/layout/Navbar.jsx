@@ -27,6 +27,7 @@ export default function Navbar({ isConnected }) {
       { to: '/admin/citizens', label: '👤 Citizens' },
       { to: '/admin/analytics', label: '📈 Analytics' },
       { to: '/admin/settings', label: '⚙️ Settings' },
+      { to: '/admin/advisories', label: '📅 Advisories' },
     ],
     Responder: [
       { to: '/responder', label: 'My Assignments' },
@@ -40,6 +41,7 @@ export default function Navbar({ isConnected }) {
       { to: '/contacts', label: '📞 Contacts' },
       { to: '/safety-check', label: '❤️ Safety' },
       { to: '/preparedness', label: 'Be Prepared' },
+      { to: '/forecasts', label: '🌤️ Forecasts' },
       { to: '/ai-assistant', label: '🤖 AI Help' },
       { to: '/family', label: '👨‍👩‍👧 Family' },
     ],
@@ -50,6 +52,7 @@ export default function Navbar({ isConnected }) {
     { to: '/map', label: '🗺️ Map' },
     { to: '/contacts', label: '📞 Contacts' },
     { to: '/preparedness', label: '📋 Preparedness' },
+    { to: '/forecasts', label: '🌤️ Forecasts' },
   ];
   const navLinks = user?.role ? (roleLinks[user.role] || roleLinks.Citizen) : publicLinks;
 

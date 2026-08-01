@@ -13,7 +13,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -32,6 +32,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
         // GET /api/users?role=Citizen&search=xyz
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsers([FromQuery] string? role, [FromQuery] string? search)
         {
             var query = _db.Users.AsQueryable();
@@ -109,6 +110,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
         // GET /api/users/responders (Convenience endpoint for admin)
         [HttpGet("responders")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetResponders()
         {
             return await GetUsers("Responder", null);
@@ -116,6 +118,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
         // GET /api/users/citizens (Convenience endpoint for admin)
         [HttpGet("citizens")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCitizens()
         {
             return await GetUsers("Citizen", null);
@@ -123,6 +126,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
         // PATCH /api/users/{id} (Toggle suspension or update active status)
         [HttpPatch("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateUserStatusDto dto)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -148,6 +152,7 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
 
         // DELETE /api/users/{id} — Admin permanently deletes a citizen or responder account
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

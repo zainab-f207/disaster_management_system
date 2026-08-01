@@ -1,4 +1,4 @@
-﻿
+
 using DisasterPreparedness_ResponseSystem.Core.DTOs;
 using DisasterPreparedness_ResponseSystem.Core.Entity;
 using DisasterPreparedness_ResponseSystem.Core.Helpers;
@@ -167,6 +167,61 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
                 _db.Alerts.Add(alert);
                 await _db.SaveChangesAsync();
             }
+        }
+        public async Task SendPreparednessAdvisoryAsync(PreparednessAdvisory advisory)
+        {
+            var dto = new RealTimeAdvisoryDto(
+                advisory.Id,
+                advisory.City,
+                advisory.Type.ToString(),
+                advisory.Severity.ToString(),
+                advisory.ForecastFor,
+                advisory.Message,
+                advisory.Latitude,
+                advisory.Longitude
+            );
+
+            await _hubContext.Clients.Group("Admins").ReceivePreparednessAdvisory(dto);
+            await _hubContext.Clients.Group("Responders").ReceivePreparednessAdvisory(dto);
+            await _hubContext.Clients.Group("PublicFeed").ReceivePreparednessAdvisory(dto);
+            
+            var cityGroup = $"City_{advisory.City.Replace(" ", "_")}";
+            await _hubContext.Clients.Group(cityGroup).ReceivePreparednessAdvisory(dto);
+
+            await SafePushAsync("Admin",
+                $"📅 Forecast: {advisory.Type} risk — {advisory.City}",
+                advisory.Message.Length > 80 ? advisory.Message[..80] + "..." : advisory.Message,
+                "/admin/advisories");
+
+            await SafePushAsync("Responder",
+                $"📅 Forecast: {advisory.Type} risk — {advisory.City}",
+                advisory.Message.Length > 80 ? advisory.Message[..80] + "..." : advisory.Message,
+                "/admin/advisories");
+
+            await SafePushAsync("Citizen",
+                $"📅 Forecast: {advisory.Type} risk — {advisory.City}",
+                advisory.Message.Length > 80 ? advisory.Message[..80] + "..." : advisory.Message,
+                "/forecasts");
+        }
+
+        public async Task SendOrgStandbyAlertAsync(PreparednessAdvisory advisory, ResponderOrganization org)
+        {
+            var msg = $"STANDBY ALERT: {org.Name}, you have been placed on standby for a forecasted {advisory.Type} in {advisory.City} on {advisory.ForecastFor.ToShortDateString()}.";
+            
+            // Send a specific system message to the org chat or responders
+            await _hubContext.Clients.Group($"OrgChat_{org.Id}").ReceiveSystemMessage(msg);
+            
+            // You can also add an Alert record to DB for the organization admins if needed
+            var alert = new Alert
+            {
+                DisasterId = 0, // Since it's not a real disaster yet
+                Message = msg,
+                Severity = SeverityLevel.Medium,
+                Audience = AlertAudience.Responders,
+                CreatedAt = DateTime.UtcNow
+            };
+            _db.Alerts.Add(alert);
+            await _db.SaveChangesAsync();
         }
     }
     }

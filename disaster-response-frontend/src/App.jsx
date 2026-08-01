@@ -37,6 +37,8 @@ import CitizenSafeRoute from './pages/CitizenSafeRoute';
 import FamilySafety from './pages/FamilySafety';
 import AcceptInvite from './pages/AcceptInvite';
 import VerifyEmail from './pages/VerifyEmail';
+import AdminAdvisories from './pages/AdminAdvisories';
+import Forecasts from './pages/Forecasts';
 
 function HomeRoute() {
   const { isAuthenticated, user } = useAuthStore();
@@ -106,6 +108,7 @@ function AppContent() {
         <Route path="/sos" element={<SOSPage />} />
         <Route path="/ai-assistant" element={<AIAssistant />} />
         <Route path="/preparedness" element={<PreparednessCentre />} />
+        <Route path="/forecasts" element={<Forecasts />} />
         <Route path="/safety-check" element={<SafetyCheck />} />
 
         <Route path="/report" element={
@@ -153,6 +156,9 @@ function AppContent() {
         <Route path="/family" element={<ProtectedRoute><FamilySafety /></ProtectedRoute>} />
         <Route path="/accept-invite" element={<AcceptInvite />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/admin/advisories" element={
+          <ProtectedRoute requiredRole="Admin"><AdminAdvisories /></ProtectedRoute>
+        } />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

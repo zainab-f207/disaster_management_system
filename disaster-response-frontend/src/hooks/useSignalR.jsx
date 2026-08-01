@@ -72,6 +72,26 @@ export function useSignalR() {
     connection.on('ReceiveChatMessage', (message) => {
       addChatMessage(message);
     });
+    connection.on('ReceivePreparednessAdvisory', (advisory) => {
+      addAlert({ ...advisory, type: 'advisory' });
+      toast((t) => (
+        <div 
+          onClick={() => {
+            toast.dismiss(t.id);
+            window.location.href = '/forecasts';
+          }}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
+          <span style={{ fontSize: '20px' }}>🌦️</span>
+          <div>
+            <div style={{ fontWeight: 600 }}>📅 Forecast: {advisory.type} risk — {advisory.city}</div>
+            <div style={{ fontSize: '12px', opacity: 0.9 }}>{new Date(advisory.forecastFor).toLocaleDateString('en-PK')}</div>
+          </div>
+        </div>
+      ), {
+        duration: 8000,
+      });
+    });
 
     setActiveConnection(connection);
 

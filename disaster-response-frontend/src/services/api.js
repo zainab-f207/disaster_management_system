@@ -101,6 +101,11 @@ export const chatApi = {
   getMessages: (orgId) => api.get(`/chat/${orgId}/messages`),
   sendMessage: (orgId, message) => api.post(`/chat/${orgId}/messages`, { message }),
 };
+export const advisoryApi = {
+  getAll: (includeAcknowledged = false) =>
+    api.get('/advisories', { params: { includeAcknowledged } }),
+  acknowledge: (id) => api.put(`/advisories/${id}/acknowledge`),
+};
 
 
 export default api;

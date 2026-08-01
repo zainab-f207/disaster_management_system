@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { Building2, Plus, Edit3, Power, MapPin, Search, RefreshCw, X, Save } from 'lucide-react';
 
 const EMPTY_ORG = {
-  name: '', type: 'Rescue', coverageArea: '', contactNumber: '', email: '', isActive: true,
+  name: '', type: 'Rescue1122', coverageArea: '', contactNumber: '', email: '', isActive: true,
 };
 
 export default function AdminOrganizations() {
@@ -62,7 +62,13 @@ export default function AdminOrganizations() {
 
   const filtered = orgs.filter(o => o.name?.toLowerCase().includes(search.toLowerCase()));
 
-  const typeColor = { Rescue: '#e53e3e', Medical: '#3182ce', Police: '#2d3748', Fire: '#dd6b20', NGO: '#805ad5', Military: '#2f855a', Other: '#718096' };
+  const typeColor = { 
+    Rescue1122: '#e53e3e', NDMA: '#38a169', PDMA: '#38a169', EdhiFoundation: '#e53e3e',
+    AlkhidmatFoundation: '#38a169', ChhipaWelfare: '#805ad5', PakistanRedCrescentSociety: '#e53e3e',
+    CivilDefence: '#d69e2e', Police: '#3182ce', FireBrigade: '#dd6b20', HealthDepartment: '#38a169',
+    PMD: '#3182ce', EnvironmentDepartment: '#38a169', WASA: '#3182ce', ElectricityDistribution: '#d69e2e',
+    GasCompany: '#d69e2e', PakistanRailways: '#718096', WaterAuthority: '#3182ce', Other: '#718096'
+  };
 
   const card = { background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' };
   const input = { width: '100%', padding: '10px 12px', background: 'var(--bg-surface-2)', border: '1.5px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', boxSizing: 'border-box' };
@@ -162,7 +168,12 @@ export default function AdminOrganizations() {
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>Type</label>
                 <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))} style={input}>
-                  {['Rescue', 'Medical', 'Police', 'Fire', 'NGO', 'Military', 'Other'].map(t => <option key={t} value={t}>{t}</option>)}
+                  {[
+                    'Rescue1122', 'NDMA', 'PDMA', 'EdhiFoundation', 'AlkhidmatFoundation',
+                    'ChhipaWelfare', 'PakistanRedCrescentSociety', 'CivilDefence', 'Police',
+                    'FireBrigade', 'HealthDepartment', 'PMD', 'EnvironmentDepartment', 'WASA',
+                    'ElectricityDistribution', 'GasCompany', 'PakistanRailways', 'WaterAuthority', 'Other'
+                  ].map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
             </div>

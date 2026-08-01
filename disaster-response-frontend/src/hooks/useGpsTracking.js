@@ -28,6 +28,11 @@ export function useGpsTracking({ onStatusChange } = {}) {
   const assignmentRef  = useRef(null);
   const lastPingRef    = useRef(0);
   const intervalRef    = useRef(null);
+  const onStatusChangeRef = useRef(onStatusChange);
+
+  useEffect(() => {
+    onStatusChangeRef.current = onStatusChange;
+  }, [onStatusChange]);
 
   // ─── Send ping to backend ────────────────────────────────────────────────
   const sendPing = useCallback(async (position) => {
@@ -45,12 +50,12 @@ export function useGpsTracking({ onStatusChange } = {}) {
       setDistanceMeters(data.distanceMeters);
       if (data.status && data.status !== status) {
         setStatus(data.status);
-        onStatusChange?.(data.status, data.previousStatus, data.distanceMeters);
+        onStatusChangeRef.current?.(data.status, data.previousStatus, data.distanceMeters);
       }
     } catch {
       // Non-fatal — GPS keeps running even if one ping fails
     }
-  }, [status, onStatusChange]);
+  }, [status]);
 
   // ─── GPS position callback ───────────────────────────────────────────────
   const handlePosition = useCallback((position) => {

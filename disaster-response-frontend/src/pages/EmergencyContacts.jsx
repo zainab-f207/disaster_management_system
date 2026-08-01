@@ -1,31 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Phone, MapPin, Heart, Shield, Flame, Zap, Droplet, AlertTriangle } from 'lucide-react';
-
-const CONTACTS = [
-  { name: 'Rescue 1122', number: '1122', emoji: '🚒', color: '#e53e3e', desc: 'Fire, Rescue & Medical Emergency', category: 'Emergency' },
-  { name: 'Police Emergency', number: '15', emoji: '👮', color: '#3182ce', desc: 'Law enforcement & security', category: 'Emergency' },
-  { name: 'Edhi Foundation', number: '115', emoji: '🚑', color: '#e53e3e', desc: 'Ambulance & welfare services', category: 'Emergency' },
-  { name: 'NDMA', number: '1135', emoji: '🛡️', color: '#38a169', desc: 'National disaster management', category: 'Emergency' },
-  { name: 'Rescue 1122 (KPK)', number: '1122', emoji: '🚒', color: '#dd6b20', desc: 'Khyber Pakhtunkhwa rescue', category: 'Emergency' },
-  { name: 'Chhipa Welfare', number: '1020', emoji: '🏥', color: '#805ad5', desc: 'Ambulance & disaster relief', category: 'Emergency' },
-  { name: 'SSGC Gas Emergency', number: '1199', emoji: '💨', color: '#d69e2e', desc: 'Gas leaks & gas emergencies (Sindh & Balochistan)', category: 'Utility' },
-  { name: 'SNGPL Gas Emergency', number: '1202', emoji: '💨', color: '#d69e2e', desc: 'Gas leaks & emergencies (Punjab & KPK)', category: 'Utility' },
-  { name: 'WAPDA / Electricity', number: '118', emoji: '⚡', color: '#d69e2e', desc: 'Electricity emergencies & power lines', category: 'Utility' },
-  { name: 'KWSB Water (Karachi)', number: '99901', emoji: '💧', color: '#3182ce', desc: 'Water supply emergencies', category: 'Utility' },
-  { name: 'Fire Brigade', number: '16', emoji: '🔥', color: '#e53e3e', desc: 'Fire department', category: 'Emergency' },
-  { name: 'Aman Foundation', number: '115', emoji: '🏥', color: '#38a169', desc: 'Emergency medical & trauma care', category: 'Emergency' },
-  { name: 'Red Crescent (PRCS)', number: '042-35761999', emoji: '🏥', color: '#e53e3e', desc: 'Disaster relief & humanitarian aid', category: 'NGO' },
-  { name: 'Alkhidmat Foundation', number: '0800-00786', emoji: '🤝', color: '#38a169', desc: 'Relief services', category: 'NGO' },
-  { name: 'Deaf & Dumb SMS SOS', number: '1169', emoji: '📱', color: '#805ad5', desc: 'SMS emergency for differently-abled', category: 'Accessibility' },
-];
+import api from '../services/api';
 
 const CATEGORIES = ['All', 'Emergency', 'Utility', 'NGO', 'Accessibility'];
+
+const mapOrganization = (org) => {
+  let emoji = '🏢';
+  let color = '#718096';
+  let desc = 'Emergency Service';
+  let category = 'Emergency';
+
+  switch (org.type) {
+    case 'Rescue1122': emoji = '🚒'; color = '#e53e3e'; desc = 'Fire, Rescue & Medical Emergency'; break;
+    case 'Police': emoji = '👮'; color = '#3182ce'; desc = 'Law enforcement & security'; break;
+    case 'EdhiFoundation': 
+    case 'ChhipaWelfare': emoji = '🚑'; color = '#e53e3e'; desc = 'Ambulance & welfare services'; break;
+    case 'NDMA': 
+    case 'PDMA': emoji = '🛡️'; color = '#38a169'; desc = 'Disaster management'; break;
+    case 'GasCompany': emoji = '💨'; color = '#d69e2e'; desc = 'Gas leaks & emergencies'; category = 'Utility'; break;
+    case 'ElectricityDistribution': emoji = '⚡'; color = '#d69e2e'; desc = 'Electricity emergencies'; category = 'Utility'; break;
+    case 'WASA':
+    case 'WaterAuthority': emoji = '💧'; color = '#3182ce'; desc = 'Water supply emergencies'; category = 'Utility'; break;
+    case 'FireBrigade': emoji = '🔥'; color = '#e53e3e'; desc = 'Fire department'; break;
+    case 'PakistanRedCrescentSociety':
+    case 'AlkhidmatFoundation': emoji = '🏥'; color = '#e53e3e'; desc = 'Disaster relief & humanitarian aid'; category = 'NGO'; break;
+    case 'HealthDepartment': emoji = '🏥'; color = '#38a169'; desc = 'Health services'; break;
+    case 'CivilDefence': emoji = '🛡️'; color = '#d69e2e'; desc = 'Civil defence & safety'; break;
+    case 'PMD':
+    case 'EnvironmentDepartment': emoji = '🌤️'; color = '#3182ce'; desc = 'Meteorological & Environmental'; category = 'Utility'; break;
+    case 'PakistanRailways': emoji = '🚆'; color = '#718096'; desc = 'Railway emergencies'; category = 'Utility'; break;
+    default: break;
+  }
+
+  return {
+    id: org.id,
+    name: org.name,
+    number: org.contactNumber || 'N/A',
+    emoji,
+    color,
+    desc,
+    category
+  };
+};
 
 export default function EmergencyContacts() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = CONTACTS.filter(c => {
+  useEffect(() => {
+    api.get('/organizations')
+      .then(res => {
+        const mapped = res.data.map(mapOrganization);
+        // Also add the deaf & dumb accessibility hardcoded option since it's not in DB
+        mapped.push({ id: 'sms-sos', name: 'Deaf & Dumb SMS SOS', number: '1169', emoji: '📱', color: '#805ad5', desc: 'SMS emergency for differently-abled', category: 'Accessibility' });
+        setContacts(mapped);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = contacts.filter(c => {
     const matchCat = activeCategory === 'All' || c.category === activeCategory;
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.number.includes(search) || c.desc.toLowerCase().includes(search.toLowerCase());
@@ -70,8 +106,13 @@ export default function EmergencyContacts() {
       </div>
 
       {/* Contact Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '14px' }}>
-        {filtered.map((c, i) => (
+      {loading ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '14px' }}>
+          {[1,2,3,4,5,6].map(i => <div key={i} style={{ height: '90px', borderRadius: '16px', background: 'var(--bg-surface-2)', animation: 'skeleton-pulse 1.5s infinite' }} />)}
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '14px' }}>
+          {filtered.map((c, i) => (
           <div key={i} style={{ ...card, padding: '18px', borderLeft: `5px solid ${c.color}`, display: 'flex', flexDirection: 'column', gap: '10px', transition: 'transform 0.15s', cursor: 'default' }}
             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}>
@@ -91,9 +132,10 @@ export default function EmergencyContacts() {
             </a>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
-      {filtered.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <div style={{ ...card, padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
           No contacts match your search.
         </div>

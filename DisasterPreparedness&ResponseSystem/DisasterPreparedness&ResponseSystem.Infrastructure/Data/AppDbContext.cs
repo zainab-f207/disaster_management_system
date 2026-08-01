@@ -20,6 +20,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
         public DbSet<ReportVerification> ReportVerifications => Set<ReportVerification>();
         public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
         public DbSet<FamilyConnection> FamilyConnections => Set<FamilyConnection>();
+        public DbSet<PreparednessAdvisory> PreparednessAdvisories => Set<PreparednessAdvisory>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -71,6 +72,8 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Data
             builder.Entity<Alert>().Property(a => a.Audience).HasConversion<string>();
             builder.Entity<DisasterReport>().Property(r => r.Status).HasConversion<string>();
             builder.Entity<DisasterReport>().Property(r => r.Type).HasConversion<string>();
+            builder.Entity<PreparednessAdvisory>().Property(a => a.Type).HasConversion<string>();
+            builder.Entity<PreparednessAdvisory>().Property(a => a.Severity).HasConversion<string>();
 
 
         }

@@ -161,6 +161,9 @@ builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<IDisasterCreationService, DisasterCreationService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpClient<ISeverityAnalysisService, SeverityAnalysisService>();
+builder.Services.AddHttpClient<IWeatherForecastApiService, WeatherForecastApiService>();
+builder.Services.AddScoped<IPreparednessAdvisoryService, PreparednessAdvisoryService>();
+builder.Services.AddHostedService<PreparednessForecastService>();
 
 builder.Services.Configure<MonitoringConfig>(
     builder.Configuration.GetSection("DisasterMonitoring"));
@@ -295,9 +298,12 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.SeedAdminUserAsync(userManager, config);
     await RoleSeeder.SeedResponderUsersAsync(userManager, db);
 
-    if (!db.ResponderOrganizations.Any())
+    var seedOrgs = SeedData.GetSeedOrganizations();
+    var existingOrgNames = db.ResponderOrganizations.Select(o => o.Name).ToList();
+    var newOrgs = seedOrgs.Where(o => !existingOrgNames.Contains(o.Name)).ToList();
+    if (newOrgs.Any())
     {
-        db.ResponderOrganizations.AddRange(SeedData.GetSeedOrganizations());
+        db.ResponderOrganizations.AddRange(newOrgs);
         await db.SaveChangesAsync();
     }
 }

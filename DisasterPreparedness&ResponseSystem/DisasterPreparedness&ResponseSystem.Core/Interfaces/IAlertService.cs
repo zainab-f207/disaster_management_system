@@ -1,4 +1,4 @@
-﻿using DisasterPreparedness_ResponseSystem.Core.Entity;
+using DisasterPreparedness_ResponseSystem.Core.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,8 @@ namespace DisasterPreparedness_ResponseSystem.Core.Interfaces
         Task SendAssignmentUpdateAsync(ResponderAssignment assignment);
         Task SendNewReportNotificationAsync(DisasterReport report, string reporterName);
         Task SendSystemAlertAsync(string message, int? disasterId = null);
+        Task SendPreparednessAdvisoryAsync(PreparednessAdvisory advisory);
+        Task SendOrgStandbyAlertAsync(PreparednessAdvisory advisory, ResponderOrganization org);
     }
 
 }
