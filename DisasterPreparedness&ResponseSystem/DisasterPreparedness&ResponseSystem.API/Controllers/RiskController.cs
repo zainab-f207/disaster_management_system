@@ -14,14 +14,17 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
         private readonly RiskTrainingService _trainingService;
         private readonly RiskModelTrainer _trainer;
         private readonly IWeatherForecastApiService _forecastApi;
+        private readonly SeismicHazardService _seismicService;
         private readonly MonitoringConfig _config;
 
         public RiskController(RiskTrainingService trainingService,
             RiskModelTrainer trainer, IWeatherForecastApiService forecastApi,
+            SeismicHazardService seismicService,
             Microsoft.Extensions.Options.IOptions<MonitoringConfig> config)
         {
             _trainingService = trainingService;
-            _trainer = trainer; _forecastApi = forecastApi; _config = config.Value;
+            _trainer = trainer; _forecastApi = forecastApi;
+            _seismicService = seismicService; _config = config.Value;
         }
 
         // Call this manually when needed. The same logic also runs daily via RiskModelRetrainingService.
@@ -34,6 +37,20 @@ namespace DisasterPreparedness_ResponseSystem.Controllers
                 return BadRequest(new { Error = trained.Error });
 
             return Ok(new { Message = "Model trained on real historical data.", trained.RowCount, trained.PositiveRows });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("seismic")]
+        public async Task<IActionResult> GetSeismicHazards()
+        {
+            return Ok(await _seismicService.GetHazardsAsync());
+        }
+
+        [AllowAnonymous]
+        [HttpGet("seismic")]
+        public async Task<IActionResult> GetSeismicHazards([FromServices] SeismicHazardService seismicService)
+        {
+            return Ok(await seismicService.GetHazardsAsync());
         }
 
         [AllowAnonymous]

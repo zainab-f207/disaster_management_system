@@ -78,13 +78,16 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
 
                 var disastersForCity = mergedDisasters
                     .Where(d => d.City == city.Name)
-                    .ToLookup(d => d.Date.ToString("yyyy-MM-dd"));
+                    .SelectMany(d => new[] { d.Date.AddDays(-1), d.Date, d.Date.AddDays(1) })
+                    .Select(d => d.ToString("yyyy-MM-dd"))
+                    .ToHashSet();
 
                 foreach (var kv in weather)
                 {
                     bool isDisasterDay = disastersForCity.Contains(kv.Key);
 
-                    // Positive rows: exact labeled disaster dates.
+                    // Positive rows: labeled disaster date plus the day before/after
+                    // to capture precursor / onset weather and increase positive examples.
                     // Negative rows: sample ~15% of remaining real non-disaster days (keeps dataset balanced-ish)
                     if (!isDisasterDay && rnd.NextDouble() > 0.15) continue;
 

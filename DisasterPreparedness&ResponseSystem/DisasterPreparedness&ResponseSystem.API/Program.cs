@@ -168,6 +168,7 @@ builder.Services.AddHttpClient<HistoricalDatasetBuilder>();
 builder.Services.AddHttpClient<GlideEventParser>();
 builder.Services.AddSingleton<RiskModelTrainer>();
 builder.Services.AddScoped<RiskTrainingService>();
+builder.Services.AddHttpClient<SeismicHazardService>();
 
 if (builder.Configuration.GetValue<bool?>("RiskModelRetraining:Enabled") ?? true)
 {

@@ -39,59 +39,62 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
             _trainLock.Wait();
             try
             {
-            var positives = rows.Count(r => r.DisasterOccurred);
-            var negatives = rows.Count - positives;
+                var positives = rows.Where(r => r.DisasterOccurred).ToList();
+                var negatives = rows.Where(r => !r.DisasterOccurred).ToList();
 
-            if (positives == 0)
-                throw new InvalidOperationException("Training data contains no positive disaster examples. Cannot train a binary risk model.");
-            if (negatives == 0)
-                throw new InvalidOperationException("Training data contains no negative non-disaster examples. Cannot train a binary risk model.");
+                if (positives.Count < 5)
+                    throw new InvalidOperationException($"Only {positives.Count} positive examples — need at least 5 to evaluate reliably. Widen your GLIDE date range or add more cities.");
+                if (negatives.Count == 0)
+                    throw new InvalidOperationException("Training data contains no negative non-disaster examples. Cannot train a binary risk model.");
 
-            var data = rows.Select(r => new WeatherInput
-            {
-                RainSum = r.RainSum,
-                WindMax = r.WindMax,
-                GustsMax = r.GustsMax,
-                TempMax = r.TempMax,
-                ApparentTempMax = r.ApparentTempMax,
-                HumidityMax = r.HumidityMax,
-                DisasterOccurred = r.DisasterOccurred,
-            });
+                var rnd = new Random(42);
+                positives = positives.OrderBy(_ => rnd.Next()).ToList();
+                negatives = negatives.OrderBy(_ => rnd.Next()).ToList();
 
-            var dataView = _ml.Data.LoadFromEnumerable(data);
-            var split = _ml.Data.TrainTestSplit(dataView, testFraction: 0.2,
-                samplingKeyColumnName: nameof(WeatherInput.DisasterOccurred));
+                // Guarantee at least 20% of positives (min 2) land in the test set
+                int posTestCount = Math.Max(2, (int)(positives.Count * 0.2));
+                int negTestCount = Math.Max(2, (int)(negatives.Count * 0.2));
 
-            var pipeline = _ml.Transforms.Concatenate("Features",
-                    nameof(WeatherInput.RainSum), nameof(WeatherInput.WindMax),
-                    nameof(WeatherInput.GustsMax), nameof(WeatherInput.TempMax),
-                    nameof(WeatherInput.ApparentTempMax), nameof(WeatherInput.HumidityMax))
-                .Append(_ml.Transforms.NormalizeMinMax("Features"))
-                .Append(_ml.BinaryClassification.Trainers.FastTree(
-                    labelColumnName: nameof(WeatherInput.DisasterOccurred),
-                    featureColumnName: "Features", numberOfLeaves: 20, numberOfTrees: 100));
+                var trainRows = positives.Skip(posTestCount).Concat(negatives.Skip(negTestCount)).ToList();
+                var testRows = positives.Take(posTestCount).Concat(negatives.Take(negTestCount)).ToList();
 
-            var model = pipeline.Fit(split.TrainSet);
+                var trainView = _ml.Data.LoadFromEnumerable(trainRows.Select(ToInput));
+                var testView = _ml.Data.LoadFromEnumerable(testRows.Select(ToInput));
 
-            try
-            {
-                var metrics = _ml.BinaryClassification.Evaluate(model.Transform(split.TestSet),
+                var pipeline = _ml.Transforms.Concatenate("Features",
+                        nameof(WeatherInput.RainSum), nameof(WeatherInput.WindMax),
+                        nameof(WeatherInput.GustsMax), nameof(WeatherInput.TempMax),
+                        nameof(WeatherInput.ApparentTempMax), nameof(WeatherInput.HumidityMax))
+                    .Append(_ml.Transforms.NormalizeMinMax("Features"))
+                    .Append(_ml.BinaryClassification.Trainers.FastTree(
+                        labelColumnName: nameof(WeatherInput.DisasterOccurred),
+                        featureColumnName: "Features", numberOfLeaves: 20, numberOfTrees: 100));
+
+                var model = pipeline.Fit(trainView);
+
+                var metrics = _ml.BinaryClassification.Evaluate(model.Transform(testView),
                     labelColumnName: nameof(WeatherInput.DisasterOccurred));
-                Console.WriteLine($"AUC: {metrics.AreaUnderRocCurve:F3}  Accuracy: {metrics.Accuracy:F3}");
-            }
-            catch (ArgumentOutOfRangeException ex) when (ex.Message.Contains("AUC is not defined", StringComparison.OrdinalIgnoreCase) ||
-                                                         ex.ParamName == "PosSample")
-            {
-                Console.WriteLine("Warning: test split contained no positive examples; skipping AUC evaluation. Model was still trained.");
-            }
+                Console.WriteLine($"AUC: {metrics.AreaUnderRocCurve:F3}  Accuracy: {metrics.Accuracy:F3}  " +
+                                   $"F1: {metrics.F1Score:F3}  (test set had {posTestCount} positive rows)");
 
-            _ml.Model.Save(model, dataView.Schema, ModelPath);
+                _ml.Model.Save(model, trainView.Schema, ModelPath);
             }
             finally
             {
                 _trainLock.Release();
             }
         }
+
+        private static WeatherInput ToInput(TrainingRow r) => new()
+        {
+            RainSum = r.RainSum,
+            WindMax = r.WindMax,
+            GustsMax = r.GustsMax,
+            TempMax = r.TempMax,
+            ApparentTempMax = r.ApparentTempMax,
+            HumidityMax = r.HumidityMax,
+            DisasterOccurred = r.DisasterOccurred,
+        };
 
         public RiskPrediction Predict(WeatherInput input)
         {
