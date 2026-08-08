@@ -164,6 +164,15 @@ builder.Services.AddHttpClient<ISeverityAnalysisService, SeverityAnalysisService
 builder.Services.AddHttpClient<IWeatherForecastApiService, WeatherForecastApiService>();
 builder.Services.AddScoped<IPreparednessAdvisoryService, PreparednessAdvisoryService>();
 builder.Services.AddHostedService<PreparednessForecastService>();
+builder.Services.AddHttpClient<HistoricalDatasetBuilder>();
+builder.Services.AddHttpClient<GlideEventParser>();
+builder.Services.AddSingleton<RiskModelTrainer>();
+builder.Services.AddScoped<RiskTrainingService>();
+
+if (builder.Configuration.GetValue<bool?>("RiskModelRetraining:Enabled") ?? true)
+{
+    builder.Services.AddHostedService<RiskModelRetrainingService>();
+}
 
 builder.Services.Configure<MonitoringConfig>(
     builder.Configuration.GetSection("DisasterMonitoring"));

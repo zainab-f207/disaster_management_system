@@ -211,17 +211,7 @@ namespace DisasterPreparedness_ResponseSystem.Infrastructure.Services
             // Send a specific system message to the org chat or responders
             await _hubContext.Clients.Group($"OrgChat_{org.Id}").ReceiveSystemMessage(msg);
             
-            // You can also add an Alert record to DB for the organization admins if needed
-            var alert = new Alert
-            {
-                DisasterId = 0, // Since it's not a real disaster yet
-                Message = msg,
-                Severity = SeverityLevel.Medium,
-                Audience = AlertAudience.Responders,
-                CreatedAt = DateTime.UtcNow
-            };
-            _db.Alerts.Add(alert);
-            await _db.SaveChangesAsync();
+           
         }
     }
     }
